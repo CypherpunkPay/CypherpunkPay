@@ -1,0 +1,22 @@
+{% extends "layout.jinja2" %}
+
+{% block content%}
+    <div id="charge" class="box">
+        <h1 class="title has-text-link-dark">
+            Charge expired!
+        </h1>
+        <div class="content">
+            <p>
+                <strong>Do not</strong> send any payments as they won't be recognized.
+            </p>
+            <p>
+                The time window for initiating the payment is over.
+                You may go back to the merchant and start over the payment process.
+            </p>
+            {% include 'partials/charge_reference_id.jinja2' %}
+            {% with button_label = 'Back' %}
+                {% include 'partials/exit_charge.jinja2' %}
+            {% endwith %}
+        </div>
+    </div>
+{% endblock content %}

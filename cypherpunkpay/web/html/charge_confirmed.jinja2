@@ -1,0 +1,30 @@
+{% extends "layout.jinja2" %}
+
+{% block content%}
+    <div id="charge" class="box">
+        <h1 class="title has-text-link-dark">
+            Payment in progress
+        </h1>
+        <div class="content">
+            <p>
+                Got
+                {% if charge.confirmations > 1 %}
+                  {{ charge.confirmations }} network confirmations,
+                {% else %}
+                  {{ charge.confirmations }} network confirmation,
+                {% endif %}
+                waiting for more...
+            </p>
+            <p>
+              Things are looking great! We noticed your incoming payment {{ view.formatted_currency_amount(charge.cc_received_total, charge.cc_currency, select_amount=True) | safe }}.
+            </p>
+            <p>
+              The payment will be considered completed once sufficiently confirmed by the Bitcoin network.
+            </p>
+            {% include 'partials/charge_reference_id.jinja2' %}
+            {% with button_label = 'Back' %}
+                {% include 'partials/exit_charge.jinja2' %}
+            {% endwith %}
+        </div>
+    </div>
+{% endblock content %}

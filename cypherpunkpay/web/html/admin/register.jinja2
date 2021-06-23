@@ -1,0 +1,68 @@
+{% extends "layout_login.jinja2" %}
+
+{% block content %}
+
+    <div class="box">
+
+        <h1 class="title has-text-danger-dark">Register Admin</h1>
+
+        {% if message %}
+            <div class="notification is-danger is-light">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        <form action="{{ request.route_url('admin_register') }}" method="post">
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label for="username" class="label">Username</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <p class="control is-expanded">
+                    <input class="input" type="text" id="username" name="username" value="admin" disabled>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label for="password" class="label">Password</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <p class="control is-expanded">
+                    <input class="input" type="password" placeholder="" id="password" name="password" value="">
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal" style="width: 300px;">
+                <label for="password_conf" class="label">Confirm password</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <p class="control">
+                    <input class="input" type="password" id="password_conf" name="password_conf" value="">
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+              </div>
+              <div class="field-body">
+                <div class="field">
+                    <button type="submit" name="form.submitted" class="button is-danger">Register</button>
+                </div>
+              </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock content %}

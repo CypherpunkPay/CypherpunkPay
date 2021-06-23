@@ -1,0 +1,36 @@
+#!/usr/bin/make -f
+
+# Based on:
+# https://dh-virtualenv.readthedocs.io/en/latest/howtos.html#building-packages-for-python3
+#
+# Packaging systemd services (dh_installsystemd):
+# https://man7.org/linux/man-pages/man1/dh_installsystemd.1.html
+# https://stackoverflow.com/questions/34342058/should-i-override-debhelper-usage-of-the-init-system
+
+%:
+	dh $@ --with python-virtualenv
+
+override_dh_virtualenv:
+	dh_virtualenv \
+		--python python3 \
+		--builtin-venv \
+		--upgrade-pip-to 21.1.2 \
+		--preinstall dh-poetry-cypherpunkdev 0.2.4 \
+		--pip-tool dh-poetry
+	rm -rf ./debian/cypherpunkpay/opt/venvs/cypherpunkpay/share
+
+.PHONY: override_dh_strip override_dh_shlibdeps
+
+override_dh_strip:
+	dh_strip --exclude=cffi
+
+override_dh_shlibdeps:
+	dh_shlibdeps -X/x86/ -X/numpy/.libs -X/scipy/.libs -X/matplotlib/.libs
+
+#override_dh_systemd_enable:
+#	dh_systemd_enable --no-enable
+#override_dh_systemd_start:
+#	dh_systemd_start --no-start
+override_dh_installsystemd:
+	dh_installsystemd --no-start
+	dh_installsystemd --no-enable

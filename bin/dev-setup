@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Upgrade existing pip and virtualenv
+sudo python3 -m pip install --upgrade pip virtualenv
+
+# Install poetry as advised on https://python-poetry.org/docs/
+curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+
+# Configure poetry
+echo "virtualenvs.in-project = true" > ~/.config/pypoetry/config.toml
+
+# Check poetry version
+poetry --version
+
+poetry install

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+rm_print () {
+    echo "Removing ${1}"
+    rm -rf ${1}
+}
+
+rm_print './.eggs'
+rm_print './.pytest_cache'
+rm_print './.venv'
+rm_print './build'
+rm_print './dist'
+rm_print './log/*.log'
+rm_print './cypherpunkpay.egg-info'
+rm_print './venv'

@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# "cypherpunkpay" pre remove script
+#
+set -e
+
+#DEBHELPER#
+
+# Remove .pyc, .pyo, __pycache__ files to avoid dpkg warnings
+find /opt/venvs/cypherpunkpay/lib/ -type f -name "*.py[co]" -delete -or -type d -name "__pycache__" -delete
+
+exit 0

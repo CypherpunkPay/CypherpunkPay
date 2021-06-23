@@ -1,0 +1,42 @@
+{% extends "layout.jinja2" %}
+
+{% block content %}
+    <div id="dummystore">
+        <h1 class="title">
+            Demo Store
+        </h1>
+        <div class="content">
+            This fake online store serves to demonstrate merchant-to-cypherpunkpay intagration.
+        </div>
+        {% for i in (0, 3, 6) -%}
+            <div class="columns">
+                {% for order in orders[0+i:3+i] -%}
+                    <div class="column">
+                        <div class="card">
+                            <header class="card-header">
+                                <div class="card-header-title is-pulled-left">
+                                    {{ order.item['name'] }}
+                                </div>
+                                <div class="card-header-title is-pulled-right has-text-right" style="display: block">
+                                    {{ view.formatted_currency_amount(order.item['price'], order.item['currency']) }}
+                                </div>
+                            </header>
+                            <div class="card-content">
+                                <div class="content has-text-centered">
+                                    <form action="{{ view.request.route_url('post_charge') }}" method="post">
+                                        <input type="hidden" name="merchant_order_id" value="{{ order.uid }}"/>
+                                        <input type="hidden" name="total" value="{{ order.item['price'] }}"/>
+                                        <input type="hidden" name="currency" value="{{ order.item['currency'] }}"/>
+                                        <button class="button is-success is-outlined">Buy and Checkout</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+    </div>
+{% endblock content %}

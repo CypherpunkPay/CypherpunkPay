@@ -1,0 +1,2 @@
+# This empty file is necessary to properly trigger dh_poetry during the DEB packaging pipeline.
+# Without this file pip would be used while we need poetry to enforce package locking.

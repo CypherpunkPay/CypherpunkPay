@@ -1,0 +1,14 @@
+<p>
+    Time to complete:
+    <span id="time-to-pay"
+          data-time-to-pay="{{ charge.soft_time_left_to_pay().seconds }}">
+        {{ charge.soft_time_left_to_pay_formatted() }}
+    </span>
+    <br />
+    <progress id="time-to-pay-bar"
+              style="height: 2px; width: 168px;"
+              class="progress is-primary"
+              value="{{ charge.soft_time_left_to_pay().seconds }}"
+              max=  "{{ charge.soft_time_to_pay().seconds }}">
+    </progress>
+</p>

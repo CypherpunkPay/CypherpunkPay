@@ -1,0 +1,8 @@
+{
+  "status" : "success",
+  "data" : {
+    "network" : "BTC",
+    "address" : "bc1quwtrymfzavun8awsv9fqv36wlk0058puuw7mer",
+    "txs" : []
+  }
+}

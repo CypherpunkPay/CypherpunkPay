@@ -1,0 +1,33 @@
+
+* BUG: charge_expired_to_complete__paid.jinja2 - no support for expired + confirmed + underpaid
+  - underpaid and expired to pay is mistakenly presented as "we noticed your payment but it failed to confirm" while it should stress underpayment
+
+* BUG: should validate total is not smaller than 10**-8 (because that is our assumed db precision)
+  test case: 0.01 Won paid in BTC is below 1 satoshi and blows this: assert self.cc_total
+
+* BUG: [Cancel Payment] button should actually make request to cancel the payment
+
+* BUG: favicon.ico is not cached and always fetched (200 instead of 304)
+
+* Add time exponential randomized skipping of (unsuccessful) callbacks
+
+* Add auto-generation of REPLACE_CYPHERPUNKPAY_TO_MERCHANT_AUTH_TOKEN and REPLACE_MERCHANT_TO_CYPHERPUNK_AUTH_TOKEN and fix how keys are replaced (remove ... with REPLACE)
+
+* Add log level to user config
+
+* Consider next blockchain height being lower than current one
+  - should height be updated to lower?
+  - should charge confirmations should be updated to lower?
+  - should charge payment and business statuses be updated to lower?
+
+* Consider consensus forks
+
+* Centralize VERSION tag
+
+* Find way to remove cypherpunkpay/web/css/theme.css (removal breaks pyramid_jinja2)
+
+* Update bulma to these (css, css.map, min.css):
+  https://github.com/jgthms/bulma/tree/master/css
+
+* Maybe specify getcontext().prec = 18+18  # For example one ETH Wei is 10**-18
+  See: https://docs.python.org/2/library/decimal.html#decimal.localcontext

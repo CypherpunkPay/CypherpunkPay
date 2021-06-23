@@ -1,0 +1,63 @@
+{% extends "layout.jinja2" %}
+
+{% block content %}
+    <div id="dummystore">
+        <h1 class="title">
+            {% if order.cc_total %}
+                Order completed
+            {% else %}
+                Order
+            {% endif %}
+        </h1>
+        {% if order.cc_total %}
+            <div class="notification is-success is-light">
+                Thank you for your payment! We are shipping the goods.
+            </div>
+        {% else %}
+            <div class="notification is-light">
+                We are awaiting your payment.
+            </div>
+        {% endif %}
+        <div class="content" style="width: 400px;">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th class="has-text-right">Order&nbsp;ID</th>
+                        <td>{{ order.uid }}</td>
+                    </tr>
+                    <tr>
+                        <th class="has-text-right">Item</th>
+                        <td>{{ order.item['name'] }}</td>
+                    </tr>
+                    <tr>
+                        <th class="has-text-right">Total</th>
+                        <td>{{ view.formatted_currency_amount(order.total, order.item['currency']) }}</td>
+                    </tr>
+                    <tr>
+                        <th class="has-text-right">Status</th>
+                        {% if order.cc_total %}
+                            <td>Paid {{ view.formatted_currency_amount(order.cc_total, order.cc_currency) }}</td>
+                        {% else %}
+                            <td>unpaid</td>
+                        {% endif %}
+                    </tr>
+                </tbody>
+            </table>
+            <div class="columns">
+                <div class="column">
+                    <a href="{{ view.request.route_url('get_dummystore_root') }}" class="button is-outlined ">Back to Store Front</a>
+                </div>
+                {% if not order.cc_total %}
+                    <div class="column">
+                        <form action="{{ view.request.route_url('post_charge') }}" method="post">
+                            <input type="hidden" name="merchant_order_id" value="{{ order.uid }}"/>
+                            <input type="hidden" name="total" value="{{ order.total }}"/>
+                            <input type="hidden" name="currency" value="{{ order.currency }}"/>
+                            <button class="button is-success is-outlined">Pay with CypherpunkPay</button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

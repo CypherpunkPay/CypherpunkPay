@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale_name }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% if refresh %}
+        <meta http-equiv="refresh" content="{{ refresh }}">
+    {% endif %}
+
+    <link rel="stylesheet" href="{{ request.static_url('cypherpunkpay:web/css/bulma.min.css') }}">
+    <link rel="stylesheet" href="{{ request.static_url('cypherpunkpay:web/css/main.css') }}">
+    <link rel="shortcut icon" href="{{ request.static_url('cypherpunkpay:web/png/bitcoin.ico') }}">
+
+    <title>{{ title }}</title>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="level">
+        <nav class="navbar is-success level-item" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <p class="navbar-item has-text-weight-bold"><a class="has-text-white" href="{{ request.route_url('get_dummystore_root') }}">Dummy Store</a></p>
+                <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div id="navbarMenu" class="navbar-menu">
+                <div class="navbar-start">
+                </div>
+                <div class="navbar-end">
+                    <div class="navbar-item">
+                        <div class="buttons">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    {% block content %}
+        <p>No content</p>
+    {% endblock content %}
+</div>
+
+</body>
+</html>

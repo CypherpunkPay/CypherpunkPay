@@ -1,0 +1,103 @@
+{% extends "./layout_admin.jinja2" %}
+
+{% block content %}
+
+    <div class="level">
+        <div class="level-left content is-medium">
+            <div class="level-item">
+                <div class="notification" style="padding-right: 1.5em;">
+                    <strong class="has-text-primary">{{ cr.completed }}</strong> charges totaling <strong class="has-text-primary">{{ view.html_formatted_currency_amount(cr.completed_usd, 'usd', true) }}</strong> completed successfully
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="level">
+        <div class="level-item level-left">
+            <div id="charges">
+
+                {% if charges %}
+                    <table class="table">
+                        <thead class="has-background-white-ter">
+                            <tr>
+                                <th class="has-text-grey-darker">Date</th>
+                                <th class="has-text-grey-darker">CypherpunkPay charge ID /<br />Merchant order ID</th>
+                                <th class="has-text-grey-darker">Requested /<br />Received</th>
+                                <th class="has-text-grey-darker">Status</th>
+                                <th class="has-text-grey-darker">Tags</th>
+                                <th class="has-text-grey-darker">What to do?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for charge in charges %}
+                                <tr>
+                                    <td class="has-text-right">
+                                        <span class="is-size-7">
+                                            {{ charge.created_at.strftime("%Y-%m-%d&nbsp;%H:%M") | safe }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="is-size-7">
+                                            {% if charge.is_draft() %}
+                                                <span class="select-all">{{ charge.short_uid() }}</span>&nbsp;<a href="{{ request.route_url('get_charge_pick_coin', uid=charge.uid) }}" title="See the charge as user sees it." target="_blank">&nearr;</a>
+                                            {% else %}
+                                                <span class="select-all">{{ charge.short_uid() }}</span>&nbsp;<a href="{{ request.route_url('get_charge', uid=charge.uid, ux_type='auto') }}" title="See the charge as user sees it." target="_blank">&nearr;</a>
+                                            {% endif %}
+                                        </span>
+                                        <br />
+                                        <span class="is-size-7 has-text-grey-light">
+                                            {{ charge.merchant_order_id or 'no merchant order ID' }}
+                                        </span>
+                                    </td>
+                                    <td class="has-text-right">
+                                        {{ view.html_formatted_currency_amount(charge.total, charge.currency, select_amount=True) | safe }}
+                                        <br />
+                                        {% if charge.block_explorer_url() %}
+                                            <span class="is-size-7 has-text-grey-light" title="See address in external block explorer">(<a href="{{ charge.block_explorer_url() }}" target="_blank">expl&nearr;</a>)</span>
+                                        {% endif %}
+                                        {% if charge.is_draft() or charge.cc_received_total == 0 %}
+                                            <span class="has-text-grey-light">&mdash;</span>
+                                        {% else %}
+                                            {% if charge.is_fiat() %}
+                                                {{ view.html_formatted_currency_amount(charge.received_total_converted_to_fiat(), charge.currency, select_amount=True) | safe }}
+                                            {% else %}
+                                                {{ view.html_formatted_currency_amount(charge.cc_received_total, charge.cc_currency, select_amount=True) | safe }}
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if charge.is_completed() %}
+                                            <span class="tag is-success ">{{ charge.status | safe }}</span>
+                                        {% else %}
+                                            <span class="tag is-light">{{ charge.status | safe }}</span>
+                                        {% endif %}
+                                        {% if charge.status_fixed_manually %}
+                                            <span class="tag is-light">manual</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if charge.is_underpaid() %}
+                                            <span class="tag is-warning">- underpaid</span>
+                                        {% endif %}
+                                        {% if charge.is_overpaid() %}
+                                            <span class="tag is-warning">+ overpaid</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small>
+                                            {{ view.formatted_merchant_action(charge) | safe }}
+                                        </small>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p>
+                        There is no charges created just yet.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

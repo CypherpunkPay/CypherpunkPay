@@ -1,0 +1,17 @@
+{% extends "./layout_admin.jinja2" %}
+
+{% block content %}
+
+    <h1 class="title">All Time</h1>
+
+    {% with cr=cr_all_time %}
+        {% include 'partials/stats_charges.jinja2' %}
+    {% endwith %}
+
+    <h1 class="title">Last 7 Days</h1>
+
+    {% with cr=cr_7d %}
+        {% include 'partials/stats_charges.jinja2' %}
+    {% endwith %}
+
+{% endblock content %}

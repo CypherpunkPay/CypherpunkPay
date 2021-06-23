@@ -1,0 +1,23 @@
+<div class="level">
+    <div class="level-left content">
+        <div class="level-item">
+            <div class="notification" style="padding-right: 1.5em;">
+                <p>
+                    <strong class="has-text-primary">{{ cr.completed }}</strong> charges totaling <strong class="has-text-primary">{{ view.html_formatted_currency_amount(cr.completed_usd, 'usd', true) }}</strong> completed successfully.
+                </p>
+                <p>
+                    Processed <strong>{{ cr.final }}</strong> charges
+                    {%- if cr.final > 0: %}
+                        with <strong class="has-text-black">{{ cr.completed_percent }}%</strong> completed, <strong class="has-text-black">{{ cr.expired_percent }}%</strong> expired, <strong class="has-text-black">{{ cr.cancelled_percent }}%</strong> cancelled.
+                    {% endif %}
+                </p>
+                <p>
+                    Next <strong>{{ cr.awaiting }}</strong> charges are in progress
+{#                {%- if cr.awaiting > 0: %}#}
+{#                    of which <strong>{{ cr.awaiting_payment_percent }}%</strong> wait for payment and <strong>{{ cr.awaiting_confirmation_percent }}%</strong> wait for confirmations#}
+{#                {% endif %}#}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

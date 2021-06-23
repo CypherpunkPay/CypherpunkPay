@@ -1,0 +1,77 @@
+{% extends "layout.jinja2" %}
+
+{% block content %}
+    <div id="donate">
+
+        <div class="box">
+            <h1 class="title has-text-link-dark">
+                {{ title }}
+            </h1>
+
+            {% include "/web/html/partials/try_again_we_are_initializing.jinja2" %}
+
+            <div class="level">
+                <div class="level-left">
+                    <div class="level-item">
+                        <p>
+                            Pick {{ donations_fiat_currency.upper() }} amount to donate:
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="level">
+                <div class="level-left">
+                    {% for amount in donations_fiat_amounts -%}
+                        <form action="{{ view.request.route_url('post_charge') }}" method="post" class="level-item">
+                            <input type="hidden" name="total" value="{{ amount }}"/>
+                            <input type="hidden" name="currency" value="{{ donations_fiat_currency }}"/>
+                            <button class="button is-link is-outlined" style="width: 100%">{{ view.formatted_currency_amount(amount, donations_fiat_currency) }}</button>
+                        </form>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="level">
+                <div class="level-left">
+                    <div class="level-item">
+                            Or enter your preferred amount and currency:
+                    </div>
+                </div>
+            </div>
+
+            {% if errors -%}
+            <div class="level">
+                <div class="level-left">
+                    <div class="level-item has-text-danger-dark">
+                        {{ ' '.join(errors.values()) }}
+                    </div>
+                </div>
+            </div>
+            {% endif -%}
+
+            <form action="{{ view.request.route_url('post_charge') }}" method="post">
+                    <div class="field is-grouped">
+                        <p class="control">
+                            <input type="text" name="total" value="" class="input is-link has-text-right {{ 'is-danger' if 'total' in errors }}" placeholder="50" style="width: 8em;"/>
+                        </p>
+                        <p class="control select is-link {{ 'is-danger' if 'currency' in errors }}">
+                            <select name="currency" class="small">
+                                {% for currency in view.top_supported_fiats() %}
+                                    <option value="{{ currency }}" {{ 'selected' if currency.casefold() == donations_fiat_currency.casefold() }}>{{ currency.upper() }}</option>
+                                {% endfor %}
+                                <option disabled>&mdash;&mdash;</option>
+                                {% for currency in view.bottom_supported_fiats() %}
+                                    <option value="{{ currency }}" {{ 'selected' if currency.casefold() == donations_fiat_currency.casefold() }}>{{ currency.upper() }}</option>
+                                {% endfor %}
+                            </select>
+                        </p>
+                        <p class="control">
+                            <button class="button is-link">Donate</button>
+                        </p>
+                    </div>
+            </form>
+
+        </div>
+    </div>
+{% endblock content %}

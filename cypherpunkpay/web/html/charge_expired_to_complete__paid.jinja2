@@ -1,0 +1,24 @@
+{% extends "layout.jinja2" %}
+
+{% block content%}
+    <div id="charge" class="box">
+        <h1 class="title has-text-link-dark">
+            Charge expired!
+        </h1>
+        <div class="content">
+            <p>
+                We did notice your incoming payment of {{ view.formatted_currency_amount(charge.cc_received_total, charge.cc_currency, select_amount=True) | safe }}.
+            </p>
+            <p>
+                However, it <strong>failed to confirm</strong> by the network within the time window expected by the merchant.
+            </p>
+            <p>
+                Contact the merchant for manual resolution.
+            </p>
+            {% include 'partials/charge_reference_id.jinja2' %}
+            {% with button_label = 'Back' %}
+                {% include 'partials/exit_charge.jinja2' %}
+            {% endwith %}
+        </div>
+    </div>
+{% endblock content %}

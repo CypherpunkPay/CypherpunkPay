@@ -1,0 +1,6 @@
+<p>
+    Send
+    <code class="is-bold has-text-link-dark">{{ view.formatted_currency_amount(charge.cc_remaining_total(), charge.cc_currency, select_amount=True) | safe }}</code>
+    to address:
+</p>
+<p><code class="select-all has-text-link-dark break-code-word">{{ charge.cc_address }}</code></p>

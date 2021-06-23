@@ -1,0 +1,18 @@
+{% extends "layout.jinja2" %}
+
+{% block content%}
+    <div id="charge" class="box">
+        {% include 'partials/charge_pay_amount.jinja2' %}
+        {% include 'partials/charge_menu.jinja2' %}
+        <div class="content">
+            <p>
+                Awaiting payment...
+            </p>
+            {% include 'partials/charge_auto_time_to_complete.jinja2' %}
+            {% include 'partials/charge_auto_qrcode.jinja2' %}
+        </div>
+        {% with button_label = 'Cancel Payment' %}
+            {% include 'partials/exit_charge.jinja2' %}
+        {% endwith %}
+    </div>
+{% endblock content %}

@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "cypherpunkpay"
+version = "1.0.1"
+description = "Modern self-hosted software for accepting Bitcoin on clearnet and onion websites."
+homepage = "https://cypherpunkpay.org/"
+authors = ["cypherpunkdev"]
+license = "Unlicense OR MIT"
+
+[tool.poetry.dependencies]
+python = "^3.6"
+pyramid = "^2.0"
+pyramid-jinja2 = "^2.8"
+waitress = "^2.0.0"
+PyQRCode = "^1.2.1"
+pypng = "^0.0.20"
+ecdsa = "^0.17.0"
+APScheduler = "^3.7.0"
+requests = "^2.25.1"
+PySocks = "^1.7.1"
+yoyo-migrations = "^7.3.2"
+monero = "^0.8.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+pytest-cov = "^2.12.1"
+pysftp = "^0.2.9"
+WebTest = "^2.0.35"
+
+[tool.poetry.plugins] # Optional super table
+[tool.poetry.plugins."paste.app_factory"]
+main = "cypherpunkpay:main"
+
+[tool.poetry.scripts]
+cypherpunkpay = "cypherpunkpay.cypherpunkpay:main"
+cypherpunkpay-write-example-testnet-xpub-to-conf = "cypherpunkpay.write_example_testnet_xpub_to_conf:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

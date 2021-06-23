@@ -1,0 +1,3 @@
+The files were *not* simply dropped in AS-IS.
+
+The files were *modified* in order to minimize the number of things we import from the Electrum project.

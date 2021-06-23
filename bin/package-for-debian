@@ -1,0 +1,31 @@
+#!/bin/bash
+
+cleanup () {
+    echo "Cleaning up..."
+    rm --force ../cypherpunkpay-dbgsym*
+    rm -rf build
+    rm -rf debian/.debhelper
+    rm -rf debian/cypherpunkpay
+    rm -rf debian/debhelper-build-stamp
+    rm -rf debian/files
+    rm -rf debian/cypherpunkpay.debhelper.log
+    rm -rf debian/cypherpunkpay.postinst.debhelper
+    rm -rf debian/cypherpunkpay.prerm.debhelper
+    rm -rf debian/cypherpunkpay.postrm.debhelper
+    rm -rf debian/cypherpunkpay.substvars
+    rm -rf debian/etc
+}
+
+cleanup
+
+mkdir -p debian/etc
+cp cypherpunkpay/config/cypherpunkpay_defaults.conf debian/etc/cypherpunkpay.conf
+
+dpkg-buildpackage -us -uc -b
+
+mkdir -p ./dist/debian
+mv ../cypherpunkpay_1.* ./dist/debian/ 2>/dev/null
+rm --force ../cypherpunkpay-dbgsym*
+
+# Uncomment this to debug process artefacts
+cleanup

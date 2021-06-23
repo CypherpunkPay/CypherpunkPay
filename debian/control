@@ -1,0 +1,16 @@
+Source: cypherpunkpay
+Section: contrib/misc
+Priority: optional
+Maintainer: cypherpunkdev <null@null.null>
+Build-Depends: debhelper (>= 9), python3, dh-virtualenv (>= 1.0),
+    python3-setuptools, python3-pip, python3-dev, libffi-dev
+Standards-Version: 3.9.5
+
+Package: cypherpunkpay
+Architecture: any
+Pre-Depends: dpkg (>= 1.16.1), python3 (>= 3.6), ${misc:Pre-Depends}
+Depends: tor ${python3:Depends}, ${misc:Depends}
+Description: Self-hosted software for accepting Bitcoin on clearnet and onion websites.
+ CypherpunkPay is a modern self-hosted software for accepting Bitcoin on clearnet and onion websites.
+ Use cases range from donations to anonymous organizations.
+ CypherpunkPay prioritizes privacy and simplicity.

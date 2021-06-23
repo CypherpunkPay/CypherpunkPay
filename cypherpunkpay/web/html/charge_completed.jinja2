@@ -1,0 +1,28 @@
+{% extends "layout.jinja2" %}
+
+{% block content%}
+    <div id="charge" class="box">
+        <h1 class="title has-text-link-dark">
+            Payment completed
+        </h1>
+        <div class="content">
+            <p>
+                Thank you for your payment!
+            </p>
+            <p>
+                We received {{ view.formatted_currency_amount(charge.cc_received_total, charge.cc_currency, select_amount=True) | safe }}.
+            </p>
+            {% include 'partials/charge_reference_id.jinja2' %}
+            <p>
+                {% if charge.is_donation() %}
+                    {% set button_label = 'Back to Donations' %}
+                {% else %}
+                    {% set button_label = 'Back to Merchant' %}
+                {% endif %}
+                {% if view.exit_url(charge) %}
+                    <a href="{{ view.exit_url(charge) }}" class="button is-link is-outlined">{{ button_label }}</a>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,3 @@
+<h1 class="title select-none has-text-link-dark">
+    Pay {{ view.formatted_currency_amount(charge.cc_remaining_total(), charge.cc_currency, select_amount=True) | safe }}
+</h1>

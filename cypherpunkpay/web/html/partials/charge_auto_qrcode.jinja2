@@ -1,0 +1,7 @@
+<p>
+    <a href="{{ charge.payment_uri() }}">Click to open your wallet</a>
+    or scan the QR code:
+</p>
+<div class="has-text-centered">
+    <img src="data:image/png;base64,{{ charge.cached_qr_code_base64() }}" />
+</div>

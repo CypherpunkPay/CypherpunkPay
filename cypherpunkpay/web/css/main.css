@@ -1,0 +1,65 @@
+.select-all {
+  user-select: all;
+  -moz-user-select: all;
+  -webkit-user-select: all;
+  -ms-user-select: all;
+}
+
+.select-none {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+.break-code-word {
+  overflow-wrap: break-word;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+/*
+  Fix tabs insde .hero.is-white element by replacing broken .hero.is-white with ours .hero.is-white-cypherpunkpay.
+ */
+.hero.is-white-cypherpunkpay {
+  background-color: white;
+  color: #0a0a0a;
+}
+.hero.is-white-cypherpunkpay.is-bold {
+  background-image: linear-gradient(141deg, #e6e6e6 0%, white 71%, white 100%);
+}
+
+/*
+  Fix tabs inside .hero element.
+ */
+#charge .tabs ul {
+  border-bottom-color: #dbdbdb;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+}
+
+/*
+  Ensure full responsivness for the manual / cryptocurrency address. Otherwise .hero-body won't downsize the width.
+  The drawback is that content is no longer centered vertically. Instead, it is at the top.
+*/
+.hero.is-halfheight .hero-body, .hero.is-fullheight .hero-body, .hero.is-fullheight-with-navbar .hero-body {
+  display: block;
+  /*display: flex;*/
+}
+
+.testnet {
+    background-image:url(../png/testnet.png);
+    background-repeat:space;
+}
+.stagenet {
+    background-image:url(../png/stagenet.png);
+    background-repeat:space;
+}

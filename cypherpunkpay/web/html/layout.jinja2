@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale_name }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% if refresh -%}
+        <meta http-equiv="refresh" content="{{ refresh }}">
+    {% endif -%}
+    <link rel="stylesheet" href="{{ request.static_url('cypherpunkpay:web/css/bulma.min.css') }}">
+    <link rel="stylesheet" href="{{ request.static_url('cypherpunkpay:web/css/main.css') }}">
+    <link rel="shortcut icon" href="{{ request.static_url('cypherpunkpay:web/png/bitcoin.ico') }}">
+    <script src="{{ request.static_url('cypherpunkpay:web/js/charge.js') }}"></script>
+    <title>{{ title }} | CypherpunkPay</title>
+</head>
+<body data-state-hash="{{ charge.state_hash_for_ui() }}">
+
+<section class="hero is-white-cypherpunkpay is-fullheight is-bold">
+    <div class="hero-body {{ view.background_coin_network_css_class(charge.cc_currency) }}">
+        <div class="container" style="max-width: 640px;">
+            {% block content %}
+                <p>No content</p>
+            {% endblock content %}
+        </div>
+    </div>
+    <div class="hero-foot">
+        {% include 'partials/powered_by_footer.jinja2' %}
+    </div>
+</section>
+
+</body>
+</html>

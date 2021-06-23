@@ -1,0 +1,23 @@
+{% extends "layout.jinja2" %}
+
+{% block content%}
+    <div id="charge" class="box">
+        <h1 class="title has-text-link-dark">
+            Charge expired!
+        </h1>
+        <div class="content">
+            <p>
+                If you have sent your transaction right before the expiry, it will be recognized.
+                Please <a href="{{ request.route_url('get_charge', uid=charge.uid, ux_type='manual') }}" class="is-link">refresh</a> a few times.
+            </p>
+            <p>
+                If you have not sent the transaction,
+                go back to your merchant and start the payment process over.
+            </p>
+            {% include 'partials/charge_reference_id.jinja2' %}
+            {% with button_label = 'Back' %}
+                {% include 'partials/exit_charge.jinja2' %}
+            {% endwith %}
+        </div>
+    </div>
+{% endblock content %}

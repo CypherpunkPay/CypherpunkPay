@@ -1,0 +1,18 @@
+opt/venvs/cypherpunkpay/bin/cypherpunkpay usr/bin/cypherpunkpay
+opt/venvs/cypherpunkpay/bin/cypherpunkpay-write-example-testnet-xpub-to-conf usr/bin/cypherpunkpay-write-example-testnet-xpub-to-conf
+
+# [ Dirty hack to avoid building for every Python separately ]
+
+opt/venvs/cypherpunkpay/lib/python3.7 opt/venvs/cypherpunkpay/lib/python3.6
+opt/venvs/cypherpunkpay/lib/python3.7 opt/venvs/cypherpunkpay/lib/python3.8
+opt/venvs/cypherpunkpay/lib/python3.7 opt/venvs/cypherpunkpay/lib/python3.9
+
+# We create *.so for all Python versions by symlinking to specific .so
+opt/venvs/cypherpunkpay/lib/python3.7/site-packages/_pysha3.cpython-37m-x86_64-linux-gnu.so opt/venvs/cypherpunkpay/lib/python3.7/site-packages/_pysha3.cpython-36m-x86_64-linux-gnu.so
+opt/venvs/cypherpunkpay/lib/python3.7/site-packages/_pysha3.cpython-37m-x86_64-linux-gnu.so opt/venvs/cypherpunkpay/lib/python3.7/site-packages/_pysha3.cpython-36-x86_64-linux-gnu.so
+opt/venvs/cypherpunkpay/lib/python3.7/site-packages/_pysha3.cpython-37m-x86_64-linux-gnu.so opt/venvs/cypherpunkpay/lib/python3.7/site-packages/_pysha3.cpython-38m-x86_64-linux-gnu.so
+opt/venvs/cypherpunkpay/lib/python3.7/site-packages/_pysha3.cpython-37m-x86_64-linux-gnu.so opt/venvs/cypherpunkpay/lib/python3.7/site-packages/_pysha3.cpython-38-x86_64-linux-gnu.so
+opt/venvs/cypherpunkpay/lib/python3.7/site-packages/_pysha3.cpython-37m-x86_64-linux-gnu.so opt/venvs/cypherpunkpay/lib/python3.7/site-packages/_pysha3.cpython-39m-x86_64-linux-gnu.so
+opt/venvs/cypherpunkpay/lib/python3.7/site-packages/_pysha3.cpython-37m-x86_64-linux-gnu.so opt/venvs/cypherpunkpay/lib/python3.7/site-packages/_pysha3.cpython-39-x86_64-linux-gnu.so
+
+# [/ Dirty hack ]
