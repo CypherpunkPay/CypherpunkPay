@@ -10,6 +10,6 @@ adduser --quiet --system --group --home /var/lib/cypherpunkpay cypherpunkpay
 mkdir -p /var/lib/cypherpunkpay/needs-backup /var/lib/cypherpunkpay/can-discard
 chown -R cypherpunkpay:cypherpunkpay /var/lib/cypherpunkpay
 
-cypherpunkpay-write-example-testnet-xpub-to-conf
+interpolate-cypherpunkpay-conf-on-first-install
 
 exit 0

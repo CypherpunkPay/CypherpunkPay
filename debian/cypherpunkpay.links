@@ -1,5 +1,5 @@
 opt/venvs/cypherpunkpay/bin/cypherpunkpay usr/bin/cypherpunkpay
-opt/venvs/cypherpunkpay/bin/cypherpunkpay-write-example-testnet-xpub-to-conf usr/bin/cypherpunkpay-write-example-testnet-xpub-to-conf
+opt/venvs/cypherpunkpay/bin/interpolate-cypherpunkpay-conf-on-first-install usr/bin/interpolate-cypherpunkpay-conf-on-first-install
 
 # [ Dirty hack to avoid building for every Python separately ]
 

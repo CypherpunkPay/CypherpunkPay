@@ -32,7 +32,7 @@ main = "cypherpunkpay:main"
 
 [tool.poetry.scripts]
 cypherpunkpay = "cypherpunkpay.cypherpunkpay:main"
-cypherpunkpay-write-example-testnet-xpub-to-conf = "cypherpunkpay.write_example_testnet_xpub_to_conf:main"
+interpolate-cypherpunkpay-conf-on-first-install = "cypherpunkpay.interpolate_cypherpunkpay_conf_on_first_install:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

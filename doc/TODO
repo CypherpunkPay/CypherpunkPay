@@ -11,8 +11,6 @@
 
 * Add time exponential randomized skipping of (unsuccessful) callbacks
 
-* Add auto-generation of REPLACE_CYPHERPUNKPAY_TO_MERCHANT_AUTH_TOKEN and REPLACE_MERCHANT_TO_CYPHERPUNK_AUTH_TOKEN and fix how keys are replaced (remove ... with REPLACE)
-
 * Add log level to user config
 
 * Consider next blockchain height being lower than current one
