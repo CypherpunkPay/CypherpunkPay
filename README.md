@@ -12,31 +12,55 @@ All docs are available on the [official website](https://cypherpunkpay.org/) ([T
 
 ## Docs for contributors
 
-Development prerequisites:
+### Prerequisites for development
 
 * Linux
 * Python 3.7.3+
+
+### Developer setup
 
 After cloning this repo, review and run:
 
 `bin/dev-setup`
 
-To run the app in development environment:
+This will update pip, install poetry and then use poetry to install dependencies.
+
+### Running app in dev env
+
+To run the app in development environment, start the server:
 
 `bin/dev-server`
+
+...then go to http://127.0.0.1:6543/
+
+Admin panel:
+http://127.0.0.1:6543/cypherpunkpay/admin/eeec6kyl2rqhys72b6encxxrte/
+
+Dummy store:
+http://127.0.0.1:6543/cypherpunkpay/dummystore/
+
+### Running tests
 
 To run the unit tests:
 
 `bin/test-unit`
 
-To run the full tests you need unpruned and synced-up bitcoind running on testnet with default settings. Then:
+To run the full test suite you need **unpruned and synced-up bitcoind running on testnet** with default settings.
+Then:
 
 `bin/test`
 
+The database for tests is separate from development and gets reset on each test run.
+
+### Resetting dev database
+
+Just remove database file:
+
+`rm /tmp/cypherpunkpay-dev.sqlite3`
 
 ## Public domain
 
-CypherpunkPay is "dual-licensed" under Unlicense OR MIT.
+CypherpunkPay is "dual-licensed" under **Unlicense** OR **MIT**.
 The Unlicense attempts to explicitly put CypherpunkPay in the public domain,
 while MIT is an alternative or fallback if you want it for legal reasons.
 
