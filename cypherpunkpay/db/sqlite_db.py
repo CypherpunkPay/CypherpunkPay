@@ -162,9 +162,9 @@ class SqliteDB(DB):
     def reload(self, obj: [User, Charge]) -> [User, Charge]:
         with self.lock:
             if isinstance(obj, User):
-                self.get_user_by_id(obj.id, update_me=obj)
+                return self.get_user_by_id(obj.id, update_me=obj)
             if isinstance(obj, Charge):
-                self.get_charge_by_uid(obj.uid, update_me=obj)
+                return self.get_charge_by_uid(obj.uid, update_me=obj)
 
     # -- Charges ------------------------------------------------------------------------------------------------------
 

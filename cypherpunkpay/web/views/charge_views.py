@@ -1,4 +1,5 @@
 import json
+import logging as log
 
 from pyramid.response import Response
 from pyramid.view import (view_config)
@@ -8,6 +9,7 @@ from cypherpunkpay.app import App
 from cypherpunkpay.models.charge import Charge
 
 from cypherpunkpay.prices.price_tickers import PriceTickers
+from cypherpunkpay.usecases.cancel_charge_uc import CancelChargeUC
 from cypherpunkpay.usecases.create_charge_uc import CreateChargeUC
 from cypherpunkpay.usecases.invalid_params import InvalidParams
 from cypherpunkpay.usecases.pick_cryptocurrency_for_charge_uc import PickCryptocurrencyForChargeUC
@@ -73,6 +75,16 @@ class ChargeViews(BaseView):
             location = self.request.route_url('get_charge_pick_coin', uid=charge.uid, _query={'wait_a_sec': 'true'})
             return HTTPFound(location=location)  # HTTPServiceUnavailable()
         location = self.request.route_url('get_charge', uid=charge.uid, ux_type='auto')
+        return HTTPFound(location=location)
+
+    @view_config(route_name='post_charge_cancel')
+    def post_charge_cancel(self):
+        uid = self.request.matchdict['uid']
+        charge = App().db().get_charge_by_uid(uid)
+        if not charge:
+            raise HTTPNotFound()
+        CancelChargeUC(charge=charge).exec()
+        location = self.exit_url(charge)
         return HTTPFound(location=location)
 
     def per_status_renderer(self, type, charge: Charge):

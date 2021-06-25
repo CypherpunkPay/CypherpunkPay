@@ -210,6 +210,19 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
 
         self.assertNotEqual(hash_after, hash_before)
 
+    def test_cancel_charge(self):
+        # POST charge
+        res = self.webapp.post('/cypherpunkpay/charge', dict(total='0.1', currency='btc'))
+        charge = App().db().get_last_charge()
+
+        # Cancel charge
+        res = self.webapp.post(f'/cypherpunkpay/charge/{charge.uid}/cancel')
+        charge = App().db().reload(charge)
+
+        donations_url = res.location
+        self.assertTrue('/cypherpunkpay/donations' in res.location)
+        self.assertEqual('cancelled', charge.status)
+
     def assertRedirectsToDonationsWithErrorOn(self, res, error_field_name: str):
         donations_url = res.location
         self.assertTrue('/cypherpunkpay/donations' in res.location)

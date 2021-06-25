@@ -93,6 +93,7 @@ def routing_config(pyramid):
     pyramid.add_route('post_charge', '/charge', request_method='POST')
     pyramid.add_route('get_charge_pick_coin', '/charge/{uid}/pick_coin', request_method='GET')
     pyramid.add_route('post_charge_pick_coin', '/charge/{uid}/pick_coin', request_method='POST')
+    pyramid.add_route('post_charge_cancel', '/charge/{uid}/cancel', request_method='POST')
     pyramid.add_route('get_charge_state_hash', '/charge/{uid}/state_hash', request_method='GET')
     pyramid.add_route('get_charge', '/charge/{uid}/{ux_type}', request_method='GET')
     pyramid.add_route('get_charge_root', '/charge/{uid}', request_method='GET')

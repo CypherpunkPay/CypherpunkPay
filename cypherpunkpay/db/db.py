@@ -41,7 +41,7 @@ class DB(ABC):
         ...
 
     @abstractmethod
-    def reload(self, obj: [User, Charge]):
+    def reload(self, obj: [User, Charge]) -> [User, Charge]:
         ...
 
     # -- Charges ------------------------------------------------------------------------------------------------------
