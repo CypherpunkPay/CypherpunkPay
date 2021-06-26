@@ -1,11 +1,20 @@
 
+* Research viability of adding LN payments support by becoming a mere fronted to externally managed LN node
+  Is this scenario technically viable?
+  - Power user would manage her LN node outside of CypherpunkPay
+  - User's LN node would have a separate wallet from the one used with on-chain CypherpunkPay
+  - CypherpunkPay would **not** attempt to wrap LN infrastructure complexity
+  - CypherpunkPay would only offer the frontend for accepting LN payments
+  - Under the hood CypherpunkPay would call LN node API to
+    - verify if accepting amount is possible (channels open and enough inbound capacity available)
+    - create payment request
+    - learn about incoming LN payment
+
 * BUG: charge_expired_to_complete__paid.jinja2 - no support for expired + confirmed + underpaid
   - underpaid and expired to pay is mistakenly presented as "we noticed your payment but it failed to confirm" while it should stress underpayment
 
 * BUG: should validate total is not smaller than 10**-8 (because that is our assumed db precision)
   test case: 0.01 Won paid in BTC is below 1 satoshi and blows this: assert self.cc_total
-
-* BUG: [Cancel Payment] button should actually make request to cancel the payment
 
 * BUG: favicon.ico is not cached and always fetched (200 instead of 304)
 
@@ -21,8 +30,6 @@
 * Consider consensus forks
 
 * Centralize VERSION tag
-
-* Find way to remove cypherpunkpay/web/css/theme.css (removal breaks pyramid_jinja2)
 
 * Update bulma to these (css, css.map, min.css):
   https://github.com/jgthms/bulma/tree/master/css
