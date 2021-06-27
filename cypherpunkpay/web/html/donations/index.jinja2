@@ -32,46 +32,50 @@
                 </div>
             </div>
 
-            <div class="level">
-                <div class="level-left">
-                    <div class="level-item">
-                            Or enter your preferred amount and currency:
+            <details style="border: 0;" {{ 'open' if errors }}>
+                <summary class="has-text-link-dark" style="cursor: pointer; width: max-content;">Customize</summary>
+
+                <div class="level" style="margin-top: 18px;">
+                    <div class="level-left">
+                        <div class="level-item">
+                            Enter your preferred amount and currency:
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {% if errors -%}
-            <div class="level">
-                <div class="level-left">
-                    <div class="level-item has-text-danger-dark">
-                        {{ ' '.join(errors.values()) }}
+                {% if errors -%}
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item has-text-danger-dark">
+                            {{ ' '.join(errors.values()) }}
+                        </div>
                     </div>
                 </div>
-            </div>
-            {% endif -%}
+                {% endif -%}
 
-            <form action="{{ view.request.route_url('post_charge') }}" method="post">
-                    <div class="field is-grouped">
-                        <p class="control">
-                            <input type="text" name="total" value="" class="input is-link has-text-right {{ 'is-danger' if 'total' in errors }}" placeholder="50" style="width: 8em;"/>
-                        </p>
-                        <p class="control select is-link {{ 'is-danger' if 'currency' in errors }}">
-                            <select name="currency" class="small">
-                                {% for currency in view.top_supported_fiats() %}
-                                    <option value="{{ currency }}" {{ 'selected' if currency.casefold() == donations_fiat_currency.casefold() }}>{{ currency.upper() }}</option>
-                                {% endfor %}
-                                <option disabled>&mdash;&mdash;</option>
-                                {% for currency in view.bottom_supported_fiats() %}
-                                    <option value="{{ currency }}" {{ 'selected' if currency.casefold() == donations_fiat_currency.casefold() }}>{{ currency.upper() }}</option>
-                                {% endfor %}
-                            </select>
-                        </p>
-                        <p class="control">
-                            <button class="button is-link">Donate</button>
-                        </p>
-                    </div>
-            </form>
+                <form action="{{ view.request.route_url('post_charge') }}" method="post">
+                        <div class="field is-grouped">
+                            <p class="control">
+                                <input type="text" name="total" value="" class="input is-link has-text-right {{ 'is-danger' if 'total' in errors }}" placeholder="50" style="width: 8em;"/>
+                            </p>
+                            <p class="control select is-link {{ 'is-danger' if 'currency' in errors }}">
+                                <select name="currency" class="small">
+                                    {% for currency in view.top_supported_fiats() %}
+                                        <option value="{{ currency }}" {{ 'selected' if currency.casefold() == donations_fiat_currency.casefold() }}>{{ currency.upper() }}</option>
+                                    {% endfor %}
+                                    <option disabled>&mdash;&mdash;</option>
+                                    {% for currency in view.bottom_supported_fiats() %}
+                                        <option value="{{ currency }}" {{ 'selected' if currency.casefold() == donations_fiat_currency.casefold() }}>{{ currency.upper() }}</option>
+                                    {% endfor %}
+                                </select>
+                            </p>
+                            <p class="control">
+                                <button class="button is-link">Donate</button>
+                            </p>
+                        </div>
+                </form>
 
+            </details>
         </div>
     </div>
 {% endblock content %}
