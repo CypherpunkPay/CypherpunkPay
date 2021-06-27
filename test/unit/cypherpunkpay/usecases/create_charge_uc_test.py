@@ -20,6 +20,12 @@ class CreateChargeUCTest(CypherpunkpayDBTestCase):
         self.assertErrorOn('-1', 'usd', error='total')
         self.assertErrorOn('0', 'usd', error='total')
 
+        # Sub-penny fiat amounts disallowed
+        self.assertErrorOn('0.009', 'chf', error='total')
+        # Sub-satoshi for any cryptocurrency disallowed due to database precision of 8 decimal points
+        self.assertErrorOn('0.0000000099', 'btc', error='total')
+        self.assertErrorOn('0.0000000099', 'xmr', error='total')
+
     def test_invalid_currency(self):
         self.assertErrorOn('1', '', error='currency')
         self.assertErrorOn('1', 'bcash', error='currency')

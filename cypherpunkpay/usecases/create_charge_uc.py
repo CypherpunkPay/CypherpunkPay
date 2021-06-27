@@ -80,25 +80,33 @@ class CreateChargeUC(BaseChargeUC):
             if self.currency in self.config.configured_coins():
                 return {}  # OK
             else:
-                return {'currency': f"No wallet configured for {self.config.cc_network(self.currency)} {self.currency}"}
-        return {'currency': f"Unsupported currency"}
+                return {'currency': f'No wallet configured for {self.config.cc_network(self.currency)} {self.currency}'}
+        return {'currency': f'Unsupported currency'}
 
     def validate_total(self) -> Dict[str, str]:
         if self.total is None:
-            return {'total': "Amount cannot be empty"}
+            return {'total': 'Amount cannot be empty'}
         if isinstance(self.total, str):
             try:
                 self.total = Decimal(self.total)
             except Exception:
-                return {'total': f"Invalid amount"}
+                return {'total': f'Invalid amount'}
         if isinstance(self.total, int):
             self.total = Decimal(self.total)
         if self.total <= 0:
-            return {'total': "Amount must be positive"}
+            return {'total': 'Amount must be positive'}
+        if self.currency in self.config.supported_fiats():
+            if self.total < Decimal('0.01'):
+                # Sub-penny fiat amounts disallowed
+                return {'total': 'Amount too small'}
+        if self.currency in self.config.supported_coins():
+            if self.total < Decimal('0.00000001'):
+                # Sub-satoshi for any cryptocurrency disallowed due to database precision of 8 decimal points
+                return {'total': 'Amount too small'}
         if self.total >= 92_233_720_369:
             # sqlite3 INTEGER is 8 bytes (including sign)
             # we use 8 digits (10**8) represent decimal part
             # that leaves us with
             # (2^63)/(10**8) = 92_233_720_369
-            return {'total': "Amount too large"}
+            return {'total': 'Amount too large'}
         return {}
