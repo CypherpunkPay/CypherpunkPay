@@ -20,8 +20,7 @@ class MockHttpClient(DummyHttpClient):
 
     counter: int = 0
 
-    def post(self, url, privacy_context, headers: dict = None, body: dict = None, set_tor_browser_headers: bool = True):
-        print(body)
+    def post(self, url, privacy_context, headers: dict = None, body: dict = None, set_tor_browser_headers: bool = True, verify=None):
         self.counter += 1
         return MockHttpClient.Response()
 

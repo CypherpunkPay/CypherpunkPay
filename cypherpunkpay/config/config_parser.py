@@ -92,6 +92,8 @@ class ConfigParser(object):
             **cfg['tor'],
             **cfg['expert']
         }
+        if cfg.has_section('lightning-network'):
+            partially_collapsed = { **partially_collapsed, **cfg['lightning-network'] }
         if cfg.has_section('dummystore'):
             partially_collapsed = { **partially_collapsed, **cfg['dummystore'] }
         partially_collapsed['server'] = cfg['server']

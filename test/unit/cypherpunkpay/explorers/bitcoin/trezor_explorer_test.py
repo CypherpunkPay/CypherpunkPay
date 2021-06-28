@@ -11,7 +11,7 @@ class StubHttpClient(DummyHttpClient):
     def __init__(self, response_filename: str):
         self.response_filename = response_filename
 
-    def get_text_or_None_on_error(self, url: str, privacy_context: str) -> [str, None]:
+    def get_text_or_None_on_error(self, url: str, privacy_context: str, verify=None) -> [str, None]:
         if self.response_filename is None:
             return None
         return Path(f"{CypherpunkpayTestCase.examples_dir(__file__)}/trezor/{self.response_filename}").read_text()

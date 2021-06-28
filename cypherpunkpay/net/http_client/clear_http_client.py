@@ -14,10 +14,10 @@ class ClearHttpClient(BaseHttpClient):
     def __exit__(self, *args):
         self.session.close()
 
-    def get(self, url, privacy_context):
-        return self.session.get(url, headers=BaseHttpClient.TOR_BROWSER_HEADERS, timeout=BaseHttpClient.DEFAULT_TIMEOUT)
+    def get(self, url, privacy_context, verify=None):
+        return self.session.get(url, headers=BaseHttpClient.TOR_BROWSER_HEADERS, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
 
-    def post(self, url, privacy_context, headers: dict = None, body: str = None, set_tor_browser_headers: bool = True):
+    def post(self, url, privacy_context, headers: dict = None, body: str = None, set_tor_browser_headers: bool = True, verify=None):
         if set_tor_browser_headers:
             combined_headers = {
                 **BaseHttpClient.TOR_BROWSER_HEADERS,
@@ -26,4 +26,4 @@ class ClearHttpClient(BaseHttpClient):
         else:
             combined_headers = headers or {}
         body = body or ''
-        return self.session.post(url, headers=combined_headers, data=body, timeout=BaseHttpClient.DEFAULT_TIMEOUT)
+        return self.session.post(url, headers=combined_headers, data=body, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)

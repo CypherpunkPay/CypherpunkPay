@@ -27,6 +27,7 @@ class Charge:
     cc_total: [Decimal, None] = None
     cc_currency: [str, None] = None
     cc_address: [str, None] = None
+    cc_lightning_payment_request: [str, None] = None
     cc_price: [Decimal, None] = None
 
     # expressed in USD for statistics purposes (transacted USD equivalent to be known regardless of specific coin and fiat selected)
@@ -90,10 +91,17 @@ class Charge:
         self._qr_cache = qr_cache if qr_cache else {}
 
     def payment_uri(self) -> str:
-        return CryptocurrencyPaymentUri.get(self.cc_currency, self.cc_address, amount=self.cc_remaining_total())
+        if self.is_lightning():
+            return f'lightning:{self.cc_lightning_payment_request}'
+        else:
+            return CryptocurrencyPaymentUri.get(self.cc_currency, self.cc_address, amount=self.cc_remaining_total())
 
     def qr_code(self):
-        qrcode = pyqrcode.create(self.payment_uri(), error='L')
+        if self.is_lightning():
+            payload = self.cc_lightning_payment_request
+        else:
+            payload = self.payment_uri()
+        qrcode = pyqrcode.create(payload, error='L')
         buffer = io.BytesIO()
         qrcode.png(buffer, scale=8)
         return buffer.getvalue()
@@ -208,6 +216,9 @@ class Charge:
     def is_donation(self):
         return self.merchant_order_id is None
 
+    def is_lightning(self):
+        return self.cc_lightning_payment_request is not None
+
     def received_total_converted_to_fiat(self):
         assert self.is_fiat()
         assert not self.is_draft()  # drafts don't have cc_currency known
@@ -221,9 +232,9 @@ class Charge:
 
     def advance_to_awaiting(self):
         assert self.is_draft() or self.is_awaiting()
-        assert self.cc_address
         assert self.cc_total
         assert self.cc_currency
+        assert self.cc_address or self.cc_lightning_payment_request
         if self.is_draft():
             log.info(f'Charge {self.short_uid()} status {self.status} -> awaiting')
             self.activated_at = utc_now()

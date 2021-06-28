@@ -13,19 +13,19 @@ class TorHttpClient(BaseHttpClient):
         from cypherpunkpay.app import App
         self._tor_circuits = tor_circuits if tor_circuits else App().tor_circuits()
 
-    def get(self, url: str, privacy_context: str):
+    def get(self, url: str, privacy_context: str, verify=None):
         if is_local_network(url):
             privacy_context = 'local_network'
         if privacy_context == BaseTorCircuits.SHARED_CIRCUIT_ID:
             privacy_context = get_domain_or_ip(url)
         session = self._tor_circuits.get_for(privacy_context)
         try:
-            return session.get(url, headers=self.TOR_BROWSER_HEADERS, timeout=BaseHttpClient.DEFAULT_TIMEOUT)
+            return session.get(url, headers=self.TOR_BROWSER_HEADERS, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
         except requests.exceptions.RequestException as e:
             self._tor_circuits.mark_as_broken(privacy_context)
             raise e
 
-    def post(self, url: str, privacy_context: str, headers: dict = None, body: str = None, set_tor_browser_headers: bool = True):
+    def post(self, url: str, privacy_context: str, headers: dict = None, body: str = None, set_tor_browser_headers: bool = True, verify=None):
         if is_local_network(url):
             privacy_context = 'local_network'
         if privacy_context == BaseTorCircuits.SHARED_CIRCUIT_ID:
@@ -40,7 +40,7 @@ class TorHttpClient(BaseHttpClient):
             combined_headers = headers or {}
         body = body or {}
         try:
-            return session.post(url, headers=combined_headers, data=body, timeout=BaseHttpClient.DEFAULT_TIMEOUT)
+            return session.post(url, headers=combined_headers, data=body, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
         except requests.exceptions.RequestException as e:
             self._tor_circuits.mark_as_broken(privacy_context)
             raise e

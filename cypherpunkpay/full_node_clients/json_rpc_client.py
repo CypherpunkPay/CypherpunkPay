@@ -3,7 +3,6 @@ import json
 import logging as log
 from json.decoder import JSONDecodeError
 from typing import Dict, List
-from urllib.parse import urlparse
 from base64 import b64encode
 
 import requests
@@ -16,7 +15,6 @@ class JsonRpcClient(object):
 
     def __init__(self, service_url, user='bitcoin', passwd='secret', http_client=None, service_name=None):
         self.__service_url = service_url
-        self.__url = urlparse(service_url)
 
         self.__user = user
         self.__passwd = passwd

@@ -1,0 +1,45 @@
+{
+    "total_limbo_balance": "0",
+    "pending_open_channels": [
+        {
+            "channel": {
+                "remote_node_pub": "0270685ca81a8e4d4d01beec5781f4cc924684072ae52c507f8ebe9daf0caaab7b",
+                "channel_point": "b48404da5397112e69636b9dbc2f2c10a5ce5cbdedca98220217b81ae81043ed:0",
+                "capacity": "100000",
+                "local_balance": "50000",
+                "remote_balance": "46530",
+                "local_chan_reserve_sat": "1000",
+                "remote_chan_reserve_sat": "1000",
+                "initiator": "INITIATOR_REMOTE",
+                "commitment_type": "ANCHORS"
+            },
+            "confirmation_height": 0,
+            "commit_fee": "2810",
+            "commit_weight": "1116",
+            "fee_per_kw": "2500"
+        },
+        {
+            "channel": {
+                "remote_node_pub": "030f0bf260acdbd3edcad84d7588ec7c5df4711e87e6a23016f989b8d3a4147230",
+                "channel_point": "fc03caee93819d10f03325c15e00696e34203151cdd3d63c223b12d2bec1b2d5:1",
+                "capacity": "50000",
+                "local_balance": "49817",
+                "remote_balance": "0",
+                "local_chan_reserve_sat": "573",
+                "remote_chan_reserve_sat": "573",
+                "initiator": "INITIATOR_LOCAL",
+                "commitment_type": "STATIC_REMOTE_KEY"
+            },
+            "confirmation_height": 0,
+            "commit_fee": "183",
+            "commit_weight": "600",
+            "fee_per_kw": "253"
+        }
+    ],
+    "pending_closing_channels": [
+    ],
+    "pending_force_closing_channels": [
+    ],
+    "waiting_close_channels": [
+    ]
+}

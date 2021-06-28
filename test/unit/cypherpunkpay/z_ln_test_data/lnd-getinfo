@@ -1,0 +1,77 @@
+{
+    "version": "0.13.0-beta commit=v0.13.0-beta",
+    "commit_hash": "725ff104808f49f0a5247bfdb4b6b5da7f488d38",
+    "identity_pubkey": "03ceb94fa580363ccdc21ae6dbdf6683e200af5c415baa410a1dedef75fd14aad3",
+    "alias": "03ceb94fa580363ccdc2",
+    "color": "#3399ff",
+    "num_pending_channels": 2,
+    "num_active_channels": 0,
+    "num_inactive_channels": 0,
+    "num_peers": 5,
+    "block_height": 2006712,
+    "block_hash": "000000000000002b6617304093a55e22a68a92b25f1c3eaa129165c2261a8bd3",
+    "best_header_timestamp": "1624878564",
+    "synced_to_chain": true,
+    "synced_to_graph": true,
+    "testnet": true,
+    "chains": [
+        {
+            "chain": "bitcoin",
+            "network": "testnet"
+        }
+    ],
+    "uris": [
+    ],
+    "features": {
+        "0": {
+            "name": "data-loss-protect",
+            "is_required": true,
+            "is_known": true
+        },
+        "5": {
+            "name": "upfront-shutdown-script",
+            "is_required": false,
+            "is_known": true
+        },
+        "7": {
+            "name": "gossip-queries",
+            "is_required": false,
+            "is_known": true
+        },
+        "9": {
+            "name": "tlv-onion",
+            "is_required": false,
+            "is_known": true
+        },
+        "12": {
+            "name": "static-remote-key",
+            "is_required": true,
+            "is_known": true
+        },
+        "14": {
+            "name": "payment-addr",
+            "is_required": true,
+            "is_known": true
+        },
+        "17": {
+            "name": "multi-path-payments",
+            "is_required": false,
+            "is_known": true
+        },
+        "23": {
+            "name": "anchors-zero-fee-htlc-tx",
+            "is_required": false,
+            "is_known": true
+        },
+        "30": {
+            "name": "amp",
+            "is_required": true,
+            "is_known": true
+        },
+        "31": {
+            "name": "amp",
+            "is_required": false,
+            "is_known": true
+        }
+    }
+}

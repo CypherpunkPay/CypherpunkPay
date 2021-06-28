@@ -23,7 +23,7 @@ class MockHttpClient(DummyHttpClient):
     headers: dict = None
     body: str = None
 
-    def post(self, url, privacy_context, headers: dict = None, body: str = None, set_tor_browser_headers: bool = True):
+    def post(self, url, privacy_context, headers: dict = None, body: str = None, set_tor_browser_headers: bool = True, verify=None):
         self.url = url
         self.headers = headers
         self.body = body

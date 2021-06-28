@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# This is specific to one developer and shouldn't be used
+
+sudo -u lnd /home/lnd/lnd/lnd --configfile=/etc/lnd.conf

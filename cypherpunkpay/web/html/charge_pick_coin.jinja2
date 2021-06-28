@@ -12,17 +12,27 @@
                 {% if 'btc' in coins %}
                     <div class="level-item">
                         <button type="submit" name="cc_currency" value="btc" class="link-button">
-                            <figure class="image is-128x128">
+                            <figure class="image is-96x96">
                                 <img src="{{ request.static_url('cypherpunkpay:web/png/bitcoin-256.png') }}" />
                             </figure>
                             <span class="has-text-dark">Bitcoin ({{ view.coin_symbol('BTC') }})</span>
                         </button>
                     </div>
                 {% endif %}
+                {% if 'btc' in coins and btc_lightning_enabled %}
+                    <div class="level-item">
+                        <button type="submit" name="cc_currency" value="btc-lightning" class="link-button">
+                            <figure class="image is-96x96">
+                                <img src="{{ request.static_url('cypherpunkpay:web/png/bitcoin-lightning-256.png') }}" />
+                            </figure>
+                            <span class="has-text-dark">Bitcoin ({{ view.coin_symbol('btc') }}) via Lightning</span>
+                        </button>
+                    </div>
+                {% endif %}
                 {% if 'xmr' in coins %}
                     <div class="level-item">
                         <button type="submit" name="cc_currency" value="xmr" class="link-button">
-                            <figure class="image is-128x128">
+                            <figure class="image is-96x96">
                                 <img src="{{ request.static_url('cypherpunkpay:web/png/monero-256.png') }}" />
                             </figure>
                             <span class="has-text-dark">Monero ({{ view.coin_symbol('XMR') }})</span>

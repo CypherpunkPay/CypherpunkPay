@@ -197,6 +197,15 @@ class Config(object):
     def dummystore_enabled(self) -> bool:
         return self._dict.get('dummystore_enabled', 'false') == 'true'
 
+    def btc_lightning_enabled(self) -> bool:
+        return self._dict.get('btc_lightning_enabled', 'false') == 'true'
+
+    def btc_lightning_lnd_url(self) -> bool:
+        return self._dict.get('btc_lightning_lnd_url', 'https://127.0.0.1:8081/')
+
+    def btc_lightning_lnd_invoice_macaroon(self) -> str:
+        return self._dict.get('btc_lightning_lnd_invoice_macaroon', None)
+
     # Environments
 
     def test_env(self):

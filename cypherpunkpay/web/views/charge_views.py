@@ -57,18 +57,23 @@ class ChargeViews(BaseView):
             'title': title,
             'charge': charge,
             'wait_a_sec': wait_a_sec,
-            'coins': self.app_config().configured_coins()
+            'coins': self.app_config().configured_coins(),
+            'btc_lightning_enabled': self.app_config().btc_lightning_enabled()
         }
 
     @view_config(route_name='post_charge_pick_coin')
     def post_charge_pick_coin(self):
         uid = self.request.matchdict['uid']
         cc_currency = self.request.params.getone('cc_currency')
+        lightning = False
+        if cc_currency == 'btc-lightning':
+            cc_currency = 'btc'
+            lightning = True
         charge = App().db().get_charge_by_uid(uid)
         if not charge:
             raise HTTPNotFound()
         try:
-            PickCryptocurrencyForChargeUC(charge=charge, cc_currency=cc_currency).exec()
+            PickCryptocurrencyForChargeUC(charge=charge, cc_currency=cc_currency, lightning=lightning).exec()
         except InvalidParams as e:
             return HTTPBadRequest()
         except PriceTickers.Missing as e:
