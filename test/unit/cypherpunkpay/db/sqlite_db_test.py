@@ -124,6 +124,7 @@ class SqliteDBTest(CypherpunkpayDBTestCase):
             cc_currency='xmr',
             cc_total=Decimal('97372.87654321'),
             cc_address='888tNkZrPN6JsEgekjMnABU4TBzc2Dt29EPAvkRxbANsAnjyPbb3iQ1YBRk1UXcdRsiKc9dhwMVgN5S9cQUiyoogDavup3H',
+            cc_lightning_payment_request='lnbc27560n1psdhzaepp5p36vfwhvk0u6fjcqnjafmg5hqqqhdtyk74ayr3gp7x02jmp347dqdpu2pskjepqw3hjqjfq7z060gfqu2pt76t5vdhkjm3q9p8hyer9wgsyj3p6yq5scqzpgxqzjhsp5thcs724yw5yvcl0lqt4xuxlhz77dpa9f28m2zevt3q0xfwa5se8s9qyyssquklk9nqcmfljlhxfy0cumhjly3lpymnzrphmu3rp37met82wskzru5ee3a4np4ukpu298zs3gxk3xdu3afvsd7we2yfjvx9k39eaycgq2ylqgg',
             cc_received_total=Decimal('72.87654321'),
 
             pay_status='underpaid',
@@ -157,6 +158,7 @@ class SqliteDBTest(CypherpunkpayDBTestCase):
         self.assertEqual(charge2.cc_currency, ret2.cc_currency)
         self.assertEqual(charge2.cc_total, ret2.cc_total)
         self.assertEqual(charge2.cc_address, ret2.cc_address)
+        self.assertEqual(charge2.cc_lightning_payment_request, ret2.cc_lightning_payment_request)
         self.assertEqual(charge2.cc_received_total, ret2.cc_received_total)
         self.assertEqual(charge2.pay_status, ret2.pay_status)
         self.assertEqual(charge2.status, ret2.status)

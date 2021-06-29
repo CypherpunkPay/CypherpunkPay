@@ -6,6 +6,7 @@ from pyramid.view import (view_config)
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound, HTTPBadRequest
 
 from cypherpunkpay.app import App
+from cypherpunkpay.lightning_node_clients.lnd_client import LightningException
 from cypherpunkpay.models.charge import Charge
 
 from cypherpunkpay.prices.price_tickers import PriceTickers
@@ -43,7 +44,8 @@ class ChargeViews(BaseView):
 
     @view_config(route_name='get_charge_pick_coin', renderer='web/html/charge_pick_coin.jinja2', http_cache=0)
     def get_charge_pick_coin(self):
-        wait_a_sec = self.request.params.get('wait_a_sec', None) == 'true' # and not App().is_fully_initialized()
+        wait_a_sec = self.request.params.get('wait_a_sec', None) == 'true'
+        lightning_error = self.request.params.get('lightning_error', None) == 'true'
         uid = self.request.matchdict['uid']
         charge = App().db().get_charge_by_uid(uid)
         if not charge:
@@ -57,6 +59,7 @@ class ChargeViews(BaseView):
             'title': title,
             'charge': charge,
             'wait_a_sec': wait_a_sec,
+            'lightning_error': lightning_error,
             'coins': self.app_config().configured_coins(),
             'btc_lightning_enabled': self.app_config().btc_lightning_enabled()
         }
@@ -79,6 +82,10 @@ class ChargeViews(BaseView):
         except PriceTickers.Missing as e:
             location = self.request.route_url('get_charge_pick_coin', uid=charge.uid, _query={'wait_a_sec': 'true'})
             return HTTPFound(location=location)  # HTTPServiceUnavailable()
+        except LightningException as e:
+            location = self.request.route_url('get_charge_pick_coin', uid=charge.uid, _query={'lightning_error': 'true'})
+            return HTTPFound(location=location)
+
         location = self.request.route_url('get_charge', uid=charge.uid, ux_type='auto')
         return HTTPFound(location=location)
 

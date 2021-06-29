@@ -69,7 +69,7 @@ class SqliteDB(DB):
                 sql = f"""
                     INSERT
                         INTO charges ({self.CHARGE_COLUMNS})
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """
                 assert_charge_types(charge)
                 values = self._charge_values(charge)
@@ -379,6 +379,7 @@ class SqliteDB(DB):
         charge.cc_total = db_int8_to_decimal(row['cc_total'])
         charge.cc_currency = row['cc_currency']
         charge.cc_address = row['cc_address']
+        charge.cc_lightning_payment_request = row['cc_lightning_payment_request']
         charge.cc_price = db_int8_to_decimal(row['cc_price'])
 
         charge.usd_total = db_int8_to_decimal(row['usd_total'])
@@ -438,6 +439,7 @@ class SqliteDB(DB):
                 cc_total,
                 cc_currency,
                 cc_address,
+                cc_lightning_payment_request,
                 cc_price,
 
                 usd_total,
@@ -483,6 +485,7 @@ class SqliteDB(DB):
             decimal_to_db_int8(charge.cc_total),
             charge.cc_currency,
             charge.cc_address,
+            charge.cc_lightning_payment_request,
             decimal_to_db_int8(charge.cc_price),
 
             decimal_to_db_int8(charge.usd_total),

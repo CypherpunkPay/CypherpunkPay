@@ -6,6 +6,7 @@
             Pay {{ view.html_formatted_currency_amount(charge.total, charge.currency, select_amount=True) | safe }} with...
         </h1>
         {% include 'partials/try_again_we_are_initializing.jinja2' %}
+        {% include 'partials/try_again_lightning_error.jinja2' %}
         <br />
         <form action="{{ view.request.route_url('post_charge_pick_coin', uid=charge.uid) }}" method="post">
             <div class="level">
@@ -25,7 +26,7 @@
                             <figure class="image is-96x96">
                                 <img src="{{ request.static_url('cypherpunkpay:web/png/bitcoin-lightning-256.png') }}" />
                             </figure>
-                            <span class="has-text-dark">Bitcoin ({{ view.coin_symbol('btc') }}) via Lightning</span>
+                            <span class="has-text-dark">Bitcoin ({{ view.coin_symbol('btc') }}) Lightning</span>
                         </button>
                     </div>
                 {% endif %}

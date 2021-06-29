@@ -272,6 +272,7 @@ class ExampleCharge:
             total=Decimal(1),
             currency='btc',
             cc_address='bc1q9uu4j9xgkppqx3g28ph30zrjte8fs7jaz79uf3',
+            cc_lightning_payment_request=None,
             cc_total=None,
             cc_currency=None,
             timeout_ms=15*60*1000,
