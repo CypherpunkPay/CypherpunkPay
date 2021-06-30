@@ -15,32 +15,41 @@ class LightningException(Exception):
 
 class LndClient(object):
 
-    def __init__(self, service_url, macaroon, http_client=None):
-        self.__service_url = service_url
-        self.__macaroon = macaroon
-        self.__http_client = http_client if http_client else ClearHttpClient()
+    def __init__(self, lnd_node_url, invoice_macaroon=None, http_client=None):
+        self._lnd_node_url = lnd_node_url
+        self._invoice_macaroon = invoice_macaroon
+        self._http_client = http_client if http_client else ClearHttpClient()
 
     # Returns payment request string
-    def addinvoice(self, total: decimal) -> str:
-        url = urljoin(self.__service_url, 'v1/invoices')
+    def addinvoice(self, total_btc: [decimal, None] = None, memo: str = None) -> str:
+        # URL
+        lnd_node_url = urljoin(self._lnd_node_url, 'v1/invoices')
 
-        headers_d = {
-            'Grpc-Metadata-macaroon': self.__macaroon
-        }
+        # Headers
+        if self._invoice_macaroon:
+            headers_d = {'Grpc-Metadata-macaroon': self._invoice_macaroon}
+        else:
+            headers_d = {}
 
-        body_s = json.dumps({
-            'memo': 'I AM MEMO FIELD',
-            'value': str(round(total * 10**8)),
-            'private': True
-        })
-
-        log.info(f'url={url}')
-        log.info(f'headers={headers_d}')
-        log.info(f'body={body_s}')
+        # Body
+        body_d = {'private': True}
+        if memo:
+            body_d['memo'] = memo
+        if total_btc:
+            total_satoshi = round(total_btc * 10 ** 8)
+            body_d['value'] = str(total_satoshi)
+        body_s = json.dumps(body_d)
 
         try:
-            res = self.__http_client.post_accepting_linkability(url, headers=headers_d, body=body_s, set_tor_browser_headers=False, verify=False)
-        except requests.exceptions.ConnectionError as e:
+            log.debug(f'Calling LND REST API at {lnd_node_url} with body={body_s}')
+            res = self._http_client.post_accepting_linkability(
+                url=lnd_node_url,
+                headers=headers_d,
+                body=body_s,
+                set_tor_browser_headers=False,
+                verify=False
+            )
+        except requests.exceptions.RequestException as e:
             log.error(f'Error connecting to LND: {e}')
             raise LightningException()
 
@@ -49,5 +58,10 @@ class LndClient(object):
         except JSONDecodeError as e:
             log.error(f'Non-json response from LND: {res.text}')
             raise LightningException()
+
+        if 'error' in res_json:
+            log.error(f'LND returned error: {res_json["error"]}')
+            raise LightningException()
+
 
         return res_json['payment_request']

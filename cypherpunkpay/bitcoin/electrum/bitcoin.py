@@ -157,7 +157,7 @@ def public_key_to_p2wpkh_addr(public_key: bytes, *, net=None) -> str:
 
 def hash_to_segwit_addr(h: bytes, witver: int, *, net=None) -> str:
     if net is None: net = constants.net
-    return segwit_addr.encode(net.SEGWIT_HRP, witver, h)
+    return segwit_addr.encode_segwit_address(net.SEGWIT_HRP, witver, h)
 
 
 ############ functions from pywallet #####################

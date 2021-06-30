@@ -69,8 +69,8 @@ class PickCryptocurrencyForChargeUC(BaseChargeUC):
     def create_lightning_payment_request(self) -> str:
         assert self.charge.cc_currency == 'btc'
         payment_request = LndClient(
-            service_url=self.config.btc_lightning_lnd_url(),
-            macaroon=self.config.btc_lightning_lnd_invoice_macaroon(),
+            lnd_node_url=self.config.btc_lightning_lnd_url(),
+            invoice_macaroon=self.config.btc_lightning_lnd_invoice_macaroon(),
             http_client=self.http_client
-        ).addinvoice(self.charge.cc_total)
+        ).addinvoice(total_btc=self.charge.cc_total)
         return payment_request

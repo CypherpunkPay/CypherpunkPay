@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from cypherpunkpay.net.http_client.dummy_http_client import DummyHttpClient
 from test.unit.cypherpunkpay.app.example_config import ExampleConfig
 from cypherpunkpay.usecases.create_charge_uc import CreateChargeUC
 from cypherpunkpay.usecases.invalid_params import InvalidParams
@@ -132,5 +133,6 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
             cc_currency=cc_currency,
             config=config,
             db=self.db,
-            price_tickers=ExamplePriceTickers()
+            price_tickers=ExamplePriceTickers(),
+            http_client=DummyHttpClient()
         ).exec()
