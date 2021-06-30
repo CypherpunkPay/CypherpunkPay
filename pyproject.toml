@@ -18,6 +18,7 @@ APScheduler = "^3.7.0"
 requests = "^2.25.1"
 PySocks = "^1.7.1"
 yoyo-migrations = "^7.3.2"
+bitstring = '^3.1.7'
 monero = "^0.8.2"
 
 [tool.poetry.dev-dependencies]

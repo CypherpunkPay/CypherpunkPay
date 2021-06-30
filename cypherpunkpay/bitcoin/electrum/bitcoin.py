@@ -29,6 +29,9 @@ from . import constants
 from .crypto import sha256d, sha256, hash_160, hmac_oneshot
 
 
+TOTAL_COIN_SUPPLY_LIMIT_IN_BTC = 21000000
+COIN = 100000000
+
 def rev_hex(s: str) -> str:
     return bh2u(bfh(s)[::-1])
 
@@ -155,3 +158,19 @@ def public_key_to_p2wpkh_addr(public_key: bytes, *, net=None) -> str:
 def hash_to_segwit_addr(h: bytes, witver: int, *, net=None) -> str:
     if net is None: net = constants.net
     return segwit_addr.encode(net.SEGWIT_HRP, witver, h)
+
+
+############ functions from pywallet #####################
+
+def hash160_to_b58_address(h160: bytes, addrtype: int) -> str:
+    s = bytes([addrtype]) + h160
+    s = s + sha256d(s)[0:4]
+    return base_encode(s, base=58)
+
+
+def b58_address_to_hash160(addr: str) -> Tuple[int, bytes]:
+    addr = to_bytes(addr, 'ascii')
+    _bytes = DecodeBase58Check(addr)
+    if len(_bytes) != 21:
+        raise Exception(f'expected 21 payload bytes in base58 address. got: {len(_bytes)}')
+    return _bytes[0], _bytes[1:21]

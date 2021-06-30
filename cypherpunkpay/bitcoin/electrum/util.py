@@ -20,6 +20,7 @@
 # ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+from collections import Set
 
 
 class BitcoinException(Exception): pass
@@ -27,6 +28,14 @@ class BitcoinException(Exception): pass
 
 def inv_dict(d):
     return {v: k for k, v in d.items()}
+
+
+def all_subclasses(cls) -> Set:
+    """Return all (transitive) subclasses of cls."""
+    res = set(cls.__subclasses__())
+    for sub in res.copy():
+        res |= all_subclasses(sub)
+    return res
 
 
 def to_bytes(something, encoding='utf8') -> bytes:
