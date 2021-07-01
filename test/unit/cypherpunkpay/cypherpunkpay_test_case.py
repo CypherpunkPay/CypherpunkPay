@@ -1,9 +1,12 @@
 import os
+from decimal import Decimal
 from tempfile import NamedTemporaryFile
 from unittest.case import TestCase
 
 
 class CypherpunkpayTestCase(TestCase):
+
+    ONE_SATOSHI = Decimal('0.00000001')
 
     @staticmethod
     def script_dir(python_script_path):

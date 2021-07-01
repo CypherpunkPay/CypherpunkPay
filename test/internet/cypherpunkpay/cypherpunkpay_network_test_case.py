@@ -1,4 +1,6 @@
 import logging
+
+from cypherpunkpay.net.http_client.clear_http_client import ClearHttpClient
 from test.unit.cypherpunkpay.app.example_config import ExampleConfig
 from test.unit.cypherpunkpay.cypherpunkpay_test_case import CypherpunkpayTestCase
 from cypherpunkpay.net.http_client.tor_http_client import TorHttpClient
@@ -12,10 +14,12 @@ class CypherpunkpayNetworkTestCase(CypherpunkpayTestCase):
         cls.official_tor = OfficialTorCircuits(config=ExampleConfig())
         cls.official_tor.connect_and_verify()
         cls.tor_http_client = TorHttpClient(cls.official_tor)
+        cls.clear_http_client = ClearHttpClient()
 
     @classmethod
     def tearDownClass(cls):
         cls.official_tor.close()
+        cls.clear_http_client.close()
 
     def assertTorBrowserRequestHeaders(self, http_client):
         res = http_client.get(url='https://httpbin.org/headers', privacy_context='shared')

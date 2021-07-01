@@ -121,3 +121,10 @@ def is_local_network(url: str) -> bool:
 def get_domain_or_ip(url: str) -> str:
     from urllib.parse import urlparse
     return urlparse(url).hostname
+
+
+# This is used to skip certificate based authentication when connecting to LND
+# We assume authentication to network level for example 1) localhost, 2) onion, 3) wireguard
+def disable_unverified_certificat_warnings():
+    import urllib3
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

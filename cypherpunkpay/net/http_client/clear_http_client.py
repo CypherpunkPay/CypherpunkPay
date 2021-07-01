@@ -14,6 +14,9 @@ class ClearHttpClient(BaseHttpClient):
     def __exit__(self, *args):
         self.session.close()
 
+    def close(self):
+        self.__exit__()
+
     def get(self, url, privacy_context, verify=None):
         return self.session.get(url, headers=BaseHttpClient.TOR_BROWSER_HEADERS, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
 

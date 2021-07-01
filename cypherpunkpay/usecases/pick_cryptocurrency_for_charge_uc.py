@@ -72,5 +72,8 @@ class PickCryptocurrencyForChargeUC(BaseChargeUC):
             lnd_node_url=self.config.btc_lightning_lnd_url(),
             invoice_macaroon=self.config.btc_lightning_lnd_invoice_macaroon(),
             http_client=self.http_client
-        ).addinvoice(total_btc=self.charge.cc_total)
+        ).addinvoice(
+            total_btc=self.charge.cc_total,
+            expiry_seconds=self.config.charge_payment_timeout_in_minutes() * 60
+        )
         return payment_request
