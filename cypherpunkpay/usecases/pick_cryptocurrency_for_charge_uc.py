@@ -40,6 +40,7 @@ class PickCryptocurrencyForChargeUC(BaseChargeUC):
             charge.address_derivation_index = address_index
             charge.cc_address = address
 
+        log.info(f'charge.cc_total={charge.cc_total}')
         charge.advance_to_awaiting()
 
         self.db.save(charge)
@@ -68,12 +69,16 @@ class PickCryptocurrencyForChargeUC(BaseChargeUC):
 
     def create_lightning_payment_request(self) -> str:
         assert self.charge.cc_currency == 'btc'
-        payment_request = LndClient(
-            lnd_node_url=self.config.btc_lightning_lnd_url(),
-            invoice_macaroon=self.config.btc_lightning_lnd_invoice_macaroon(),
-            http_client=self.http_client
-        ).addinvoice(
+        lnd_client = self.instantiate_lnd_client()
+        payment_request = lnd_client.addinvoice(
             total_btc=self.charge.cc_total,
             expiry_seconds=self.config.charge_payment_timeout_in_minutes() * 60
         )
         return payment_request
+
+    def instantiate_lnd_client(self):
+        return LndClient(
+            lnd_node_url=self.config.btc_lightning_lnd_url(),
+            invoice_macaroon=self.config.btc_lightning_lnd_invoice_macaroon(),
+            http_client=self.http_client
+        )

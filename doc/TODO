@@ -10,6 +10,8 @@
     - create payment request
     - learn about incoming LN payment
 
+* BUG: 0.01 Won goes below 1 satoshi and causes server error on sanity assertion
+
 * BUG: charge_expired_to_complete__paid.jinja2 - no support for expired + confirmed + underpaid
   - underpaid and expired to pay is mistakenly presented as "we noticed your payment but it failed to confirm" while it should stress underpayment
 
