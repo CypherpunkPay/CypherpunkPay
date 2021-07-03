@@ -1,6 +1,7 @@
+from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
 from cypherpunkpay.common import *
 from cypherpunkpay.models.address_credits import AddressCredits
-from cypherpunkpay.models.charge import ExampleCharge
+from cypherpunkpay.models.charge import ExampleCharge, Charge
 from cypherpunkpay.models.credit import Credit
 from test.unit.db_test_case import CypherpunkpayDBTestCase
 from cypherpunkpay.net.http_client.dummy_http_client import DummyHttpClient
@@ -11,7 +12,7 @@ from test.unit.config.example_config import ExampleConfig
 class StubRefreshChargeUC(RefreshChargeUC):
 
     def __init__(self, charge_uid: str, credits: [List[Credit], None], blockchain_height=None, db=None):
-        self._blockchain_height = blockchain_height or sys.maxsize
+        self._blockchain_height = blockchain_height or 2**31  # just big
         super().__init__(charge_uid, current_height=self._blockchain_height, db=db, http_client=DummyHttpClient(), config=ExampleConfig())
         self._mock_credits = credits
 
@@ -20,6 +21,26 @@ class StubRefreshChargeUC(RefreshChargeUC):
             return None
         else:
             return AddressCredits(self._mock_credits, self._blockchain_height)
+
+
+class StubLnRefreshChargeUC(RefreshChargeUC):
+
+    def __init__(self, charge_uid: str, received_total_msats: int, db=None):
+        self._blockchain_height = 2**31  # just big
+        super().__init__(charge_uid, current_height=self._blockchain_height, db=db, http_client=DummyHttpClient(), config=ExampleConfig())
+        self._mock_received_total_msats = received_total_msats
+
+    def instantiate_lnd_client(self):
+        class StubLndClient(object):
+            def __init__(self, received_total_msats):
+                self._mock_received_total_msats = received_total_msats
+
+            def lookupinvoice(self, r_hash) -> LnInvoice():
+                ln_invoice = LnInvoice()
+                ln_invoice.amt_paid_msat = self._mock_received_total_msats
+                return ln_invoice
+
+        return StubLndClient(received_total_msats=self._mock_received_total_msats)
 
 
 class RefreshChargeUCTest(CypherpunkpayDBTestCase):
@@ -385,7 +406,7 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         self.assertEqual(900, charge.cc_received_total)
 
     def test_completed_to_completed_overpaid(self):
-        # This means user accidently sent money again to the charge that was already completed.
+        # This means user accidentally sent money again to the charge that was already completed.
         # We still want to recognize such accidental overpayments so we continue to track completed charges.
         # This will help with refunds.
         charge = ExampleCharge.db_create(self.db,
@@ -434,3 +455,24 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         self.assertTrue(charge.is_expired())
         self.assertEqual(1000, charge.cc_received_total)
         self.assertEqual(1, charge.confirmations)
+
+    # Lightning
+
+    def test_lightning_unpaid_to_completed(self):
+        RECEIVED_TOTAL_MSATS = 2_000_000 * 1000  # 0.02 BTC
+
+        charge = Charge(total=self.ONE_SATOSHI, currency='btc', time_to_pay_ms=15*60*1000, time_to_complete_ms=60*60*1000)
+        charge.cc_total = charge.total
+        charge.activated_at = utc_now()
+        charge.status = 'awaiting'
+        charge.cc_lightning_payment_request = self.EXAMPLE_PAYMENT_REQUEST_TESTNET
+        self.db.insert(charge)
+
+        uc = StubLnRefreshChargeUC(charge.uid, received_total_msats=RECEIVED_TOTAL_MSATS, db=self.db)
+        uc.exec()
+        self.db.reload(charge)
+        assert charge.is_confirmed()
+        assert charge.is_completed()
+        assert charge.cc_received_total == Decimal('0.02')
+        assert charge.paid_at is not None
+        assert charge.completed_at is not None

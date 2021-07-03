@@ -1,3 +1,12 @@
+from cypherpunkpay.bitcoin.electrum.constants import BitcoinMainnet, BitcoinTestnet
+
+
+def btc_network_class(network_name):
+    if network_name == 'mainnet':
+        return BitcoinMainnet
+    elif network_name == 'testnet':
+        return BitcoinTestnet
+
 
 def is_testnet_address(address: str):
     # See: https://en.bitcoin.it/wiki/List_of_address_prefixes

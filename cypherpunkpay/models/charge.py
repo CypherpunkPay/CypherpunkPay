@@ -325,6 +325,7 @@ class ExampleCharge:
         charge.paid_at = paid_at
         charge.status = status
         charge.cc_received_total = cc_received_total
+        charge.cc_lightning_payment_request = cc_lightning_payment_request
         charge.subsequent_discrepancies = subsequent_discrepancies
         if uid:
             charge.uid = uid

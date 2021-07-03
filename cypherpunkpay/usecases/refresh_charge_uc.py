@@ -1,12 +1,14 @@
 from cypherpunkpay.app import App
+from cypherpunkpay.bitcoin import btc_network_class
+from cypherpunkpay.bitcoin.electrum.lnaddr import lndecode
 from cypherpunkpay.common import *
+from cypherpunkpay.lightning_node_clients.lnd_client import LndClient
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.models.credit import Credit
 from cypherpunkpay.usecases import UseCase
 from cypherpunkpay.usecases.ensure_block_explorers_uc import EnsureBlockExplorersUC
 from cypherpunkpay.usecases.fetch_address_credits_from_explorers_uc import FetchAddressCreditsFromExplorersUC
-
 from cypherpunkpay.usecases.fetch_address_credits_from_full_node_uc import FetchAddressCreditsFromFullNodeUC
 
 
@@ -49,7 +51,7 @@ class RefreshChargeUC(UseCase):
         if charge.is_cancelled() and not charge.cc_total:
             return
 
-        credits = self.fetch_address_credits(charge)  # This is many seconds!
+        credits = self.fetch_credits(charge)  # This is many seconds!
         if credits is None:
             return  # fetching failed
 
@@ -125,7 +127,9 @@ class RefreshChargeUC(UseCase):
                 self._db.save(charge)
             return
 
-    def fetch_address_credits(self, charge) -> [AddressCredits, None]:
+    def fetch_credits(self, charge) -> [AddressCredits, None]:
+        if charge.is_lightning():
+            return self.fetch_credits_from_lightning_node(charge)
         if self.full_node_enabled(charge):
             return self.fetch_address_credits_from_full_node(charge)
         else:
@@ -152,6 +156,20 @@ class RefreshChargeUC(UseCase):
                 self._db.save(charge)
         if charge.cc_currency == 'xmr':
             pass  # XMR empty list of available block explorers cannot be used with EnsureBlockExplorer so we pass here
+
+    # MOCK ME
+    def fetch_credits_from_lightning_node(self, charge) -> [AddressCredits, None]:
+        lnd_client = self.instantiate_lnd_client()
+        payment_request = lndecode(charge.cc_lightning_payment_request, net=btc_network_class(self._config.btc_network()))
+        ln_invoice = lnd_client.lookupinvoice(r_hash=payment_request.paymenthash)
+        credits = []
+        if ln_invoice.amt_paid_sat and ln_invoice.amt_paid_sat > 0:
+            total_paid_btc = Decimal(ln_invoice.amt_paid_sat) / 10**8
+            # Wrapped in AddressCredits for compatibility with existing charge resolution code
+            # Ideally LN charges should be dealt with separately
+            credit = Credit(total_paid_btc, 0, has_replaceable_flag=False)
+            credits.append(credit)
+        return AddressCredits(credits, self._current_height)
 
     # MOCK ME
     def fetch_address_credits_from_full_node(self, charge) -> [AddressCredits, None]:
@@ -191,3 +209,10 @@ class RefreshChargeUC(UseCase):
 
     def confirmations(self, credits: List[Credit], current_height):
         return min(map(lambda c: current_height - c.confirmed_height() + 1, credits))
+
+    def instantiate_lnd_client(self):
+        return LndClient(
+            lnd_node_url=self._config.btc_lightning_lnd_url(),
+            invoice_macaroon=self._config.btc_lightning_lnd_invoice_macaroon(),
+            http_client=self._http_client
+        )

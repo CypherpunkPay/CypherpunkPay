@@ -8,6 +8,7 @@ from datetime import datetime
 import requests
 
 from cypherpunkpay import disable_unverified_certificat_warnings
+from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
 from cypherpunkpay.net.http_client.clear_http_client import ClearHttpClient
 
 
@@ -69,3 +70,8 @@ class LndClient(object):
             raise LightningException()
 
         return res_json['payment_request']
+
+    def lookupinvoice(self, r_hash) -> LnInvoice:
+        ln_invoice = LnInvoice()
+        ln_invoice.amt_paid_msat = 1000
+        return ln_invoice
