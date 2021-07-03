@@ -16,7 +16,7 @@
                             <figure class="image is-96x96">
                                 <img src="{{ request.static_url('cypherpunkpay:web/png/bitcoin-256.png') }}" />
                             </figure>
-                            <span class="has-text-dark">Bitcoin ({{ view.coin_symbol('BTC') }})</span>
+                            <span class="has-text-dark">Bitcoin (BTC)<br>&nbsp;</span>
                         </button>
                     </div>
                 {% endif %}
@@ -26,7 +26,7 @@
                             <figure class="image is-96x96">
                                 <img src="{{ request.static_url('cypherpunkpay:web/png/bitcoin-lightning-256.png') }}" />
                             </figure>
-                            <span class="has-text-dark">Bitcoin ({{ view.coin_symbol('btc') }}) Lightning</span>
+                            <span class="has-text-dark">Bitcoin ({{ view.coin_symbol('btc') }})<br>Lightning Network</span>
                         </button>
                     </div>
                 {% endif %}
@@ -36,7 +36,7 @@
                             <figure class="image is-96x96">
                                 <img src="{{ request.static_url('cypherpunkpay:web/png/monero-256.png') }}" />
                             </figure>
-                            <span class="has-text-dark">Monero ({{ view.coin_symbol('XMR') }})</span>
+                            <span class="has-text-dark">Monero (XMR)<br>&nbsp;</span>
                         </button>
                     </div>
                 {% endif %}

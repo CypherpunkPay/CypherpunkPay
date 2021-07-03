@@ -1,9 +1,8 @@
 class LnInvoice(object):
 
-    amt_paid_msat: [int, None] = None
+    is_settled: bool = False
+    amt_paid_msat: int = 0
 
     @property
-    def amt_paid_sat(self) -> [int, None]:
-        if self.amt_paid_msat is None:
-            return None
+    def amt_paid_sat(self) -> int:
         return int(self.amt_paid_msat / 1000)

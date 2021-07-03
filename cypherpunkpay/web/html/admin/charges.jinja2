@@ -52,8 +52,8 @@
                                     <td class="has-text-right">
                                         {{ view.html_formatted_currency_amount(charge.total, charge.currency, select_amount=True) | safe }}
                                         <br />
-                                        {% if charge.block_explorer_url() %}
-                                            <span class="is-size-7 has-text-grey-light" title="See address in external block explorer">(<a href="{{ charge.block_explorer_url() }}" target="_blank">expl&nearr;</a>)</span>
+                                        {% if view.block_explorer_url(charge) %}
+                                            <span class="is-size-7 has-text-grey-light" title="See address in external block explorer">(<a href="{{ view.block_explorer_url(charge) }}" target="_blank">expl&nearr;</a>)</span>
                                         {% endif %}
                                         {% if charge.is_draft() or charge.cc_received_total == 0 %}
                                             <span class="has-text-grey-light">&mdash;</span>

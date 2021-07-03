@@ -1,18 +1,19 @@
-import decimal
-import json
-import logging as log
-from json.decoder import JSONDecodeError
 from urllib.parse import urljoin
-from datetime import datetime
 
 import requests
 
-from cypherpunkpay import disable_unverified_certificat_warnings
+from cypherpunkpay.common import *
+
+from cypherpunkpay import disable_unverified_certificate_warnings
 from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
 from cypherpunkpay.net.http_client.clear_http_client import ClearHttpClient
 
 
 class LightningException(Exception):
+    pass
+
+
+class UnknownInvoiceLightningException(LightningException):
     pass
 
 
@@ -24,15 +25,12 @@ class LndClient(object):
         self._http_client = http_client if http_client else ClearHttpClient()
 
     # Returns payment request string
-    def addinvoice(self, total_btc: [decimal, None] = None, memo: str = None, expiry_seconds: [int, None] = None) -> str:
+    def addinvoice(self, total_btc: [Decimal, None] = None, memo: str = None, expiry_seconds: [int, None] = None) -> str:
         # URL
         lnd_node_url = urljoin(self._lnd_node_url, 'v1/invoices')
 
         # Headers
-        if self._invoice_macaroon:
-            headers_d = {'Grpc-Metadata-macaroon': self._invoice_macaroon}
-        else:
-            headers_d = {}
+        headers_d = self._auth_header()
 
         # Body
         body_d = {'private': True}
@@ -46,8 +44,8 @@ class LndClient(object):
         body_s = json.dumps(body_d)
 
         try:
-            log.debug(f'Calling LND REST API at {lnd_node_url} with body={body_s}')
-            disable_unverified_certificat_warnings()
+            log.debug(f'Calling LND REST API: POST {lnd_node_url} with body={body_s}')
+            disable_unverified_certificate_warnings()
             res = self._http_client.post_accepting_linkability(
                 url=lnd_node_url,
                 headers=headers_d,
@@ -71,7 +69,56 @@ class LndClient(object):
 
         return res_json['payment_request']
 
-    def lookupinvoice(self, r_hash) -> LnInvoice:
+    def lookupinvoice(self, r_hash: bytes) -> LnInvoice:
+        # Sanity check
+        assert isinstance(r_hash, bytes)
+        assert len(r_hash) == 32
+
+        # URL
+        lnd_node_url = urljoin(self._lnd_node_url, f'v1/invoice/{r_hash.hex()}')
+
+        # Headers
+        headers_d = self._auth_header()
+
+        try:
+            log.debug(f'Calling LND REST API: GET {lnd_node_url}')
+            disable_unverified_certificate_warnings()
+            res = self._http_get(headers_d, lnd_node_url)
+        except requests.exceptions.RequestException as e:
+            log.error(f'Error connecting to LND: {e}')
+            raise LightningException()
+
+        try:
+            res_json = json.loads(res.text)
+        except JSONDecodeError as e:
+            log.error(f'Non-json response from LND: {res.text}')
+            raise LightningException()
+
+        if 'error' in res_json:
+            log.error(f'LND returned error: {res_json["error"]}')
+            if res_json['code'] == 2:
+                raise UnknownInvoiceLightningException()
+            raise LightningException()
+
         ln_invoice = LnInvoice()
-        ln_invoice.amt_paid_msat = 1000
+        if res_json['settled']:
+            ln_invoice.is_settled = True
+            ln_invoice.amt_paid_msat = int(res_json['amt_paid_msat'])
         return ln_invoice
+
+    # private
+
+    def _auth_header(self):
+        if self._invoice_macaroon:
+            return {'Grpc-Metadata-macaroon': self._invoice_macaroon}
+        else:
+            return {}
+
+    #  mock me
+    def _http_get(self, headers_d, lnd_node_url) -> requests.Response:
+        return self._http_client.get_accepting_linkability(
+            url=lnd_node_url,
+            headers=headers_d,
+            set_tor_browser_headers=False,
+            verify=False
+        )

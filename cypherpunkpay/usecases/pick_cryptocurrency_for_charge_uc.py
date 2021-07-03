@@ -40,7 +40,6 @@ class PickCryptocurrencyForChargeUC(BaseChargeUC):
             charge.address_derivation_index = address_index
             charge.cc_address = address
 
-        log.info(f'charge.cc_total={charge.cc_total}')
         charge.advance_to_awaiting()
 
         self.db.save(charge)

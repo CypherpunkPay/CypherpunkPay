@@ -13,9 +13,16 @@ import collections.abc
 import json
 from json import JSONDecodeError
 
+import decimal
 from decimal import Decimal
 
 from typing import List, Dict
+
+from pprint import pprint
+
+from pathlib import Path
+
+from types import SimpleNamespace
 
 
 def utc_now():
@@ -125,6 +132,6 @@ def get_domain_or_ip(url: str) -> str:
 
 # This is used to skip certificate based authentication when connecting to LND
 # We assume authentication to network level for example 1) localhost, 2) onion, 3) wireguard
-def disable_unverified_certificat_warnings():
+def disable_unverified_certificate_warnings():
     import urllib3
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

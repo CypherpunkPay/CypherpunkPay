@@ -255,14 +255,6 @@ class Charge:
         state = f'{self.pay_status} {self.status} {self.cc_received_total} {self.confirmations}'
         return sha3.sha3_256(state.encode('utf8')).hexdigest()
 
-    def block_explorer_url(self):
-        if self.cc_currency == 'btc':
-            from cypherpunkpay import App
-            if App().config().btc_mainnet():
-                return f'https://blockstream.info/address/{self.cc_address}'
-            else:
-                return f'https://blockstream.info/testnet/address/{self.cc_address}'
-
 
 class ExampleCharge:
 

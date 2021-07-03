@@ -17,6 +17,7 @@ class RefreshChargeUC(UseCase):
     charge_uid: str
 
     CONFIRMATIONS_TO_CONSIDER_COMPLETED = 2
+    LIGHTNING_FAKE_NUMBER_OF_CONFIRMATIONS = 65535  # how many "confirmations" to assign to LN payments; a marker value as LN payments don't have a concept of confirmations
 
     def __init__(self, charge_uid: str, current_height=None, db=None, http_client=None, config=None):
         self.charge_uid = charge_uid
@@ -163,11 +164,11 @@ class RefreshChargeUC(UseCase):
         payment_request = lndecode(charge.cc_lightning_payment_request, net=btc_network_class(self._config.btc_network()))
         ln_invoice = lnd_client.lookupinvoice(r_hash=payment_request.paymenthash)
         credits = []
-        if ln_invoice.amt_paid_sat and ln_invoice.amt_paid_sat > 0:
+        if ln_invoice.is_settled and ln_invoice.amt_paid_sat > 0:
             total_paid_btc = Decimal(ln_invoice.amt_paid_sat) / 10**8
             # Wrapped in AddressCredits for compatibility with existing charge resolution code
             # Ideally LN charges should be dealt with separately
-            credit = Credit(total_paid_btc, 0, has_replaceable_flag=False)
+            credit = Credit(total_paid_btc, self._current_height - self.LIGHTNING_FAKE_NUMBER_OF_CONFIRMATIONS, has_replaceable_flag=False)
             credits.append(credit)
         return AddressCredits(credits, self._current_height)
 

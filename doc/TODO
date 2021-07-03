@@ -1,14 +1,9 @@
 
-* Research viability of adding LN payments support by becoming a mere fronted to externally managed LN node
-  Is this scenario technically viable?
-  - Power user would manage her LN node outside of CypherpunkPay
-  - User's LN node would have a separate wallet from the one used with on-chain CypherpunkPay
-  - CypherpunkPay would **not** attempt to wrap LN infrastructure complexity
-  - CypherpunkPay would only offer the frontend for accepting LN payments
-  - Under the hood CypherpunkPay would call LN node API to
-    - verify if accepting amount is possible (channels open and enough inbound capacity available)
-    - create payment request
-    - learn about incoming LN payment
+* BUG: expired LN charges should stop refreshing (now UnknownInvoiceLightningException)
+
+* BUG: completed LN charges should stop refreshing as there is no way to send second payment to the same LN invoice
+
+* BUG: cancelled LN charges would unnecessarily refresh until when?
 
 * BUG: 0.01 Won goes below 1 satoshi and causes server error on sanity assertion
 

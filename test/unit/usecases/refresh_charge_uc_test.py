@@ -37,7 +37,9 @@ class StubLnRefreshChargeUC(RefreshChargeUC):
 
             def lookupinvoice(self, r_hash) -> LnInvoice():
                 ln_invoice = LnInvoice()
-                ln_invoice.amt_paid_msat = self._mock_received_total_msats
+                if self._mock_received_total_msats > 0:
+                    ln_invoice.is_settled = True
+                    ln_invoice.amt_paid_msat = self._mock_received_total_msats
                 return ln_invoice
 
         return StubLndClient(received_total_msats=self._mock_received_total_msats)
@@ -471,6 +473,7 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubLnRefreshChargeUC(charge.uid, received_total_msats=RECEIVED_TOTAL_MSATS, db=self.db)
         uc.exec()
         self.db.reload(charge)
+
         assert charge.is_confirmed()
         assert charge.is_completed()
         assert charge.cc_received_total == Decimal('0.02')

@@ -17,8 +17,16 @@ class ClearHttpClient(BaseHttpClient):
     def close(self):
         self.__exit__()
 
-    def get(self, url, privacy_context, verify=None):
-        return self.session.get(url, headers=BaseHttpClient.TOR_BROWSER_HEADERS, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
+    def get(self, url, privacy_context, headers: dict = None, set_tor_browser_headers: bool = True, verify=None):
+        if set_tor_browser_headers:
+            combined_headers = {
+                **BaseHttpClient.TOR_BROWSER_HEADERS,
+                **(headers or {})
+            }
+        else:
+            combined_headers = headers or {}
+
+        return self.session.get(url, headers=combined_headers, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
 
     def post(self, url, privacy_context, headers: dict = None, body: str = None, set_tor_browser_headers: bool = True, verify=None):
         if set_tor_browser_headers:

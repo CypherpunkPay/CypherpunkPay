@@ -22,14 +22,14 @@ class BaseHttpClient(object):
         'TE': 'Trailers'
     }
 
-    def get(self, url, privacy_context, verify=None) -> requests.Response:
+    def get(self, url, privacy_context, headers: dict = None, set_tor_browser_headers: bool = True, verify=None) -> requests.Response:
         raise NotImplementedError()
 
     def post(self, url, privacy_context, headers: dict = None, body: str = None, set_tor_browser_headers: bool = True, verify=None) -> requests.Response:
         raise NotImplementedError()
 
-    def get_accepting_linkability(self, url: str, verify=None) -> requests.Response:
-        return self.get(url, privacy_context=BaseTorCircuits.SHARED_CIRCUIT_ID, verify=verify)
+    def get_accepting_linkability(self, url: str, headers: dict = None, set_tor_browser_headers: bool = True, verify=None) -> requests.Response:
+        return self.get(url, privacy_context=BaseTorCircuits.SHARED_CIRCUIT_ID, headers=headers, set_tor_browser_headers=set_tor_browser_headers, verify=verify)
 
     def post_accepting_linkability(self, url: str, headers: dict = None, body: str = None, set_tor_browser_headers: bool = True, verify=None) -> requests.Response:
         return self.post(url, privacy_context=BaseTorCircuits.SHARED_CIRCUIT_ID, headers=headers, body=body, set_tor_browser_headers=set_tor_browser_headers, verify=verify)
