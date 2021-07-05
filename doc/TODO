@@ -1,9 +1,12 @@
 
-* BUG: expired LN charges should stop refreshing (now UnknownInvoiceLightningException)
+* Create docs on LN support in CypherpunkPay
 
-* BUG: completed LN charges should stop refreshing as there is no way to send second payment to the same LN invoice
+* Deploy LN support to donate.cypherpunkpay.org (mainnet) and store.cypherpunkpay.org (testnet)
 
-* BUG: cancelled LN charges would unnecessarily refresh until when?
+* LN charge in final state requires special handling:
+  - expired LN charges should stop refreshing as there is no way to receive payment (now UnknownInvoiceLightningException)
+  - completed LN charges should stop refreshing as there is (virtually) no way to send second payment to the same LN invoice
+  - cancelled LN charges should stop refreshing
 
 * BUG: 0.01 Won goes below 1 satoshi and causes server error on sanity assertion
 
