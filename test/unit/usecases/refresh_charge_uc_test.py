@@ -479,3 +479,41 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         assert charge.cc_received_total == Decimal('0.02')
         assert charge.paid_at is not None
         assert charge.completed_at is not None
+
+    # Mock checking lookupinvoice will NOT be called
+    class MockLnRefreshChargeUC(RefreshChargeUC):
+        def __init__(self, charge_uid: str, db=None):
+            self._blockchain_height = 2**31  # just big
+            super().__init__(charge_uid, current_height=self._blockchain_height, db=db, http_client=DummyHttpClient(), config=ExampleConfig())
+
+        def instantiate_lnd_client(self):
+            class MockLndClient(object):
+                def lookupinvoice(self, r_hash) -> LnInvoice():
+                    raise Exception('This method should not be called -> test case failed')
+            return MockLndClient()
+
+    def test_lightning_expired_wont_refresh(self):
+        charge = Charge(total=self.ONE_SATOSHI, currency='btc', time_to_pay_ms=1, time_to_complete_ms=60*60*1000)
+        charge.cc_total = charge.total
+        charge.activated_at = utc_now()
+        charge.status = 'expired'
+        charge.pay_status = 'unpaid'
+        charge.cc_lightning_payment_request = self.EXAMPLE_PAYMENT_REQUEST_TESTNET
+        self.db.insert(charge)
+
+        uc = self.MockLnRefreshChargeUC(charge.uid, db=self.db)
+        uc.exec()  # should not call LND (checked by the mock)
+
+    def test_lightning_completed_wont_refresh(self):
+        charge = Charge(total=self.ONE_SATOSHI, currency='btc', time_to_pay_ms=1, time_to_complete_ms=60*60*1000)
+        charge.cc_total = charge.total
+        charge.cc_received_total = charge.cc_total
+        charge.activated_at = utc_now()
+        charge.paid_at = utc_now()
+        charge.pay_status = 'paid'
+        charge.status = 'completed'
+        charge.cc_lightning_payment_request = self.EXAMPLE_PAYMENT_REQUEST_TESTNET
+        self.db.insert(charge)
+
+        uc = self.MockLnRefreshChargeUC(charge.uid, db=self.db)
+        uc.exec()  # should not call LND (checked by the mock)

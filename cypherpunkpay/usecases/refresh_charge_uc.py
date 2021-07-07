@@ -44,13 +44,23 @@ class RefreshChargeUC(UseCase):
             if not charge.has_final_status():
                 charge.advance_to_expired()
             self._db.save(charge)
+            if charge.is_lightning():
+                # LN invoices can't be paid after expiry
+                return
             # No return here. The charge may still have its *pay_status* updated.
 
         if charge.is_expired() and not charge.cc_total:
+            # draft charge expired before user picked coin
             return
 
         if charge.is_cancelled() and not charge.cc_total:
+            # charge got cancelled before user picked coin
             return
+
+        if charge.is_lightning():
+            if charge.is_expired() or charge.is_completed():
+                # LN invoices that are expired or already paid cannot receive coins - no need to check
+                return
 
         credits = self.fetch_credits(charge)  # This is many seconds!
         if credits is None:
