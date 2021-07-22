@@ -163,4 +163,4 @@ class ChargeViews(BaseView):
         charge = App().db().get_charge_by_uid(uid)
         if not charge:
             raise HTTPNotFound()
-        return Response(charge.state_hash_for_ui())
+        return Response(body=charge.state_hash_for_ui(), content_type='text/plain')

@@ -252,7 +252,7 @@ class Charge:
 
     # if changed the charge UI needs to refresh / think UI cache invalidation
     def state_hash_for_ui(self):
-        state = f'{self.pay_status} {self.status} {self.cc_received_total} {self.confirmations}'
+        state = f'{self.pay_status} {self.status} is_soft_expired_to_pay={self.is_soft_expired_to_pay()} {self.cc_received_total} {self.confirmations}'
         return sha3.sha3_256(state.encode('utf8')).hexdigest()
 
 
