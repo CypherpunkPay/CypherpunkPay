@@ -1,6 +1,7 @@
 import logging as log
 
 import os
+import pytz
 import sys
 import re
 
@@ -26,7 +27,7 @@ from types import SimpleNamespace
 
 
 def utc_now():
-    return datetime.datetime.now(datetime.timezone.utc)
+    return datetime.datetime.now(pytz.utc)
 
 
 def utc_ago(
