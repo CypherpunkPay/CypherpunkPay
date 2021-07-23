@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+
+export LND_VERSION=v0.13.1-beta
+
+cd /tmp
+
+wget https://github.com/lightningnetwork/lnd/releases/download/$LND_VERSION/lnd-linux-amd64-$LND_VERSION.tar.gz
+wget https://github.com/lightningnetwork/lnd/releases/download/$LND_VERSION/manifest-$LND_VERSION.txt
+wget https://github.com/lightningnetwork/lnd/releases/download/$LND_VERSION/manifest-roasbeef-$LND_VERSION.sig
+
+curl https://keybase.io/bitconner/pgp_keys.asc | gpg --import
+curl https://keybase.io/roasbeef/pgp_keys.asc | gpg --import
+
+gpg --verify manifest-roasbeef-$LND_VERSION.sig manifest-$LND_VERSION.txt
+
+sha256sum --check manifest-$LND_VERSION.txt --ignore-missing
+
+tar -xzf lnd-linux-amd64-$LND_VERSION.tar.gz
+
+sudo install -m 0755 -o root -g root -t /usr/local/bin lnd-linux-amd64-$LND_VERSION/*
