@@ -13,6 +13,10 @@ class LightningException(Exception):
     pass
 
 
+class InvalidMacaroonLightningException(LightningException):
+    pass
+
+
 class UnknownInvoiceLightningException(LightningException):
     pass
 
@@ -64,6 +68,9 @@ class LndClient(object):
             raise LightningException()
 
         if 'error' in res_json:
+            if 'signature mismatch' in res_json['error']:
+                log.error(f'Error authenticating to LND, check btc_lightning_lnd_invoice_macaroon option in your cypherpunkpay.conf file')
+                raise InvalidMacaroonLightningException()
             log.error(f'LND returned error: {res_json["error"]}')
             raise LightningException()
 

@@ -32,7 +32,7 @@ class EnsureBlockExplorersUCTest(CypherpunkpayDBTestCase):
 
     def test_resets_explorers_if_subsequent_discrepancies_reached_threshold(self):
         good_luck = 0
-        for i in range(100):
+        for i in range(200):
             charge = ExampleCharge.create()
             charge.block_explorer_1 = 'cypherpunkpay.explorers.bitcoin.mempool_explorer MempoolExplorer'
             charge.block_explorer_2 = 'cypherpunkpay.explorers.bitcoin.blockstream_explorer BlockstreamExplorer'

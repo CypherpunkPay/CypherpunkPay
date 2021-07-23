@@ -4,7 +4,7 @@ import pytest
 
 from cypherpunkpay.bitcoin.electrum.constants import BitcoinTestnet
 from test.network.network_test_case import CypherpunkpayNetworkTestCase
-from cypherpunkpay.lightning_node_clients.lnd_client import LndClient, LightningException, UnknownInvoiceLightningException
+from cypherpunkpay.lightning_node_clients.lnd_client import LndClient, LightningException, UnknownInvoiceLightningException, InvalidMacaroonLightningException
 from cypherpunkpay.bitcoin.electrum.lnaddr import lndecode
 from test.unit.test_case import CypherpunkpayTestCase
 
@@ -12,8 +12,10 @@ from test.unit.test_case import CypherpunkpayTestCase
 class LndClientTest(CypherpunkpayNetworkTestCase):
 
     DEV_LND_URL = 'https://127.0.0.1:8081'
-    DEV_LND_INVOICE_MACAROON = '0201036c6e640258030a1048e0f05f02ff3f5ff7a4046ba186016e1201301a160a0761646472657373120472656164120577726974651a170a08696e766f69636573120472656164120577726974651a0f0a076f6e636861696e120472656164000006208778b5873594d4033de9b6b945d56e5b09cb00bb6001208d4366e8b348bd6a5f'
-    DEV_LND_INVALID_INVOICE_MACAROON = '02ae'
+    DEV_LND_INVOICE_MACAROON = '0201036c6e640258030a100749d833cb20ba2b00af5ac46dcf70331201301a160a0761646472657373120472656164120577726974651a170a08696e766f69636573120472656164120577726974651a0f0a076f6e636861696e120472656164000006200d848586e393814cd8237db32d9e7192854dc05eba578b065a78dba6021af448'
+
+    DEV_LND_INVALID_INVOICE_MACAROON = '0201036c6e640258030a1048e0f05f02ff3f5ff7a4046ba186016e1201301a160a0761646472657373120472656164120577726974651a170a08696e766f69636573120472656164120577726974651a0f0a076f6e636861696e120472656164000006208778b5873594d4033de9b6b945d56e5b09cb00bb6001208d4366e8b348bd6a5f'
+    DEV_LND_MALFORMED_INVOICE_MACAROON = '02ae'
     DEV_LND_INVALID_PAYMENT_HASH = b'\xf1i\xf4\xc6\xe9\x9c\x97\xfaI\xfb"\xe8\xff\x0e\xc9\xf4\xbe\xdb\xc6\xc3:\x0f\xe3I.\x0b\xf1\xac$\xfd\xa9\x0e'
     DEV_LND_IRRELEVANT_PAYMENT_HASH = b'\xf1i\xf4\xc6\xe9\x9c\x97\xfaI\xfb"\xe8\xff\x0e\xc9\xf4\xbe\xdb\xc6\xc3:\x0f\xe3I.\x0b\xf1\xac$\xfd\xa9\x0e'
 
@@ -32,9 +34,13 @@ class LndClientTest(CypherpunkpayNetworkTestCase):
         with pytest.raises(LightningException):
             LndClient('http://127.0.0.1:8081', invoice_macaroon=self.DEV_LND_INVOICE_MACAROON, http_client=self.clear_http_client).addinvoice()
 
-    def test_invalid_invoice_macaroon(self):
+    def test_malformed_invoice_macaroon(self):
         with pytest.raises(LightningException):
             LndClient(self.DEV_LND_URL, invoice_macaroon='0ea3', http_client=self.clear_http_client).addinvoice()
+
+    def test_invalid_invoice_macaroon(self):
+        with pytest.raises(InvalidMacaroonLightningException):
+            LndClient(self.DEV_LND_URL, invoice_macaroon=self.DEV_LND_INVALID_INVOICE_MACAROON, http_client=self.clear_http_client).addinvoice()
 
     # addinvoice
 
