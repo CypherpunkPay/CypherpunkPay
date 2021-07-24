@@ -1,5 +1,7 @@
 
-* Create docs on LN support in CypherpunkPay
+* The charge_payment_timeout_in_minutes should be propagated and used in LN invoice creation to also enforce it on the invoice level
+
+* Cancelled LN charges should propagate cancellation to LND (the invoice should be cancelled)
 
 * Deploy LN support to donate.cypherpunkpay.org (mainnet) and store.cypherpunkpay.org (testnet)
 
@@ -12,8 +14,6 @@
   test case: 0.01 Won paid in BTC is below 1 satoshi and blows this: assert self.cc_total
 
 * BUG: favicon.ico is not cached and always fetched (200 instead of 304)
-
-* Cancelled LN charges should propagate cancellation to LND (the invoice should be cancelled)
 
 * Add time exponential randomized skipping of (unsuccessful) callbacks
 
