@@ -1,3 +1,5 @@
+from typing import List
+
 import os
 import subprocess
 import json
@@ -22,21 +24,21 @@ class DeployTestCase(TestCase):
         self.deb_file = f'{os.path.dirname(os.path.realpath(__file__))}/../../dist/debian/cypherpunkpay_1.0.2_amd64.deb'
         self.test_deb_script = f'{os.path.dirname(os.path.realpath(__file__))}/resources/install_and_run_cypherpunkpay_deb.sh'
 
-    def get_servers_dict(self):
+    def get_servers(self) -> List:
         log.info(f'Getting server list...')
         cmd = f'curl -X GET -H "Authorization: Bearer {self.api_token}" "https://api.99stack.com/v1/server/list"'
         response_body = subprocess.run(cmd, shell=True, capture_output=True).stdout.decode('utf-8')
         data = json.loads(response_body)
-        self.assert_ok(data)
         #log.info(self.pretty(data))
-        return dict(data)  # normalize to dict
+        self.assert_no_error_message(data)
+        return data['servers']
 
     def create_or_get_server(self, name):
         log.info("\n")
         had_no_network = False
         while True:
-            servers_dict = self.get_servers_dict()
-            server = next(filter(lambda server_data: server_data['name'] == name, servers_dict.values()), None)
+            servers = self.get_servers()
+            server = next(filter(lambda server_data: server_data['name'] == name, servers), None)
             if server:
                 if server['iface']:
                     ipv4 = 'NOT FOUND'
@@ -86,7 +88,7 @@ class DeployTestCase(TestCase):
         shell_result = subprocess.run(cmd, shell=True, capture_output=True)
         response_body = shell_result.stdout.decode('utf-8')
         data = json.loads(response_body)
-        self.assert_ok(data)
+        self.assert_no_error_message(data)
         return data
 
     def delete_server(self, server_id):
@@ -101,7 +103,7 @@ class DeployTestCase(TestCase):
             pass  # empty body is OK
 
     def delete_server_if_present(self, name):
-        servers_dict = self.get_servers_dict()
+        servers_dict = self.get_servers()
         server = next(filter(lambda kv: kv[1]['name'] == name, servers_dict.items()), None)
         if server:
             server_id = server[0]
@@ -139,7 +141,7 @@ class DeployTestCase(TestCase):
         with NamedTemporaryFile(mode='w+b', prefix='cypherpunkpay-test-', suffix=suffix) as file:
             return file.name
 
-    def assert_ok(self, data):
+    def assert_no_error_message(self, data):
         if isinstance(data, dict) and data.get('response_code') and data.get('response_code') >= 300:
             raise Exception(data)
 

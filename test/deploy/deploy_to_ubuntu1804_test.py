@@ -18,8 +18,8 @@ class DeployToUbuntu1804Test(DeployTestCase):
         server_info = self.create_server(
             hostname='ubuntu1804',
             label='ubuntu1804',
-            region=209,
-            plan=2101,
-            image=2109
+            region=101,  # Amsterdam
+            plan=1101,
+            image=1109
         )
-        #log.info(server_info)
+        #print(server_info)
