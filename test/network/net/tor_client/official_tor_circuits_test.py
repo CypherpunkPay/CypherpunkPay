@@ -6,7 +6,7 @@ from cypherpunkpay.tools.safe_uid import SafeUid
 
 class OfficialTorCircuitsTest(CypherpunkpayNetworkTestCase):
 
-    EXAMPLE_ONION_URL = 'https://facebookcorewwwi.onion'
+    EXAMPLE_ONION_URL = 'https://www.facebookwkhpilnemxj7asaniu7vnjjbiltxjqhye3mhbshg7kx5tfyd.onion/'
     EXAMPLE_CLEAR_URL = 'https://www.facebook.com/'
     EXAMPLE_CLEAR_URL2 = 'https://ifconfig.me/'
 
