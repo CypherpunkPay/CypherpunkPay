@@ -1,3 +1,0 @@
-#!/bin/bash
-
-.venv/bin/pytest test/internet
