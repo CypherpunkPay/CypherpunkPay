@@ -67,11 +67,14 @@ class LndClient(object):
             log.error(f'Non-json response from LND: {res.text}')
             raise LightningException()
 
-        if 'error' in res_json:
-            if 'signature mismatch' in res_json['error']:
+        code = res_json.get('code')
+        if code and code > 0:
+            # We assume 'message' property is always returned in JSON response
+            message = res_json['message']
+            log.error(f'LND returned error code={code} with message [{message}]')
+            if 'signature mismatch' in message:
                 log.error(f'Error authenticating to LND, check btc_lightning_lnd_invoice_macaroon option in your cypherpunkpay.conf file')
                 raise InvalidMacaroonLightningException()
-            log.error(f'LND returned error: {res_json["error"]}')
             raise LightningException()
 
         return res_json['payment_request']
@@ -101,16 +104,21 @@ class LndClient(object):
             log.error(f'Non-json response from LND: {res.text}')
             raise LightningException()
 
-        if 'error' in res_json:
-            log.error(f'LND returned error: {res_json["error"]}')
-            if res_json['code'] == 2:
+        code = res_json.get('code')
+        if code and code > 0:
+            # We assume 'message' property is always returned in JSON response
+            message = res_json['message']
+            log.error(f'LND returned error code={code} with message [{message}]')
+            if code in [2, 5]:
                 raise UnknownInvoiceLightningException()
             raise LightningException()
 
         ln_invoice = LnInvoice()
+
         if res_json['settled']:
             ln_invoice.is_settled = True
             ln_invoice.amt_paid_msat = int(res_json['amt_paid_msat'])
+
         return ln_invoice
 
     # private
