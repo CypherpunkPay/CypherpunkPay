@@ -41,16 +41,30 @@ http://127.0.0.1:6543/cypherpunkpay/dummystore/
 
 ### Running tests
 
-To run the unit tests:
+To run just the **unit tests**:
 
 `bin/test-unit`
 
-To run the full test suite you need **unpruned and synced-up bitcoind running on testnet** with default settings.
+The database for tests is separate from development and gets reset on each test run.
+
+To run the **full test suite** you need on your development laptop:
+
+* testnet `bitcoind` running
+  * unpruned
+  * synced-up
+  * with default settings
+  * with ZMQ notifications enabled for LND:
+    ```
+    zmqpubrawblock=tcp://127.0.0.1:28332
+    zmqpubrawtx=tcp://127.0.0.1:28333
+    ```
+* testnet `lnd` running
+  * connected and synced-up against your `bitcoind`
+  * TODO: this probably needs more guidance
+
 Then:
 
 `bin/test`
-
-The database for tests is separate from development and gets reset on each test run.
 
 ### Resetting dev database
 
@@ -62,6 +76,6 @@ Just remove database file:
 
 CypherpunkPay is "dual-licensed" under **Unlicense** OR **MIT**.
 The Unlicense attempts to explicitly put CypherpunkPay in the public domain,
-while MIT is an alternative or fallback if you want it for legal reasons.
+while MIT is an alternative or fallback if you need it for legal reasons.
 
 SPDX-License-Identifier: Unlicense OR MIT

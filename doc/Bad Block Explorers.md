@@ -1,3 +1,10 @@
+# Bad Block Explorers - CypherpunkPay Developer Docs
+
+## Relevant only for CypherpunkPay developers
+
+This is internal docs for CypherpunkPay developers.
+
+## The list of not useful block explorers
 
 Verified BAD block explorers (not suitable for CypherpunkPay):
 
