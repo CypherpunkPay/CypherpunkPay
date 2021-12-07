@@ -51,7 +51,7 @@ class EnsureBlockExplorersUCTest(CypherpunkpayDBTestCase):
 
     def test_resets_explorers_if_cannot_instantiate(self):
         good_luck = 0
-        for i in range(100):
+        for i in range(2*100):
             charge = ExampleCharge.create()
             charge.block_explorer_1 = 'cypherpunkpay.explorers.bitcoin.mempool_explorer MempoolExplorer'
             charge.block_explorer_2 = 'cypherpunkpay.explorers.bitcoin.incorrect_explorer IncorrectExplorer'
@@ -67,4 +67,4 @@ class EnsureBlockExplorersUCTest(CypherpunkpayDBTestCase):
                 good_luck += 1
 
         # Most of the time both explorers should be reset
-        assert good_luck > 50
+        assert good_luck > 2*50
