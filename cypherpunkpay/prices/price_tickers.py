@@ -4,7 +4,6 @@ from typing import Dict
 
 from cypherpunkpay.net.http_client.tor_http_client import BaseHttpClient
 from cypherpunkpay.prices.cmc_coin_price_source import CmcCoinPriceSource
-from cypherpunkpay.prices.cwatch_coin_price_source import CwatchCoinPriceSource
 from cypherpunkpay.prices.messari_coin_price_source import MessariCoinPriceSource
 from cypherpunkpay.prices.coingecko_coin_price_source import CoingeckoCoinPriceSource
 from cypherpunkpay.prices.paprika_coin_price_source import PaprikaCoinPriceSource
@@ -61,8 +60,7 @@ class PriceTickers(object):
             CmcCoinPriceSource(self._http_client).get(coin, 'usd'),
             PaprikaCoinPriceSource(self._http_client).get(coin, 'usd'),
             CoingeckoCoinPriceSource(self._http_client).get(coin, 'usd'),
-            MessariCoinPriceSource(self._http_client).get(coin, 'usd'),
-            CwatchCoinPriceSource(self._http_client).get(coin, 'usd')
+            MessariCoinPriceSource(self._http_client).get(coin, 'usd')
         ]))
         if len(coin_prices) > 0:
             median_coin_price = median(coin_prices)
