@@ -28,6 +28,15 @@ class Config(object):
     def db_file_path(self) -> str:
         return self._dict.get('db_file_path')
 
+    def path_prefix(self) -> str:
+        path_prefix = self._dict.get('path_prefix', 'cypherpunkpay')
+        if path_prefix != '/':
+            if '/' in path_prefix:
+                log.error('Incorrect value for config entry path_prefix. It should not contain \'/\'.')
+                exit(1)
+            path_prefix = f'/{path_prefix}'
+        return path_prefix
+
     def btc_account_xpub(self) -> str:
         if self.btc_mainnet():
             return self._dict.get('btc_mainnet_account_xpub')
