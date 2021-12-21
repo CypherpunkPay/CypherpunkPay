@@ -29,7 +29,7 @@ def main(global_config, **settings):
 
     # Routing
     path_prefix = App().config().path_prefix()
-    if path_prefix != '/':
+    if len(path_prefix) > 0:
         pyramid.add_route('get_root_not_prefixed', '/', request_method='GET')  # 302: / -> /path_prefix/
 
     pyramid.include(routing_config, route_prefix=path_prefix)
@@ -125,7 +125,7 @@ def routing_config(pyramid):
 
 def scan_views(pyramid):
     pyramid.scan('cypherpunkpay.web.views')
-    if App().config().path_prefix() != '/':
+    if len(App().config().path_prefix()) > 0:
         pyramid.scan('cypherpunkpay.web.views_prefix')
     if App().config().donations_enabled():
         pyramid.scan('cypherpunkpay.web.views_donations')
