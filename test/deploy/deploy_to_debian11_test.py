@@ -5,7 +5,7 @@ from test.deploy.deploy_test_case import DeployTestCase
 
 class DeployToDebian11Test(DeployTestCase):
 
-    #@skip
+    @skip
     def test_debian11(self):
         host_ipv4 = self.create_or_get_server('debian11')
         self.upload_deb_and_run_tests(host_ipv4)
@@ -20,6 +20,6 @@ class DeployToDebian11Test(DeployTestCase):
             label='debian11',
             region=101,  # Amsterdam
             plan=1101,
-            image=1127
+            image=1122
         )
         #log.info(server_info)

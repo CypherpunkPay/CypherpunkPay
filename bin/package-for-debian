@@ -14,12 +14,16 @@ cleanup () {
     rm -rf debian/cypherpunkpay.postrm.debhelper
     rm -rf debian/cypherpunkpay.substvars
     rm -rf debian/etc
+    rm -rf debian/opt
 }
 
 cleanup
 
 mkdir -p debian/etc
 cp cypherpunkpay/config/cypherpunkpay_defaults.conf debian/etc/cypherpunkpay.conf
+
+mkdir -p debian/opt/venvs/cypherpunkpay/lib/python3.9/site-packages
+cp -rf debian/so/* debian/opt/venvs/cypherpunkpay/lib/python3.9/site-packages
 
 dpkg-buildpackage -us -uc -b
 

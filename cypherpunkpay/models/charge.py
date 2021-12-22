@@ -2,7 +2,7 @@ import base64
 import io
 
 import pyqrcode
-import sha3
+from Cryptodome.Hash import SHA3_256
 
 from cypherpunkpay.bitcoin import Bip32
 from cypherpunkpay.common import *
@@ -253,7 +253,9 @@ class Charge:
     # if changed the charge UI needs to refresh / think UI cache invalidation
     def state_hash_for_ui(self):
         state = f'{self.pay_status} {self.status} is_soft_expired_to_pay={self.is_soft_expired_to_pay()} {self.cc_received_total} {self.confirmations}'
-        return sha3.sha3_256(state.encode('utf8')).hexdigest()
+        h_obj = SHA3_256.new()
+        h_obj.update(state.encode('utf8'))
+        return h_obj.hexdigest()
 
 
 class ExampleCharge:

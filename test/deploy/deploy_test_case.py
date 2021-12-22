@@ -21,7 +21,7 @@ class DeployTestCase(TestCase):
         cmd = 'cat ~/.bash_aliases | grep DEVELOPMENT_S99_SSH_UUID'
         self.ssh_uuid = subprocess.run(cmd, shell=True, capture_output=True).stdout.decode('utf-8').split('=')[1].strip()
         self.private_key_path = '/home/user/.ssh/99stack_dev'
-        self.deb_file = f'{os.path.dirname(os.path.realpath(__file__))}/../../dist/debian/cypherpunkpay_1.0.2_amd64.deb'
+        self.deb_file = f'{os.path.dirname(os.path.realpath(__file__))}/../../dist/debian/cypherpunkpay_1.0.3_amd64.deb'
         self.test_deb_script = f'{os.path.dirname(os.path.realpath(__file__))}/resources/install_and_run_cypherpunkpay_deb.sh'
 
     def get_servers(self) -> List:
@@ -54,12 +54,14 @@ class DeployTestCase(TestCase):
                     log.info(f'Found {name} but no network interface assigned yet (ongoing provisioning?)')
                     had_no_network = True
             else:
-                if name == 'ubuntu1804':
-                    self.create_ubuntu1804()
-                if name == 'ubuntu2004':
-                    self.create_ubuntu2004()
+                if name == 'ubuntu2110':
+                    self.create_ubuntu2110()
                 if name == 'ubuntu2104':
                     self.create_ubuntu2104()
+                if name == 'ubuntu2004':
+                    self.create_ubuntu2004()
+                if name == 'ubuntu1804':
+                    self.create_ubuntu1804()
                 if name == 'debian11':
                     self.create_debian11()
                 if name == 'debian10':

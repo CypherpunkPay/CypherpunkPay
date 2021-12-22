@@ -15,7 +15,7 @@ All docs are available on the [official website](https://cypherpunkpay.org/) ([T
 ### Prerequisites for development
 
 * Linux
-* Python 3.7.3+
+* Python 3.9
 
 ### Developer setup
 
@@ -70,7 +70,7 @@ Then:
 
 Just remove database file:
 
-`rm /tmp/cypherpunkpay-dev.sqlite3`
+`rm /tmp/cypherpunkpay_dev.sqlite3`
 
 ## Public domain
 

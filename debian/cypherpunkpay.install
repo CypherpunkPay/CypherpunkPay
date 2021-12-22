@@ -1,1 +1,5 @@
 debian/etc/cypherpunkpay.conf etc
+debian/opt/venvs/cypherpunkpay/lib/python3.9/site-packages/_cffi_backend.cpython-36m-x86_64-linux-gnu.so opt/venvs/cypherpunkpay/lib/python3.9/site-packages
+debian/opt/venvs/cypherpunkpay/lib/python3.9/site-packages/_cffi_backend.cpython-37m-x86_64-linux-gnu.so opt/venvs/cypherpunkpay/lib/python3.9/site-packages
+debian/opt/venvs/cypherpunkpay/lib/python3.9/site-packages/_cffi_backend.cpython-38-x86_64-linux-gnu.so opt/venvs/cypherpunkpay/lib/python3.9/site-packages
+debian/opt/venvs/cypherpunkpay/lib/python3.9/site-packages/cffi.libs/libffi-d58a691e.so.8.1.0 opt/venvs/cypherpunkpay/lib/python3.9/site-packages/cffi.libs
