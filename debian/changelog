@@ -1,8 +1,14 @@
+cypherpunkpay (1.0.5) stable; urgency=low
+
+  * Refer to https://github.com/CypherpunkPay/CypherpunkPay
+
+ -- cypherpunkdev <null@null.null>  Thu, 25 Dec 2021 00:00:00 +0000
+
 cypherpunkpay (1.0.4) stable; urgency=low
 
   * Refer to https://github.com/CypherpunkPay/CypherpunkPay
 
- -- cypherpunkdev <null@null.null>  Thu, 21 Dec 2021 00:00:00 +0000
+ -- cypherpunkdev <null@null.null>  Thu, 25 Dec 2021 00:00:00 +0000
 
 cypherpunkpay (1.0.3) stable; urgency=low
 
