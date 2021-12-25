@@ -29,7 +29,7 @@ class Config(object):
         return self._dict.get('db_file_path')
 
     def path_prefix(self) -> str:
-        path_prefix = self.server().get('path_prefix')
+        path_prefix = self._dict.get('path_prefix')
         if path_prefix == '/' or not path_prefix:
             return  # normalize to None when path_prefix is empty
         # if '/' in path_prefix:
