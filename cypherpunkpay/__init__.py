@@ -16,8 +16,6 @@ from cypherpunkpay.jobs.job_scheduler import DummyJobScheduler
 from cypherpunkpay.prices.price_tickers import ExamplePriceTickers
 from cypherpunkpay.web.security.root_acl import RootACL
 
-CYPHERPUNKPAY_URL_PATH_PREFIX = '/cypherpunkpay'
-
 
 def main(global_config, **settings):
     """ This function instantiates real app singleton and returns a Pyramid WSGI web app.
@@ -30,8 +28,11 @@ def main(global_config, **settings):
     pyramid.include('pyramid_jinja2')
 
     # Routing
-    pyramid.add_route('get_root_not_prefixed', '/', request_method='GET')  # 302: / -> /CYPHERPUNKPAY_URL_PATH_PREFIX/
-    pyramid.include(routing_config, route_prefix=CYPHERPUNKPAY_URL_PATH_PREFIX)
+    path_prefix = App().config().path_prefix()
+    if len(path_prefix) > 0:
+        pyramid.add_route('get_root_not_prefixed', '/', request_method='GET')  # 302: / -> /path_prefix/
+
+    pyramid.include(routing_config, route_prefix=path_prefix)
 
     # Authentication and Authorization
     configure_pyramid_authn_and_authz(pyramid)
@@ -67,7 +68,7 @@ def configure_pyramid_authn_and_authz(pyramid):
         hashalg='sha512',
         timeout=3600,
         reissue_time=60,
-        path=f'{CYPHERPUNKPAY_URL_PATH_PREFIX}/admin',
+        path=f'{App().config().path_prefix()}/admin',
         http_only=True,
         callback=(lambda user_login, request: ['group:admins'] if user_login == 'admin' else [])  # return groups for specific user
     )
@@ -124,6 +125,8 @@ def routing_config(pyramid):
 
 def scan_views(pyramid):
     pyramid.scan('cypherpunkpay.web.views')
+    if len(App().config().path_prefix()) > 0:
+        pyramid.scan('cypherpunkpay.web.views_prefix')
     if App().config().donations_enabled():
         pyramid.scan('cypherpunkpay.web.views_donations')
     if App().config().admin_panel_enabled():
