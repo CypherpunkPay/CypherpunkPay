@@ -81,7 +81,7 @@ class CallPaymentCompletedUrlUCTest(CypherpunkpayDBTestCase):
         self.assertEqual('http://127.0.0.1:6543/cypherpunkpay/dummystore/cypherpunkpay_payment_completed', mock_http_client.url)
 
         # With local network privacy context
-        self.assertEqual('local_network', mock_http_client.privacy_context)
+        self.assertEqual(BaseTorCircuits.LOCAL_NETWORK, mock_http_client.privacy_context)
 
         # Has the right headers
         self.assertEqual('Bearer nsrzukv53xjhmw4w5ituyk5cre', mock_http_client.headers.get('Authorization'))

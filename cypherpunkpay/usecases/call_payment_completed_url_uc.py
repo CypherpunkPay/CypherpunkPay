@@ -44,7 +44,7 @@ class CallPaymentCompletedUrlUC(UseCase):
 }}""".strip()
         privacy_context = BaseTorCircuits.SHARED_CIRCUIT_ID
         if not self._config.merchant_use_tor():
-            privacy_context = "local_network"
+            privacy_context = BaseTorCircuits.LOCAL_NETWORK
         try:
             response: Response = self._http_client.post(url, privacy_context=privacy_context, headers=headers, body=body)
         except requests.exceptions.RequestException as e:
