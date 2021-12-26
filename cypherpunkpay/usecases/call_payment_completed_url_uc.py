@@ -6,6 +6,7 @@ from requests import Response
 from cypherpunkpay import utc_now
 from cypherpunkpay.app import App
 from cypherpunkpay.models.charge import Charge
+from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits
 from cypherpunkpay.usecases import UseCase
 
 
@@ -41,12 +42,18 @@ class CallPaymentCompletedUrlUC(UseCase):
   "cc_total": "{format(self._charge.cc_total, 'f')}",
   "cc_currency": "{self._charge.cc_currency.casefold()}"
 }}""".strip()
+        privacy_context = BaseTorCircuits.SHARED_CIRCUIT_ID
+        if not self._config.merchant_use_tor():
+            privacy_context = "local_network"
         try:
-            response: Response = self._http_client.post_accepting_linkability(url, headers=headers, body=body)
+            response: Response = self._http_client.post(url, privacy_context=privacy_context, headers=headers, body=body)
         except requests.exceptions.RequestException as e:
-            log.error(f'Calling marchant failed, tried to POST {url} - got exception {e}')
+            log.error(f'Calling merchant failed, tried to POST {url} - got exception {e}')
             return
 
         if response.ok and not response.is_redirect:
             self._charge.payment_completed_url_called_at = utc_now()
             self._db.save(self._charge)
+            log.info(f'Calling merchant succeeded for merchant_order_id "{self._charge.merchant_order_id}"')
+        else:
+            log.error(f'Calling merchant failed, tried to POST {url} - got response with status code {response.status_code}')
