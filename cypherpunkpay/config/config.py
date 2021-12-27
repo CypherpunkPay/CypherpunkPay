@@ -186,9 +186,6 @@ class Config(object):
     def merchant_enabled(self) -> bool:
         return self._dict.get('merchant_enabled', 'false') == 'true'
 
-    def skip_tor_for_merchant_callbacks(self) -> bool:
-        return self._dict.get('skip_tor_for_merchant_callbacks', 'false') == 'true'
-
     def payment_completed_notification_url(self) -> str:
         return self._dict.get('payment_completed_notification_url', None)
 
@@ -200,6 +197,11 @@ class Config(object):
 
     def merchant_to_cypherpunkpay_auth_token(self) -> str:
         return self._dict.get('merchant_to_cypherpunkpay_auth_token', None)
+
+    def skip_tor_for_merchant_callbacks(self) -> bool:
+        return self._dict.get('skip_tor_for_merchant_callbacks', 'false') == 'true'
+
+    # Admin
 
     def admin_panel_enabled(self) -> bool:
         return self._dict.get('admin_panel_enabled', 'false') == 'true'

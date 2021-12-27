@@ -1,50 +1,53 @@
 {% extends "layout.jinja2" %}
 
 {% block content %}
-    <div id="charge" class="box content">
+    <div id="charge" class="box">
         <h1 class="title has-text-link-dark">
             Pay {{ view.html_formatted_currency_amount(charge.total, charge.currency, select_amount=True) | safe }} with...
         </h1>
+        {% include 'partials/charge_description.jinja2' %}
         {% include 'partials/try_again_we_are_initializing.jinja2' %}
         {% include 'partials/try_again_lightning_error.jinja2' %}
         <br />
-        <form action="{{ view.request.route_url('post_charge_pick_coin', uid=charge.uid) }}" method="post">
-            <div class="level">
-                {% if 'btc' in coins %}
-                    <div class="level-item">
-                        <button type="submit" name="cc_currency" value="btc" class="link-button">
-                            <figure class="image is-96x96">
-                                <img src="{{ request.static_url('cypherpunkpay:web/png/bitcoin-256.png') }}" />
-                            </figure>
-                            <span class="has-text-dark">Bitcoin (BTC)<br>&nbsp;</span>
-                        </button>
-                    </div>
-                {% endif %}
-                {% if 'btc' in coins and btc_lightning_enabled %}
-                    <div class="level-item">
-                        <button type="submit" name="cc_currency" value="btc-lightning" class="link-button">
-                            <figure class="image is-96x96">
-                                <img src="{{ request.static_url('cypherpunkpay:web/png/bitcoin-lightning-256.png') }}" />
-                            </figure>
-                            <span class="has-text-dark">Bitcoin ({{ view.coin_symbol('btc') }})<br>Lightning Network</span>
-                        </button>
-                    </div>
-                {% endif %}
-                {% if 'xmr' in coins %}
-                    <div class="level-item">
-                        <button type="submit" name="cc_currency" value="xmr" class="link-button">
-                            <figure class="image is-96x96">
-                                <img src="{{ request.static_url('cypherpunkpay:web/png/monero-256.png') }}" />
-                            </figure>
-                            <span class="has-text-dark">Monero (XMR)<br>&nbsp;</span>
-                        </button>
-                    </div>
-                {% endif %}
-            </div>
-        </form>
-        <br />
-        {% with button_label = 'Cancel Payment' %}
-            {% include 'partials/cancel_charge_button.jinja2' %}
-        {% endwith %}
+        <div class="content">
+            <form action="{{ view.request.route_url('post_charge_pick_coin', uid=charge.uid) }}" method="post">
+                <div class="level">
+                    {% if 'btc' in coins %}
+                        <div class="level-item">
+                            <button type="submit" name="cc_currency" value="btc" class="link-button">
+                                <figure class="image is-96x96">
+                                    <img src="{{ request.static_url('cypherpunkpay:web/png/bitcoin-256.png') }}" />
+                                </figure>
+                                <span class="has-text-dark">Bitcoin (BTC)<br>&nbsp;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                    {% if 'btc' in coins and btc_lightning_enabled %}
+                        <div class="level-item">
+                            <button type="submit" name="cc_currency" value="btc-lightning" class="link-button">
+                                <figure class="image is-96x96">
+                                    <img src="{{ request.static_url('cypherpunkpay:web/png/bitcoin-lightning-256.png') }}" />
+                                </figure>
+                                <span class="has-text-dark">Bitcoin ({{ view.coin_symbol('btc') }})<br>Lightning Network</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                    {% if 'xmr' in coins %}
+                        <div class="level-item">
+                            <button type="submit" name="cc_currency" value="xmr" class="link-button">
+                                <figure class="image is-96x96">
+                                    <img src="{{ request.static_url('cypherpunkpay:web/png/monero-256.png') }}" />
+                                </figure>
+                                <span class="has-text-dark">Monero (XMR)<br>&nbsp;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </form>
+            <br />
+            {% with button_label = 'Cancel Payment' %}
+                {% include 'partials/cancel_charge_button.jinja2' %}
+            {% endwith %}
+        </div>
     </div>
 {% endblock content %}

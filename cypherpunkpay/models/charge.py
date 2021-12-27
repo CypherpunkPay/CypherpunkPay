@@ -22,6 +22,7 @@ class Charge:
     # expected payment
     total: Decimal
     currency: str
+    beneficiary: [str, None] = None
 
     # expressed in cryptocurrency
     cc_total: [Decimal, None] = None
