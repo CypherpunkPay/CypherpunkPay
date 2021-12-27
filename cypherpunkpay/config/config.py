@@ -28,13 +28,18 @@ class Config(object):
     def db_file_path(self) -> str:
         return self._dict.get('db_file_path')
 
-    def path_prefix(self) -> str:
+    def path_prefix(self) -> [str, None]:
         path_prefix = self._dict.get('path_prefix')
+        # Normalize
         if path_prefix == '/' or not path_prefix:
-            return  # normalize to None when path_prefix is empty
-        # if '/' in path_prefix:
-        #     log.error('Incorrect value for config entry path_prefix. It should not contain \'/\'.')
-        #     exit(1)
+            return
+        if not path_prefix.startswith('/'):
+            path_prefix = '/' + path_prefix
+        if path_prefix.endswith('/'):
+            path_prefix = path_prefix[0:-1]
+        if path_prefix.count('/') > 1:
+            log.error('The path_prefix cannot be nested. Please use a flat path like the default /cypherpunkpay')
+            exit(1)
         return path_prefix
 
     def btc_account_xpub(self) -> str:
@@ -172,6 +177,7 @@ class Config(object):
         s = self._dict.get('donations_fiat_currency', 'usd').strip().casefold()
         if s not in self.supported_fiats():
             log.error(f'Unsupported donations_fiat_currency in your config file. Pick one of {self.supported_fiats()}')
+            exit(1)
         return s
 
     def donations_fiat_amounts(self) -> List[str]:
