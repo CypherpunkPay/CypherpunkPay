@@ -67,7 +67,7 @@ class OfficialTorCircuits(BaseTorCircuits):
 
     def _create_for(self, label):
         session = Session()
-        if label != 'local_network':
+        if label != BaseTorCircuits.LOCAL_NETWORK:
             socks5_proxy = f'socks5h://{label}:{label}@{self._config.tor_socks5_host()}:{self._config.tor_socks5_port()}'
             session.proxies = {'http': socks5_proxy, 'https': socks5_proxy}
         self._sessions[label] = session

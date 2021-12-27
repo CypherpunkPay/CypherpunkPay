@@ -15,7 +15,7 @@ class TorHttpClient(BaseHttpClient):
 
     def get(self, url: str, privacy_context: str, headers: dict = None, set_tor_browser_headers: bool = True, verify=None):
         if is_local_network(url):
-            privacy_context = 'local_network'
+            privacy_context = BaseTorCircuits.LOCAL_NETWORK
         if privacy_context == BaseTorCircuits.SHARED_CIRCUIT_ID:
             privacy_context = get_domain_or_ip(url)
         session = self._tor_circuits.get_for(privacy_context)
@@ -34,7 +34,7 @@ class TorHttpClient(BaseHttpClient):
 
     def post(self, url: str, privacy_context: str, headers: dict = None, body: str = None, set_tor_browser_headers: bool = True, verify=None):
         if is_local_network(url):
-            privacy_context = 'local_network'
+            privacy_context = BaseTorCircuits.LOCAL_NETWORK
         if privacy_context == BaseTorCircuits.SHARED_CIRCUIT_ID:
             privacy_context = get_domain_or_ip(url)
         session = self._tor_circuits.get_for(privacy_context)

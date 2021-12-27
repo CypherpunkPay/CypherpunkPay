@@ -1,5 +1,8 @@
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+import requests
+
+from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits
 from test.network.network_test_case import CypherpunkpayNetworkTestCase
 from cypherpunkpay.tools.safe_uid import SafeUid
 
@@ -74,6 +77,14 @@ class OfficialTorCircuitsTest(CypherpunkpayNetworkTestCase):
                     future.result()
                 except Exception as exc:
                     self.fail(f'Failure to get future.result() for future: {future.__dict__}')
+
+    def test_local_network_label_does_not_use_tor(self):
+        session = self.official_tor.get_for(BaseTorCircuits.LOCAL_NETWORK)
+
+        ip_disabled_tor = self.get_ip(session)
+        ip_clear = self.get_ip(requests.Session())
+
+        self.assertEqual(ip_disabled_tor, ip_clear)
 
     # @unittest.skip("TODO: needs to somehow change the circuit / label / socks5 user:pass")
     # def test_mark_as_broken_resets_tor_circuit(self):
