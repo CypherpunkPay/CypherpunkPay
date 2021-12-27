@@ -52,7 +52,7 @@ class OfficialTorCircuits(BaseTorCircuits):
                 else:
                     raise e
 
-    # Use special label 'local_network' to avoid setting socks5 proxy
+    # Use special label 'skip_tor' to avoid setting socks5 proxy
     def get_for(self, label: str) -> requests.Session:
         with self._global_lock:
             if label not in self._lock_for:
@@ -67,7 +67,7 @@ class OfficialTorCircuits(BaseTorCircuits):
 
     def _create_for(self, label):
         session = Session()
-        if label != BaseTorCircuits.LOCAL_NETWORK:
+        if label != BaseTorCircuits.SKIP_TOR:
             socks5_proxy = f'socks5h://{label}:{label}@{self._config.tor_socks5_host()}:{self._config.tor_socks5_port()}'
             session.proxies = {'http': socks5_proxy, 'https': socks5_proxy}
         self._sessions[label] = session

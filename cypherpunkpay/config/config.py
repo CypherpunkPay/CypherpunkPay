@@ -186,8 +186,8 @@ class Config(object):
     def merchant_enabled(self) -> bool:
         return self._dict.get('merchant_enabled', 'false') == 'true'
 
-    def merchant_use_tor(self) -> bool:
-        return self._dict.get('merchant_use_tor', 'true') != 'false'
+    def skip_tor_for_merchant_callbacks(self) -> bool:
+        return self._dict.get('skip_tor_for_merchant_callbacks', 'false') == 'true'
 
     def payment_completed_notification_url(self) -> str:
         return self._dict.get('payment_completed_notification_url', None)

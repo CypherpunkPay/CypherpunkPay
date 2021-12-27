@@ -42,9 +42,12 @@ class CallPaymentCompletedUrlUC(UseCase):
   "cc_total": "{format(self._charge.cc_total, 'f')}",
   "cc_currency": "{self._charge.cc_currency.casefold()}"
 }}""".strip()
-        privacy_context = BaseTorCircuits.SHARED_CIRCUIT_ID
-        if not self._config.merchant_use_tor():
-            privacy_context = BaseTorCircuits.LOCAL_NETWORK
+
+        if self._config.skip_tor_for_merchant_callbacks():
+            privacy_context = BaseTorCircuits.SKIP_TOR
+        else:
+            privacy_context = BaseTorCircuits.SHARED_CIRCUIT_ID
+
         try:
             response: Response = self._http_client.post(url, privacy_context=privacy_context, headers=headers, body=body)
         except requests.exceptions.RequestException as e:

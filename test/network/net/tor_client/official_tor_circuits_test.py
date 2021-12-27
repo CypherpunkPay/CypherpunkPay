@@ -78,8 +78,8 @@ class OfficialTorCircuitsTest(CypherpunkpayNetworkTestCase):
                 except Exception as exc:
                     self.fail(f'Failure to get future.result() for future: {future.__dict__}')
 
-    def test_local_network_label_does_not_use_tor(self):
-        session = self.official_tor.get_for(BaseTorCircuits.LOCAL_NETWORK)
+    def test_skip_tor_label_does_not_use_tor(self):
+        session = self.official_tor.get_for(BaseTorCircuits.SKIP_TOR)
 
         ip_disabled_tor = self.get_ip(session)
         ip_clear = self.get_ip(requests.Session())
