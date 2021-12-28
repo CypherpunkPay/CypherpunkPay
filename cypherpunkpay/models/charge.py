@@ -33,9 +33,21 @@ class Charge:
     # expressed in USD for statistics purposes (transacted USD equivalent to be known regardless of specific coin and fiat selected)
     usd_total: [Decimal, None] = None
 
-    # progress
-    pay_status: str = 'unpaid'               # track incoming payments
+    # track technical status of incoming payment, one of:
+    # - unpaid       no funds received, not even unconfirmed
+    # - underpaid    the total received is less than required, this summed up is irrespective to confirmation status
+    # - paid         the total received is >= required but transaction(s) remain unconfirmed
+    # - confirmed    the total confirmed is >= required; 1 network confirmation is enough regardless of coin as pay_status has no direct business significance
+    pay_status: str = 'unpaid'
+
+    # track business status of the charge, one of:
+    # - draft         user must select cryptocurrency; the charge is not being tracked for incoming payments; the charge can remain draft indefinitely
+    # - awaiting      total fully confirmed is less than required; we are awaiting for user payments and/or enough network confirmations
+    # - completed     success, total fully confirmed is >= required
+    # - expired       either user failed to initiate payment within 20 minutes OR received total failed to fully confirm within 48 hours
+    # - cancelled     user or merchant cancelled the charge manually
     status: str = 'draft'                    # track charge business status based on pay_status, high level business rules and manual overrides
+
     cc_received_total: Decimal = Decimal(0)
     confirmations: int = 0
 
