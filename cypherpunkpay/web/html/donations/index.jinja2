@@ -26,6 +26,7 @@
                         <form action="{{ view.request.route_url('post_charge') }}" method="post" class="level-item">
                             <input type="hidden" name="total" value="{{ amount }}"/>
                             <input type="hidden" name="currency" value="{{ donations_fiat_currency }}"/>
+                            <input type="hidden" name="beneficiary" value="{{ donations_cause }}">
                             <button class="button is-link is-outlined" style="width: 100%">{{ view.formatted_currency_amount(amount, donations_fiat_currency) }}</button>
                         </form>
                     {% endfor %}
@@ -69,6 +70,7 @@
                                     {% endfor %}
                                 </select>
                             </p>
+                            <input type="hidden" name="beneficiary" value="{{ donations_cause }}">
                             <p class="control">
                                 <button class="button is-link">Donate</button>
                             </p>

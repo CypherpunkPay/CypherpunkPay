@@ -22,7 +22,6 @@ class Charge:
     # expected payment
     total: Decimal
     currency: str
-    beneficiary: [str, None] = None
 
     # expressed in cryptocurrency
     cc_total: [Decimal, None] = None
@@ -51,6 +50,10 @@ class Charge:
     # context
     wallet_fingerprint: [str, None] = None
     address_derivation_index: [int, None] = None
+
+    # descriptive, without technical significance
+    beneficiary: [str, None] = None
+    what_for: [str, None] = None
 
     # merchant tags
     status_fixed_manually: bool = False
@@ -282,6 +285,8 @@ class ExampleCharge:
             cc_received_total=Decimal(0),
             merchant_order_id=None,
             subsequent_discrepancies=0,
+            beneficiary=None,
+            what_for=None
         ):
         total = Decimal(total)
         cc_received_total = Decimal(cc_received_total)
@@ -322,6 +327,8 @@ class ExampleCharge:
         charge.cc_received_total = cc_received_total
         charge.cc_lightning_payment_request = cc_lightning_payment_request
         charge.subsequent_discrepancies = subsequent_discrepancies
+        charge.beneficiary = beneficiary
+        charge.what_for = what_for
         if uid:
             charge.uid = uid
         if created_at:

@@ -24,11 +24,14 @@ class ChargeViews(BaseView):
 
     @view_config(route_name='post_charge')
     def post_charge(self):
-        total = self.request.params.get('total')
-        currency = self.request.params.get('currency')
-        merchant_order_id = self.request.params.get('merchant_order_id')
+        params = self.request.params
+        total = params.get('total')
+        currency = params.get('currency')
+        merchant_order_id = params.get('merchant_order_id')
+        beneficiary = params.get('beneficiary')
+        what_for = params.get('what_for')
         try:
-            charge = CreateChargeUC(total=total, currency=currency, merchant_order_id=merchant_order_id).exec()
+            charge = CreateChargeUC(total=total, currency=currency, merchant_order_id=merchant_order_id, beneficiary=beneficiary, what_for=what_for).exec()
             if charge.is_active():
                 location = self.request.route_url('get_charge', uid=charge.uid, ux_type='auto')
                 return HTTPFound(location=location)

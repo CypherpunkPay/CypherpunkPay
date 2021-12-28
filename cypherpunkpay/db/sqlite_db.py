@@ -69,7 +69,7 @@ class SqliteDB(DB):
                 sql = f"""
                     INSERT
                         INTO charges ({self.CHARGE_COLUMNS})
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """
                 assert_charge_types(charge)
                 values = self._charge_values(charge)
@@ -399,11 +399,14 @@ class SqliteDB(DB):
         charge.wallet_fingerprint = row['wallet_fingerprint']
         charge.address_derivation_index = row['address_derivation_index']
 
+        charge.beneficiary = row['beneficiary']
+        charge.what_for = row['what_for']
         charge.status_fixed_manually = bool(row['status_fixed_manually'])
 
         charge.block_explorer_1 = row['block_explorer_1']
         charge.block_explorer_2 = row['block_explorer_2']
         charge.subsequent_discrepancies = int(row['subsequent_discrepancies'])
+
 
         charge.created_at = self.soft_apply_utc(row['created_at'])
         charge.updated_at = self.soft_apply_utc(row['updated_at'])
@@ -459,6 +462,8 @@ class SqliteDB(DB):
                 wallet_fingerprint,
                 address_derivation_index,
 
+                beneficiary,
+                what_for,
                 status_fixed_manually,
 
                 block_explorer_1,
@@ -505,6 +510,8 @@ class SqliteDB(DB):
             charge.wallet_fingerprint,
             int(charge.address_derivation_index) if charge.address_derivation_index else None,
 
+            charge.beneficiary,
+            charge.what_for,
             charge.status_fixed_manually,
 
             charge.block_explorer_1,

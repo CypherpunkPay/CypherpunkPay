@@ -40,7 +40,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
 
     def test_charge_btc_success_flow_auto(self):
         # POST charge
-        res = self.webapp.post('/cypherpunkpay/charge', dict(total='0.00000307', currency='btc'))
+        res = self.webapp.post('/cypherpunkpay/charge', dict(total='0.00000307', currency='btc', beneficiary="Wiki Leaks", what_for="Free Assange Campaign"))
         url = res.location
         self.assertEqual(302, res.status_int)
 
@@ -50,6 +50,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, '0.00000307')
         self.assertInBody(res, 'BTC')
         self.assertInBody(res, charge.cc_address)
+        self.assertInBody(res, 'Wiki Leaks, Free Assange Campaign')
 
         # GET underpaid
         charge.pay_status = 'underpaid'
@@ -59,6 +60,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, '0.00000007')
         self.assertInBody(res, 'BTC')
         self.assertInBody(res, charge.cc_address)
+        self.assertInBody(res, 'Wiki Leaks, Free Assange Campaign')
 
         # GET paid
         charge.pay_status = 'paid'
@@ -70,6 +72,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, 'in progress')
         self.assertInBody(res, charge.uid)    # your reference charge ID
         self.assertNotInBody(res, charge.cc_address)  # address should no longer be displayed
+        self.assertInBody(res, 'Wiki Leaks, Free Assange Campaign')
 
         # GET confirmed
         charge.pay_status = 'confirmed'
@@ -81,6 +84,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, '1 network confirmation')
         self.assertInBody(res, charge.uid)    # your reference charge ID
         self.assertNotInBody(res, charge.cc_address)  # address should no longer be displayed
+        self.assertInBody(res, 'Wiki Leaks, Free Assange Campaign')
 
         # GET completed
         charge.pay_status = 'confirmed'
@@ -93,10 +97,11 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, 'completed')
         self.assertInBody(res, charge.uid)    # your reference charge ID
         self.assertNotInBody(res, charge.cc_address)  # address should no longer be displayed
+        self.assertInBody(res, 'Wiki Leaks, Free Assange Campaign')
 
     def test_charge_btc_success_flow_manual(self):
         # POST charge
-        res = self.webapp.post('/cypherpunkpay/charge', dict(total='37', currency='btc'))
+        res = self.webapp.post('/cypherpunkpay/charge', dict(total='37', currency='btc', beneficiary="Wiki Leaks", what_for="Free Assange Campaign"))
         url = res.location
         self.assertEqual(302, res.status_int)
 
@@ -106,6 +111,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, '37')
         self.assertInBody(res, 'BTC')
         self.assertInBody(res, charge.cc_address)
+        self.assertInBody(res, 'Wiki Leaks, Free Assange Campaign')
 
         # GET underpaid
         charge.pay_status = 'underpaid'
@@ -115,6 +121,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, '26')
         self.assertInBody(res, 'BTC')
         self.assertInBody(res, charge.cc_address)
+        self.assertInBody(res, 'Wiki Leaks, Free Assange Campaign')
 
         # GET paid
         charge.pay_status = 'paid'
@@ -126,6 +133,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, 'in progress')
         self.assertInBody(res, charge.uid)  # your reference charge ID
         self.assertNotInBody(res, charge.cc_address)  # address should no longer be displayed
+        self.assertInBody(res, 'Wiki Leaks, Free Assange Campaign')
 
         # GET confirmed
         charge.pay_status = 'confirmed'
@@ -137,6 +145,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, '1 network confirmation')
         self.assertInBody(res, charge.uid)  # your reference charge ID
         self.assertNotInBody(res, charge.cc_address)  # address should no longer be displayed
+        self.assertInBody(res, 'Wiki Leaks, Free Assange Campaign')
 
         # GET completed
         charge.pay_status = 'confirmed'
@@ -149,6 +158,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, 'completed')
         self.assertInBody(res, charge.uid)  # your reference charge ID
         self.assertNotInBody(res, charge.cc_address)  # address should no longer be displayed
+        self.assertInBody(res, 'Wiki Leaks, Free Assange Campaign')
 
     def test_charge_usd_then_select_btc_payment(self):
         # POST charge

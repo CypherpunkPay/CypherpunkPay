@@ -27,6 +27,8 @@
                                         <input type="hidden" name="merchant_order_id" value="{{ order.uid }}"/>
                                         <input type="hidden" name="total" value="{{ order.item['price'] }}"/>
                                         <input type="hidden" name="currency" value="{{ order.item['currency'] }}"/>
+                                        <input type="hidden" name="beneficiary" value="Dummy Store Ltd"/>
+                                        <input type="hidden" name="what_for" value="{{ order.item['name'] }}"/>
                                         <button class="button is-success is-outlined">Buy and Checkout</button>
                                     </form>
                                 </div>

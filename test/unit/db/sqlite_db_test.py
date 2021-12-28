@@ -128,7 +128,10 @@ class SqliteDBTest(CypherpunkpayDBTestCase):
 
             pay_status='underpaid',
             status='expired',
-            address_derivation_index=13
+            address_derivation_index=13,
+
+            beneficiary='SQLite',
+            what_for='Further Development'
         )
         charge2.confirmations = 2
         charge2.status_fixed_manually = True
@@ -167,6 +170,8 @@ class SqliteDBTest(CypherpunkpayDBTestCase):
         self.assertEqual(charge2.block_explorer_1, ret2.block_explorer_1)
         self.assertEqual(charge2.block_explorer_2, ret2.block_explorer_2)
         self.assertEqual(charge2.subsequent_discrepancies, ret2.subsequent_discrepancies)
+        self.assertEqual(charge2.beneficiary, ret2.beneficiary)
+        self.assertEqual(charge2.what_for, ret2.what_for)
 
         self.assertEqual(charge2.created_at, ret2.created_at)
         self.assertEqual(charge2.updated_at, ret2.updated_at)

@@ -11,7 +11,17 @@ class CreateChargeUC(BaseChargeUC):
 
     BTC_PRECISION = 8
 
-    def __init__(self, total: [str, Decimal], currency: str, merchant_order_id: str = None, config=None, db=None, price_tickers=None, qr_cache=None):
+    def __init__(self,
+                 total: [str, Decimal],
+                 currency: str,
+                 merchant_order_id: str = None,
+                 beneficiary=None,
+                 what_for=None,
+                 config=None,
+                 db=None,
+                 price_tickers=None,
+                 qr_cache=None
+                ):
         self.config = config if config else App().config()
         self.db = db if db else App().db()
         self.price_tickers = price_tickers if price_tickers else App().price_tickers()
@@ -20,6 +30,8 @@ class CreateChargeUC(BaseChargeUC):
         self.total = total
         self.currency = currency
         self.merchant_order_id = merchant_order_id
+        self.beneficiary = beneficiary
+        self.what_for = what_for
 
         self.cc_currency = None
         self.wallet_fingerprint = None
@@ -62,6 +74,9 @@ class CreateChargeUC(BaseChargeUC):
             charge.address_derivation_index = address_index
             charge.cc_address = address
             charge.advance_to_awaiting()
+
+        charge.beneficiary = self.beneficiary
+        charge.what_for = self.what_for
 
         self.db.insert(charge)
         return charge

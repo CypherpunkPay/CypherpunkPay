@@ -1,7 +1,3 @@
-"""
-Create coins
-"""
-
 from yoyo import step
 
 __depends__ = {}
