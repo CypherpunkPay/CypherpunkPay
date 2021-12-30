@@ -2,20 +2,18 @@
     &raquo;
     {% if charge.is_donation() %}
         Donation of {{ view.formatted_currency_amount(charge.total, charge.currency) | safe }}
-        to
-        {% if not charge.beneficiary and not charge.what_for %}
-            a good cause
+        {% if charge.beneficiary and charge.what_for %}
+            to {{ charge.beneficiary }}, {{ charge.what_for }}
         {% endif %}
         {% if charge.beneficiary and not charge.what_for %}
-            {{ charge.beneficiary }}
+            to {{ charge.beneficiary }}
         {% endif %}
-        {% if charge.beneficiary and charge.what_for %}
-            {{ charge.beneficiary }}, {{ charge.what_for }}
+        {% if not charge.beneficiary and charge.what_for %}
+            {{ charge.what_for }}
         {% endif %}
     {% else %}
         Payment of {{ view.formatted_currency_amount(charge.total, charge.currency) | safe }}
         {% if not charge.beneficiary and not charge.what_for %}
-            to merchant
             for order {{ charge.merchant_order_id }}
         {% endif %}
         {% if charge.beneficiary and not charge.what_for %}
