@@ -16,13 +16,16 @@
         {% if not charge.beneficiary and not charge.what_for %}
             for order {{ charge.merchant_order_id }}
         {% endif %}
+        {% if charge.beneficiary and charge.what_for %}
+            to {{ charge.beneficiary }}
+            for {{ charge.what_for }}
+        {% endif %}
         {% if charge.beneficiary and not charge.what_for %}
             to {{ charge.beneficiary }}
             for order {{ charge.merchant_order_id }}
         {% endif %}
-        {% if charge.beneficiary and charge.what_for %}
-            to {{ charge.beneficiary }}
-            for {{ charge.what_for }}
+        {% if not charge.beneficiary and charge.what_for %}
+            {{ charge.what_for }}
         {% endif %}
     {% endif %}
 </h2>
