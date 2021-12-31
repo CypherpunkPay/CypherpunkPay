@@ -91,5 +91,25 @@ class DummystoreViewsTest(CypherpunkpayAppTestCase):
         self.assertEqual('btc', order.cc_currency)
         self.assertEqual(200, res.status_int)
 
+    def test_post_cypherpunkpay_payment_failed__does_not_ship(self):
+        order = DummyStoreOrder(uid='ord-140', item_id=0, total=10, currency='USD')
+        App().db().insert(order)
+        data_correct = """
+        {
+            "untrusted": {
+                "merchant_order_id": "ord-140",
+                "total": "10",
+                "currency": "usd"
+            },
+
+            "status": "cancelled"
+        }
+        """
+        res = self.webapp.post('/cypherpunkpay/dummystore/cypherpunkpay_payment_failed', headers=self.correct_auth_header(), params=data_correct, expect_errors=False)
+        order = App().db().get_order_by_uid('ord-140')
+        self.assertIsNone(order.cc_total)
+        self.assertIsNone(order.cc_currency)
+        self.assertEqual(200, res.status_int)
+
     def correct_auth_header(self) -> dict:
         return {'Authorization': 'Bearer nsrzukv53xjhmw4w5ituyk5cre'}

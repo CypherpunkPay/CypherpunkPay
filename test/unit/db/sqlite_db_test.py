@@ -203,7 +203,7 @@ class SqliteDBTest(CypherpunkpayDBTestCase):
         charge4.status_fixed_manually = True
         charge4.merchant_order_id = 'ord-1'
         self.db.insert(charge4)
-        ret = self.db.get_charges_for_merchant_notification()
+        ret = self.db.get_charges_for_merchant_notification(statuses=['completed'])
         self.assertEqual(1, len(ret))
 
         # save() / insert

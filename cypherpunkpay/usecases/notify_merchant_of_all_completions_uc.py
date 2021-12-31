@@ -11,6 +11,6 @@ class NotifyMerchantOfAllCompletionsUC(UseCase):
         self._http_client = http_client
 
     def exec(self):
-        charges = self._db.get_charges_for_merchant_notification()
+        charges = self._db.get_charges_for_merchant_notification(statuses=['completed'])
         for charge in charges:
             CallPaymentCompletedUrlUC(charge=charge, db=self._db, config=self._config, http_client=self._http_client).exec()

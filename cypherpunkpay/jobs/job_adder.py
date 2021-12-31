@@ -10,6 +10,7 @@ class JobAdder(object):
 
     def add_full_time_jobs(self):
         scheduler = self._app.job_scheduler()
+        config = self._app.config()
 
         trigger = interval.IntervalTrigger(seconds=60)
         scheduler.add_job(
@@ -39,13 +40,23 @@ class JobAdder(object):
             trigger=trigger
         )
 
-        if self._app.config().merchant_enabled():
+        if config.merchant_enabled():
             from cypherpunkpay.usecases.notify_merchant_of_all_completions_uc import NotifyMerchantOfAllCompletionsUC
-            trigger = interval.IntervalTrigger(seconds=4)
+            trigger = interval.IntervalTrigger(seconds=5)
             scheduler.add_job(
                 lambda: NotifyMerchantOfAllCompletionsUC(self._app.db()).exec(),
                 id='notify_merchant_of_all_completions',
                 name="notify_merchant_of_all_completions",
+                trigger=trigger
+            )
+
+        if config.merchant_enabled() and config.payment_failed_notification_url():
+            from cypherpunkpay.usecases.notify_merchant_of_all_failed_uc import NotifyMerchantOfAllFailedUC
+            trigger = interval.IntervalTrigger(seconds=10)
+            scheduler.add_job(
+                lambda: NotifyMerchantOfAllFailedUC(self._app.db()).exec(),
+                id='notify_merchant_of_all_failed',
+                name="notify_merchant_of_all_failed",
                 trigger=trigger
             )
 
@@ -58,7 +69,7 @@ class JobAdder(object):
             trigger=trigger
         )
 
-        if self._app.config().dev_env():
+        if config.dev_env():
             from cypherpunkpay.db.dev_examples import DevExamples
             # This is attempted in perpetuity because we wait for App to be fully initialized (prices etc)
             trigger = interval.IntervalTrigger(seconds=2)

@@ -195,6 +195,9 @@ class Config(object):
     def payment_completed_notification_url(self) -> str:
         return self._dict.get('payment_completed_notification_url', None)
 
+    def payment_failed_notification_url(self) -> str:
+        return self._dict.get('payment_failed_notification_url', None)
+
     def back_to_merchant_url(self) -> str:
         return self._dict.get('back_to_merchant_url', None)
 

@@ -31,7 +31,7 @@ def main(global_config, **settings):
     path_prefix = App().config().path_prefix()
     if path_prefix:
         pyramid.add_route('get_root_not_prefixed', '/', request_method='GET')  # 302: / -> /path_prefix/
-        
+
     pyramid.include(routing_config, route_prefix=path_prefix)
 
     # Authentication and Authorization
@@ -120,6 +120,7 @@ def routing_config(pyramid):
             log.info(f'Dummy store enabled at /{pyramid.route_prefix}/')
             pyramid.add_route('get_dummystore_root', '/', request_method='GET')
             pyramid.add_route('post_cypherpunkpay_payment_completed', '/cypherpunkpay_payment_completed', request_method='POST')
+            pyramid.add_route('post_cypherpunkpay_payment_failed', '/cypherpunkpay_payment_failed', request_method='POST')
             pyramid.add_route('get_dummystore_order', '/order/{uid}', request_method='GET')
 
 

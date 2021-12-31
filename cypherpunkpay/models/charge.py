@@ -57,7 +57,7 @@ class Charge:
     completed_at: [datetime, None] = None    # when status set to completed (meaning, enough confirmations or manual completion)
     expired_at: [datetime, None] = None      # when expired to pay or expired to complete or manual expiration
     cancelled_at: [datetime, None] = None    # when manually cancelled
-    payment_completed_url_called_at: [datetime, None] = None  # when merchant `payment_completed_notification_url` got successfully called
+    merchant_callback_url_called_at: [datetime, None] = None  # when merchant `payment_completed_notification_url` got successfully called
 
     # context
     wallet_fingerprint: [str, None] = None
@@ -265,6 +265,11 @@ class Charge:
         log.info(f'Charge {self.short_uid()} status {self.status} -> expired')
         self.expired_at = utc_now()
         self.status = 'expired'
+
+    def advance_to_cancelled(self):
+        log.info(f'Charge {self.short_uid()} status {self.status} -> cancelled')
+        self.cancelled_at = utc_now()
+        self.status = 'cancelled'
 
     # if changed the charge UI needs to refresh / think UI cache invalidation
     def state_hash_for_ui(self):

@@ -36,7 +36,6 @@ class CallPaymentCompletedUrlUCTest(CypherpunkpayDBTestCase):
 
     def test_exec(self):
         charge = ExampleCharge.db_create(self.db, uid='1', total=Decimal('1234567890.00000001'), currency='usd', status='completed', merchant_order_id='ord-1', cc_total=Decimal('1000.000000000001'), cc_currency='btc')
-        #ExampleCharge.db_create(self.db, uid='2', total=Decimal('1000.000000000001'), currency='xmr', status='completed', merchant_order_id='ord-2', cc_currency='xmr')
 
         mock_http_client = MockHttpClient()
         CallPaymentCompletedUrlUC(charge=charge, db=self.db, config=ExampleConfig(), http_client=mock_http_client).exec()
@@ -55,16 +54,16 @@ class CallPaymentCompletedUrlUCTest(CypherpunkpayDBTestCase):
         body = mock_http_client.body
         import json
         parsed_body = json.loads(body)
-        self.assertTrue('untrusted' in parsed_body)
-        self.assertTrue('status' in parsed_body)
-        self.assertTrue('cc_total' in parsed_body)
-        self.assertTrue('cc_currency' in parsed_body)
-        self.assertTrue('"1234567890.00000001"' in body)
-        self.assertTrue('"1000.000000000001"' in body)
+        self.assertEqual(parsed_body['untrusted']['merchant_order_id'], 'ord-1')
+        self.assertEqual(parsed_body['untrusted']['total'], '1234567890.00000001')
+        self.assertEqual(parsed_body['untrusted']['currency'], 'usd')
+        self.assertEqual(parsed_body['status'], 'completed')
+        self.assertEqual(parsed_body['cc_total'], '1000.000000000001')
+        self.assertEqual(parsed_body['cc_currency'], 'btc')
 
         # Marks charge as notified
         charge_reloaded = self.db.get_charge_by_uid('1')
-        self.assertIsNotNone(charge_reloaded.payment_completed_url_called_at)
+        self.assertIsNotNone(charge_reloaded.merchant_callback_url_called_at)
 
     def test_exec_without_tor(self):
         charge = ExampleCharge.db_create(self.db, uid='1', total=Decimal('1234567890.00000001'), currency='usd', status='completed', merchant_order_id='ord-1', cc_total=Decimal('1000.000000000001'), cc_currency='btc')
@@ -81,22 +80,3 @@ class CallPaymentCompletedUrlUCTest(CypherpunkpayDBTestCase):
 
         # With SKIP_TOR privacy context
         self.assertEqual(BaseTorCircuits.SKIP_TOR, mock_http_client.privacy_context)
-
-        # Has the right headers
-        self.assertEqual('Bearer nsrzukv53xjhmw4w5ituyk5cre', mock_http_client.headers.get('Authorization'))
-        self.assertEqual('application/json', mock_http_client.headers.get('Content-Type'))
-
-        # Renders body correctly
-        body = mock_http_client.body
-        import json
-        parsed_body = json.loads(body)
-        self.assertTrue('untrusted' in parsed_body)
-        self.assertTrue('status' in parsed_body)
-        self.assertTrue('cc_total' in parsed_body)
-        self.assertTrue('cc_currency' in parsed_body)
-        self.assertTrue('"1234567890.00000001"' in body)
-        self.assertTrue('"1000.000000000001"' in body)
-
-        # Marks charge as notified
-        charge_reloaded = self.db.get_charge_by_uid('1')
-        self.assertIsNotNone(charge_reloaded.payment_completed_url_called_at)

@@ -242,17 +242,19 @@ class SqliteDB(DB):
             if row:
                 return self.charge_from_row(row)
 
-    def get_charges_for_merchant_notification(self):
+    def get_charges_for_merchant_notification(self, statuses: List):
+        placeholders = ','.join(['?' for _ in statuses])
         with self.lock:
             sql = f"""
                 SELECT {self.CHARGE_COLUMNS} FROM charges
                 WHERE
-                    status = 'completed' AND
+                    status IN ({placeholders}) AND
                     merchant_order_id IS NOT NULL AND
-                    payment_completed_url_called_at IS NULL
-                ORDER BY completed_at
+                    merchant_callback_url_called_at IS NULL
+                ORDER BY completed_at, cancelled_at, expired_at
             """
-            rows = self._db.execute(sql)
+            values = statuses
+            rows = self._db.execute(sql, values)
             charges = []
             for row in rows:
                 charges.append(self.charge_from_row(row))
@@ -394,7 +396,7 @@ class SqliteDB(DB):
         charge.completed_at = self.soft_apply_utc(row['completed_at'])
         charge.expired_at = self.soft_apply_utc(row['expired_at'])
         charge.cancelled_at = self.soft_apply_utc(row['cancelled_at'])
-        charge.payment_completed_url_called_at = self.soft_apply_utc(row['payment_completed_url_called_at'])
+        charge.merchant_callback_url_called_at = self.soft_apply_utc(row['merchant_callback_url_called_at'])
 
         charge.wallet_fingerprint = row['wallet_fingerprint']
         charge.address_derivation_index = row['address_derivation_index']
@@ -457,7 +459,7 @@ class SqliteDB(DB):
                 completed_at,
                 expired_at,
                 cancelled_at,
-                payment_completed_url_called_at,
+                merchant_callback_url_called_at,
 
                 wallet_fingerprint,
                 address_derivation_index,
@@ -505,7 +507,7 @@ class SqliteDB(DB):
             charge.completed_at,
             charge.expired_at,
             charge.cancelled_at,
-            charge.payment_completed_url_called_at,
+            charge.merchant_callback_url_called_at,
 
             charge.wallet_fingerprint,
             int(charge.address_derivation_index) if charge.address_derivation_index else None,

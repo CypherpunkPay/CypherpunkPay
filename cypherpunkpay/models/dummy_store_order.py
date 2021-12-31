@@ -11,7 +11,7 @@ class DummyStoreOrder:
     total: Decimal = 0
     currency: str = None
 
-    cc_total: Decimal = 0
+    cc_total: [Decimal, None] = None
     cc_currency: str = None
 
     def __init__(self, uid: str, item_id: int, total: [Decimal, str], currency: str):
@@ -28,6 +28,9 @@ class DummyStoreOrder:
 
     def ship(self):
         log.info(f'Shipping order: {self.__dict__}')
+
+    def dont_ship(self):
+        log.info(f'Not shipping order because of failed payment: {self.__dict__}')
 
     def is_payment_completed(self):
         return self.cc_total and self.cc_currency

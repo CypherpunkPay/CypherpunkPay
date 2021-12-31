@@ -1,4 +1,5 @@
 import hashlib
+from abc import ABC
 
 from monero.backends.offline import OfflineWallet
 from monero.wallet import Wallet
@@ -9,7 +10,7 @@ from cypherpunkpay.exceptions import UnsupportedCoin
 from cypherpunkpay.usecases import UseCase
 
 
-class BaseChargeUC(UseCase):
+class BaseChargeUC(UseCase, ABC):
 
     def next_unused_address(self, cc_currency):
         if cc_currency == 'btc':

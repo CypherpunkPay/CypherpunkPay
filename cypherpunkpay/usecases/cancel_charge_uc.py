@@ -1,6 +1,4 @@
-from cypherpunkpay.common import *
 from cypherpunkpay.usecases.base_charge_uc import BaseChargeUC
-from cypherpunkpay.usecases.invalid_params import InvalidParams
 from cypherpunkpay.app import App
 from cypherpunkpay.models.charge import Charge
 
@@ -12,9 +10,6 @@ class CancelChargeUC(BaseChargeUC):
         self.charge = charge
 
     def exec(self) -> Charge:
-        status_before = self.charge.status
-        self.charge.status = 'cancelled'
-        self.charge.cancelled_at = utc_now()
+        self.charge.advance_to_cancelled()
         self.db.save(self.charge)
-        log.info(f'Charge {self.charge.short_uid()} status {status_before} -> cancelled')
         return self.charge

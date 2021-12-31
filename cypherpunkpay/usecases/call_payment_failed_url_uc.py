@@ -3,17 +3,17 @@ import logging as log
 from cypherpunkpay.usecases.call_merchant_base_uc import CallMerchantBaseUC
 
 
-class CallPaymentCompletedUrlUC(CallMerchantBaseUC):
+class CallPaymentFailedUrlUC(CallMerchantBaseUC):
 
     def exec(self):
         if not self._config.merchant_enabled() or \
            not self._charge.merchant_order_id or \
-           not self._charge.is_completed():
+           not (self._charge.is_cancelled() or self._charge.is_expired()):
             return
 
-        log.debug(f'Notifying merchant on status=completed for {self._charge.short_uid()}')
+        log.debug(f'Notifying merchant on status={self._charge.status} for {self._charge.short_uid()}')
 
-        url = self._config.payment_completed_notification_url()
+        url = self._config.payment_failed_notification_url()
         body = f"""
 {{
   "untrusted": {{
@@ -21,9 +21,7 @@ class CallPaymentCompletedUrlUC(CallMerchantBaseUC):
     "total": "{format(self._charge.total, 'f')}",
     "currency": "{self._charge.currency.casefold()}"
   }},
-  "status": "completed",
-  "cc_total": "{format(self._charge.cc_total, 'f')}",
-  "cc_currency": "{self._charge.cc_currency.casefold()}"
+  "status": "{self._charge.status}"
 }}""".strip()
 
         self.call_merchant_and_mark_as_done(url, body)

@@ -79,7 +79,7 @@ class DB(ABC):
         ...
 
     @abstractmethod
-    def get_charges_for_merchant_notification(self):
+    def get_charges_for_merchant_notification(self, statuses: List):
         ...
 
     @abstractmethod

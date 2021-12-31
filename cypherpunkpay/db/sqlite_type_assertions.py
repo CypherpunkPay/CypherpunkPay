@@ -81,7 +81,7 @@ def assert_charge_types(c: Charge):
     assert_utc_or_null(c.completed_at)
     assert_utc_or_null(c.expired_at)
     assert_utc_or_null(c.cancelled_at)
-    assert_utc_or_null(c.payment_completed_url_called_at)
+    assert_utc_or_null(c.merchant_callback_url_called_at)
 
     assert_str_or_null(c.wallet_fingerprint)
     assert_int_or_null(c.address_derivation_index)

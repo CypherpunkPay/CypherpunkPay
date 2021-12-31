@@ -40,7 +40,7 @@ class NotifyMerchantOfAllCompletionsUCTest(CypherpunkpayDBTestCase):
         ExampleCharge.db_create(self.db, total=Decimal('4'), currency='usd', status='completed', merchant_order_id=None)
         # already notified
         charge = ExampleCharge.db_create(self.db, total=Decimal('5'), currency='usd', status='completed', merchant_order_id='d', )
-        charge.payment_completed_url_called_at = utc_now()
+        charge.merchant_callback_url_called_at = utc_now()
         self.db.save(charge)
 
         # ELIGIBLE FOR NOTIFICATION
