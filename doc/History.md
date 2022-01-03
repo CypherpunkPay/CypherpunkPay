@@ -8,3 +8,5 @@
 2021-10-28 Christopher Allen, co-author of TLS, announces integration of CypherpunkPay into Blockchain Commons / Bitcoin Standup suite [tweet](https://twitter.com/ChristopherA/status/1453799773140512768?s=20), [instructions](https://www.higithub.com/BlockchainCommons/repo/Bitcoin-Standup-Scripts), [2021 Q3 Blockchain Commons Report](https://www.blockchaincommons.com/quarterlies/Q3-2021-Report/). It's an honor, thanks for recognition Chris!
 
 2021-12-21 New contributor to the project starts submitting quality [pull requests](https://github.com/CypherpunkPay/CypherpunkPay/pull/8).
+
+2022-01-03 CypherpunkPay accepted to [Awesome Bitcoin Payment Processors](https://github.com/alexk111/awesome-bitcoin-payment-processors) list by Alex Kaul
