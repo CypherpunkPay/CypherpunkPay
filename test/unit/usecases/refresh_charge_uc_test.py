@@ -25,24 +25,13 @@ class StubRefreshChargeUC(RefreshChargeUC):
 
 class StubLnRefreshChargeUC(RefreshChargeUC):
 
-    def __init__(self, charge_uid: str, received_total_msats: int, db=None):
+    def __init__(self, charge_uid: str, credits: [List[Credit], None], db=None):
         self._blockchain_height = 2**31  # just big
         super().__init__(charge_uid, current_height=self._blockchain_height, db=db, http_client=DummyHttpClient(), config=ExampleConfig())
-        self._mock_received_total_msats = received_total_msats
+        self._mock_credits = credits
 
-    def instantiate_lnd_client(self):
-        class StubLndClient(object):
-            def __init__(self, received_total_msats):
-                self._mock_received_total_msats = received_total_msats
-
-            def lookupinvoice(self, r_hash) -> LnInvoice():
-                ln_invoice = LnInvoice()
-                if self._mock_received_total_msats > 0:
-                    ln_invoice.is_settled = True
-                    ln_invoice.amt_paid_msat = self._mock_received_total_msats
-                return ln_invoice
-
-        return StubLndClient(received_total_msats=self._mock_received_total_msats)
+    def fetch_credits_from_lightning_node(self, charge) -> [AddressCredits, None]:
+        return AddressCredits(self._mock_credits, self._blockchain_height)
 
 
 class RefreshChargeUCTest(CypherpunkpayDBTestCase):
@@ -461,8 +450,6 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
     # Lightning
 
     def test_lightning_unpaid_to_completed(self):
-        RECEIVED_TOTAL_MSATS = 2_000_000 * 1000  # 0.02 BTC
-
         charge = Charge(total=self.ONE_SATOSHI, currency='btc', time_to_pay_ms=15*60*1000, time_to_complete_ms=60*60*1000)
         charge.cc_total = charge.total
         charge.activated_at = utc_now()
@@ -470,27 +457,24 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         charge.cc_lightning_payment_request = self.EXAMPLE_PAYMENT_REQUEST_TESTNET
         self.db.insert(charge)
 
-        uc = StubLnRefreshChargeUC(charge.uid, received_total_msats=RECEIVED_TOTAL_MSATS, db=self.db)
+        uc = StubLnRefreshChargeUC(charge.uid, [Credit.confirmed(Decimal('0.00000001'), 1000)], db=self.db)
         uc.exec()
         self.db.reload(charge)
 
         assert charge.is_confirmed()
         assert charge.is_completed()
-        assert charge.cc_received_total == Decimal('0.02')
+        assert charge.cc_received_total == Decimal('0.00000001')
         assert charge.paid_at is not None
         assert charge.completed_at is not None
 
-    # Mock checking lookupinvoice will NOT be called
+    # Mock checking fetch_credits_from_lightning_node will NOT be called
     class MockLnRefreshChargeUC(RefreshChargeUC):
         def __init__(self, charge_uid: str, db=None):
             self._blockchain_height = 2**31  # just big
             super().__init__(charge_uid, current_height=self._blockchain_height, db=db, http_client=DummyHttpClient(), config=ExampleConfig())
 
-        def instantiate_lnd_client(self):
-            class MockLndClient(object):
-                def lookupinvoice(self, r_hash) -> LnInvoice():
-                    raise Exception('This method should not be called -> test case failed')
-            return MockLndClient()
+        def fetch_credits_from_lightning_node(self, charge):
+            raise Exception('This method should not be called -> test case failed')
 
     def test_lightning_expired_wont_refresh(self):
         charge = Charge(total=self.ONE_SATOSHI, currency='btc', time_to_pay_ms=1, time_to_complete_ms=60*60*1000)

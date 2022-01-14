@@ -1,8 +1,5 @@
 from cypherpunkpay.app import App
-from cypherpunkpay.bitcoin import btc_network_class
-from cypherpunkpay.bitcoin.electrum.lnaddr import lndecode
 from cypherpunkpay.common import *
-from cypherpunkpay.lightning_node_clients.lnd_client import LndClient
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.models.credit import Credit
@@ -10,6 +7,7 @@ from cypherpunkpay.usecases import UseCase
 from cypherpunkpay.usecases.ensure_block_explorers_uc import EnsureBlockExplorersUC
 from cypherpunkpay.usecases.fetch_address_credits_from_explorers_uc import FetchAddressCreditsFromExplorersUC
 from cypherpunkpay.usecases.fetch_address_credits_from_full_node_uc import FetchAddressCreditsFromFullNodeUC
+from cypherpunkpay.usecases.fetch_credits_from_lightning_node_uc import FetchCreditsFromLightningNodeUC
 
 
 class RefreshChargeUC(UseCase):
@@ -17,7 +15,6 @@ class RefreshChargeUC(UseCase):
     charge_uid: str
 
     CONFIRMATIONS_TO_CONSIDER_COMPLETED = 2
-    LIGHTNING_FAKE_NUMBER_OF_CONFIRMATIONS = 65535  # how many "confirmations" to assign to LN payments; a marker value as LN payments don't have a concept of confirmations
 
     def __init__(self, charge_uid: str, current_height=None, db=None, http_client=None, config=None):
         self.charge_uid = charge_uid
@@ -170,24 +167,16 @@ class RefreshChargeUC(UseCase):
 
     # MOCK ME
     def fetch_credits_from_lightning_node(self, charge) -> [AddressCredits, None]:
-        lnd_client = self.instantiate_lnd_client()
-        payment_request = lndecode(charge.cc_lightning_payment_request, net=btc_network_class(self._config.btc_network()))
-        ln_invoice = lnd_client.lookupinvoice(r_hash=payment_request.paymenthash)
-        credits = []
-        if ln_invoice.is_settled and ln_invoice.amt_paid_sat > 0:
-            total_paid_btc = Decimal(ln_invoice.amt_paid_sat) / 10**8
-            # Wrapped in AddressCredits for compatibility with existing charge resolution code
-            # Ideally LN charges should be dealt with separately
-            credit = Credit(total_paid_btc, self._current_height - self.LIGHTNING_FAKE_NUMBER_OF_CONFIRMATIONS, has_replaceable_flag=False)
-            credits.append(credit)
-        return AddressCredits(credits, self._current_height)
+        return FetchCreditsFromLightningNodeUC(
+            cc_lightning_payment_request=charge.cc_lightning_payment_request,
+            current_height=self._current_height,
+            config=self._config,
+            http_client=self._http_client
+        ).exec()
 
     # MOCK ME
     def fetch_address_credits_from_full_node(self, charge) -> [AddressCredits, None]:
         return FetchAddressCreditsFromFullNodeUC(
-            charge.cc_currency,
-            charge.cc_address,
-            charge.wallet_fingerprint,
             current_height=self._current_height,
             http_client=self._http_client
         ).exec()
@@ -220,10 +209,3 @@ class RefreshChargeUC(UseCase):
 
     def confirmations(self, credits: List[Credit], current_height):
         return min(map(lambda c: current_height - c.confirmed_height() + 1, credits))
-
-    def instantiate_lnd_client(self):
-        return LndClient(
-            lnd_node_url=self._config.btc_lightning_lnd_url(),
-            invoice_macaroon=self._config.btc_lightning_lnd_invoice_macaroon(),
-            http_client=self._http_client
-        )
