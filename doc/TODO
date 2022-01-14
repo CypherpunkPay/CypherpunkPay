@@ -1,9 +1,15 @@
 
+* Add BTC and sats denominations for custom amount
+
+* Homepage: make DONATE more visible (user feedback)
+
+* Homepage: make GITHUB more visible (user feedback)
+
+* Consider decreasing log/stats/interval as 10 seconds was reported as too verbose by the user
+
 * The charge_payment_timeout_in_minutes should be propagated and used in LN invoice creation to also enforce it on the invoice level
 
 * Cancelled LN charges should propagate cancellation to LND (the invoice should be cancelled)
-
-* Deploy LN support to donate.cypherpunkpay.org (mainnet) and store.cypherpunkpay.org (testnet)
 
 * BUG: 0.01 Won goes below 1 satoshi and causes server error on sanity assertion
 
