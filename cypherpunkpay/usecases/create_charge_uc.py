@@ -56,6 +56,8 @@ class CreateChargeUC(BaseChargeUC):
                 qr_cache=self.qr_cache
             )
         else:
+            self.convert_sats_to_btc()
+
             # ready charge (payment total specified in cryptocurrency)
             charge = Charge(
                 total=self.total,
@@ -81,6 +83,11 @@ class CreateChargeUC(BaseChargeUC):
         self.db.insert(charge)
         return charge
 
+    def convert_sats_to_btc(self):
+        if self.currency == 'sats':
+            self.currency = 'btc'
+            self.total = self.total / 10**8
+
     def validate_inputs(self):
         errors = {}
         errors.update(self.validate_currency())
@@ -89,13 +96,16 @@ class CreateChargeUC(BaseChargeUC):
             raise InvalidParams(errors)
 
     def validate_currency(self) -> Dict[str, str]:
-        if self.currency in self.config.supported_fiats():
+        currency = self.currency
+        if currency == 'sats':
+            currency = 'btc'  # locally for validation purposes only
+        if currency in self.config.supported_fiats():
             return {}  # OK
-        if self.currency in self.config.supported_coins():
-            if self.currency in self.config.configured_coins():
+        if currency in self.config.supported_coins():
+            if currency in self.config.configured_coins():
                 return {}  # OK
             else:
-                return {'currency': f'No wallet configured for {self.config.cc_network(self.currency)} {self.currency}'}
+                return {'currency': f'No wallet configured for {self.config.cc_network(currency)} {currency}'}
         return {'currency': f'Unsupported currency'}
 
     def validate_total(self) -> Dict[str, str]:
@@ -117,6 +127,9 @@ class CreateChargeUC(BaseChargeUC):
         if self.currency in self.config.supported_coins():
             if self.total < Decimal('0.00000001'):
                 # Sub-satoshi for any cryptocurrency disallowed due to database precision of 8 decimal points
+                return {'total': 'Amount too small'}
+        if self.currency == 'sats':
+            if self.total < 1:
                 return {'total': 'Amount too small'}
         if self.total >= 92_233_720_369:
             # sqlite3 INTEGER is 8 bytes (including sign)

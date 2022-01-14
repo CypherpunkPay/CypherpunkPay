@@ -59,16 +59,20 @@
                 <form action="{{ view.request.route_url('post_charge') }}" method="post">
                         <div class="field is-grouped">
                             <p class="control">
-                                <input type="text" name="total" value="" class="input is-link has-text-right {{ 'is-danger' if 'total' in errors }}" placeholder="50" style="width: 8em;"/>
+                                <input type="text" name="total" value="" class="input is-link has-text-right {{ 'is-danger' if 'total' in errors }}" placeholder="100000" style="width: 8em;"/>
                             </p>
                             <p class="control select is-link {{ 'is-danger' if 'currency' in errors }}">
                                 <select name="currency" class="small">
+                                    {% for currency in view.coin_denominations() %}
+                                        <option value="{{ currency }}">{{ 'sats' if currency == 'sats' else currency.upper() }}</option>
+                                    {% endfor %}
+                                    <option disabled>&mdash;&mdash;</option>
                                     {% for currency in view.top_supported_fiats() %}
-                                        <option value="{{ currency }}" {{ 'selected' if currency.casefold() == donations_fiat_currency.casefold() }}>{{ currency.upper() }}</option>
+                                        <option value="{{ currency }}">{{ currency.upper() }}</option>
                                     {% endfor %}
                                     <option disabled>&mdash;&mdash;</option>
                                     {% for currency in view.bottom_supported_fiats() %}
-                                        <option value="{{ currency }}" {{ 'selected' if currency.casefold() == donations_fiat_currency.casefold() }}>{{ currency.upper() }}</option>
+                                        <option value="{{ currency }}">{{ currency.upper() }}</option>
                                     {% endfor %}
                                 </select>
                             </p>

@@ -208,4 +208,7 @@ class RefreshChargeUC(UseCase):
         return sum(map(lambda c: c.value(), credits))
 
     def confirmations(self, credits: List[Credit], current_height):
-        return min(map(lambda c: current_height - c.confirmed_height() + 1, credits))
+        if credits:
+            return min(map(lambda c: current_height - c.confirmed_height() + 1, credits))
+        else:
+            return 0

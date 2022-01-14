@@ -1,4 +1,5 @@
 from decimal import Decimal
+from typing import List
 
 from cypherpunkpay import Config, App
 from cypherpunkpay.db.db import DB
@@ -138,6 +139,13 @@ class BaseView(object):
             'czk': 'cs_CZ',
             'zar': 'af_ZA'
         }
+
+    def coin_denominations(self) -> List[str]:
+        coins = self.app_config().configured_coins()
+        if 'btc' in coins:
+            # Special treatment to have both sats and BTC
+            coins = ['sats'] + coins
+        return coins
 
     def supported_fiats(self):
         return Config.supported_fiats()

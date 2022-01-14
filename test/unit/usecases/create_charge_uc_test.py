@@ -73,6 +73,19 @@ class CreateChargeUCTest(CypherpunkpayDBTestCase):
         self.assertTrue(charge.is_awaiting())
         self.assertTrue(charge.is_unpaid())
 
+    def test_valid_coin_sats_creates_awaiting_charge(self):
+        charge = self.create_charge('150_000', 'sats')
+
+        self.assertEqual(Decimal('0.00150000'), charge.total)
+        self.assertEqual('btc', charge.currency)
+
+        self.assertEqual(Decimal('0.00150000'), charge.cc_total)
+        self.assertEqual('btc', charge.cc_currency)
+        self.assertNotEmpty(charge.cc_address)
+
+        self.assertTrue(charge.is_awaiting())
+        self.assertTrue(charge.is_unpaid())
+
     def test_btc_testnet_next_address(self):
         class LocalExampleConfig(ExampleConfig):
             def btc_account_xpub(self):
