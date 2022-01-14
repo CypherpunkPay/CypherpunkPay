@@ -110,7 +110,7 @@ class Charge:
         if self.is_lightning():
             return f'lightning:{self.cc_lightning_payment_request}'
         else:
-            return CryptocurrencyPaymentUri.get(self.cc_currency, self.cc_address, amount=self.cc_remaining_total())
+            return CryptocurrencyPaymentUri.get(self.cc_currency, self.cc_address, amount=self.cc_remaining_total(), label=self.description)
 
     def qr_code(self):
         if self.is_lightning():
@@ -278,6 +278,28 @@ class Charge:
         h_obj.update(state.encode('utf8'))
         return h_obj.hexdigest()
 
+    # Wallet history entry / transaction text description
+    @property
+    def description(self) -> str:
+        if self.is_donation():
+            if self.beneficiary and self.what_for:
+                return f'Donation to {self.beneficiary}, {self.what_for}'
+            if self.beneficiary and not self.what_for:
+                return f'Donation to {self.beneficiary}'
+            if not self.beneficiary and self.what_for:
+                return f'Donation to {self.what_for}'
+            if not self.beneficiary and not self.what_for:
+                return f'Donation'
+        else:
+            if not self.beneficiary and not self.what_for:
+                return f'Order {self.merchant_order_id}, charge {self.short_uid()}'
+            if self.beneficiary and self.what_for:
+                return f'{self.beneficiary}, {self.what_for}, charge {self.short_uid()}'
+            if self.beneficiary and not self.what_for:
+                return f'{self.beneficiary}, order {self.merchant_order_id}, charge {self.short_uid()}'
+            if not self.beneficiary and self.what_for:
+                return f'{self.what_for}, charge {self.short_uid()}'
+
 
 class ExampleCharge:
 
@@ -359,3 +381,4 @@ class ExampleCharge:
         charge = cls.create(**kwargs)
         db.insert(charge)
         return charge
+

@@ -93,7 +93,7 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
     def test_btc_lightning(self):
 
         class LndClientStub(object):
-            def addinvoice(self, total_btc, expiry_seconds) -> str:
+            def addinvoice(self, total_btc, expiry_seconds, memo) -> str:
                 return CypherpunkpayTestCase.EXAMPLE_PAYMENT_REQUEST_TESTNET
 
         class PickCryptocurrencyForChargeUCStub(PickCryptocurrencyForChargeUC):

@@ -71,6 +71,7 @@ class PickCryptocurrencyForChargeUC(BaseChargeUC):
         lnd_client = self.instantiate_lnd_client()
         payment_request = lnd_client.addinvoice(
             total_btc=self.charge.cc_total,
+            memo=self.charge.description,
             expiry_seconds=self.config.charge_payment_timeout_in_minutes() * 60
         )
         return payment_request
