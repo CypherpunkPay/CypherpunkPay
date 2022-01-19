@@ -142,6 +142,10 @@ class Config(object):
             'aud', 'brl', 'cad', 'chf', 'czk', 'inr', 'jpy', 'krw', 'mxn', 'pln', 'rub', 'zar'
         ]
 
+    @staticmethod
+    def supported_themes() -> List[str]:
+        return ['plain', 'entertainment']
+
     def configured_coins(self) -> List[str]:
         ret = []
         if self.btc_account_xpub():
@@ -172,6 +176,13 @@ class Config(object):
     def donations_cause(self) -> str:
         cause = self._dict.get('donations_cause', None)
         return cause or None  # convert '' to None
+
+    def theme(self) -> str:
+        theme = self._dict.get('theme', 'plain')
+        if theme not in self.supported_themes():
+            log.error(f'Unsupported theme in your config file. Pick one of {self.supported_themes()}')
+            exit(1)
+        return theme
 
     def donations_fiat_currency(self) -> str:
         s = self._dict.get('donations_fiat_currency', 'usd').strip().casefold()

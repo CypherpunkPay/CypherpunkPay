@@ -218,6 +218,9 @@ class BaseView(object):
     def app_config(self) -> Config:
         return self.app().config()
 
+    def theme(self) -> str:
+        return self.app_config().theme()
+
     def block_explorer_url(self, charge: Charge):
         if charge.cc_currency == 'btc' and not charge.is_lightning():
             if self.app().config().btc_mainnet():

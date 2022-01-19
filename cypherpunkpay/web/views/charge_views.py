@@ -1,5 +1,4 @@
 import json
-import logging as log
 
 from pyramid.response import Response
 from pyramid.view import (view_config)
@@ -45,7 +44,7 @@ class ChargeViews(BaseView):
             location = self.request.route_url('get_donations', _query={'errors': json.dumps(e.errors)})
             return HTTPFound(location=location)  #return HTTPBadRequest(e.errors)
 
-    @view_config(route_name='get_charge_pick_coin', renderer='web/html/charge_pick_coin.jinja2', http_cache=0)
+    @view_config(route_name='get_charge_pick_coin', renderer='jinja2', http_cache=0)
     def get_charge_pick_coin(self):
         wait_a_sec = self.request.params.get('wait_a_sec', None) == 'true'
         lightning_error = self.request.params.get('lightning_error', None) == 'true'
@@ -58,6 +57,7 @@ class ChargeViews(BaseView):
             location = self.request.route_url('get_charge', uid=charge.uid, ux_type='auto')
             return HTTPFound(location=location)
         title = f"Charge {charge.created_at.date().isoformat()} | {charge.uid}"
+        self.request.override_renderer = f'{self.htmls()}/charge_pick_coin.jinja2'
         return {
             'title': title,
             'charge': charge,
@@ -104,22 +104,22 @@ class ChargeViews(BaseView):
 
     def per_status_renderer(self, type, charge: Charge):
         if charge.is_completed():
-            return f"web/html/charge_completed.jinja2"
+            return f"{self.htmls()}/charge_completed.jinja2"
 
         if charge.is_cancelled():
-            return f"web/html/charge_cancelled.jinja2"
+            return f"{self.htmls()}/charge_cancelled.jinja2"
 
         if charge.is_expired() and charge.is_unpaid():
-            return f"web/html/charge_expired_to_complete__unpaid.jinja2"
+            return f"{self.htmls()}/charge_expired_to_complete__unpaid.jinja2"
         if charge.is_expired() and not charge.is_unpaid():
-            return f"web/html/charge_expired_to_complete__paid.jinja2"
+            return f"{self.htmls()}/charge_expired_to_complete__paid.jinja2"
         if charge.is_soft_expired_to_pay():
-            return f"web/html/charge_expired_to_pay.jinja2"
+            return f"{self.htmls()}/charge_expired_to_pay.jinja2"
 
         if charge.is_awaiting() and charge.pay_status in {'paid', 'confirmed'}:
-            return f"web/html/charge_{charge.pay_status}.jinja2"
+            return f"{self.htmls()}/charge_{charge.pay_status}.jinja2"
         if charge.is_awaiting() and charge.pay_status in ['unpaid', 'underpaid']:
-            return f"web/html/charge_{type}_{charge.pay_status}.jinja2"
+            return f"{self.htmls()}/charge_{type}_{charge.pay_status}.jinja2"
 
         raise Exception(f"Unsupported charge pay_status={charge.pay_status}, status={charge.status}")
 
@@ -167,3 +167,6 @@ class ChargeViews(BaseView):
         if not charge:
             raise HTTPNotFound()
         return Response(body=charge.state_hash_for_ui(), content_type='text/plain')
+
+    def htmls(self):
+        return f"web/html/charge/theme_{self.theme()}"
