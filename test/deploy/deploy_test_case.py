@@ -21,7 +21,7 @@ class DeployTestCase(TestCase):
         cmd = 'cat ~/.bash_aliases | grep DEVELOPMENT_S99_SSH_UUID'
         self.ssh_uuid = subprocess.run(cmd, shell=True, capture_output=True).stdout.decode('utf-8').split('=')[1].strip()
         self.private_key_path = '/home/user/.ssh/99stack_dev'
-        self.deb_file = f'{os.path.dirname(os.path.realpath(__file__))}/../../dist/debian/cypherpunkpay_1.0.8_amd64.deb'
+        self.deb_file = f'{os.path.dirname(os.path.realpath(__file__))}/../../dist/debian/cypherpunkpay_1.0.9_amd64.deb'
         self.test_deb_script = f'{os.path.dirname(os.path.realpath(__file__))}/resources/install_and_run_cypherpunkpay_deb.sh'
 
     def get_servers(self) -> List:

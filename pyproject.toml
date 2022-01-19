@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cypherpunkpay"
-version = "1.0.8"
+version = "1.0.9"
 description = "Modern self-hosted software for accepting Bitcoin on clearnet and onion websites."
 homepage = "https://cypherpunkpay.org/"
 authors = ["cypherpunkdev"]
