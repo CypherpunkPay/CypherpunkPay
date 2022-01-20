@@ -4,10 +4,8 @@
           data-time-to-pay="{{ charge.soft_time_left_to_pay().seconds }}">
         {{ charge.soft_time_left_to_pay_formatted() }}
     </span>
-    [ <a href="{{ request.route_url('get_charge', uid=charge.uid, ux_type='manual') }}">refresh</a> ]
     <br />
     <progress id="time-to-pay-bar"
-              style="height: 2px; width: 168px; back"
               class="progress is-primary"
               value="{{ charge.soft_time_left_to_pay().seconds }}"
               max=  "{{ charge.soft_time_to_pay().seconds }}">

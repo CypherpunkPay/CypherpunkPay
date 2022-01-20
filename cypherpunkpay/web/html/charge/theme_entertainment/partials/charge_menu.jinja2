@@ -1,0 +1,10 @@
+<div class="tabs is-boxed">
+    <ul>
+        <li class="{{ 'is-active' if request.matchdict['ux_type'] == 'auto' }}">
+            <a href="{{ request.route_url('get_charge', uid=charge.uid, ux_type='auto') }}">Scan</a>
+        </li>
+        <li class="{{ 'is-active' if request.matchdict['ux_type'] == 'manual' }}">
+            <a href="{{ request.route_url('get_charge', uid=charge.uid, ux_type='manual') }}">Copy</a>
+        </li>
+    </ul>
+</div>

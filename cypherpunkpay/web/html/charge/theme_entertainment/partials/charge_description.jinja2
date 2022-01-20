@@ -1,0 +1,31 @@
+<h2 class="subtitle is-6 has-text-link-dark" style="margin-top: -1em;">
+    &raquo;
+    {% if charge.is_donation() %}
+        Donation of {{ view.formatted_currency_amount(charge.total, charge.currency) | safe }}
+        {% if charge.beneficiary and charge.what_for %}
+            to {{ charge.beneficiary }}, {{ charge.what_for }}
+        {% endif %}
+        {% if charge.beneficiary and not charge.what_for %}
+            to {{ charge.beneficiary }}
+        {% endif %}
+        {% if not charge.beneficiary and charge.what_for %}
+            {{ charge.what_for }}
+        {% endif %}
+    {% else %}
+        Payment of {{ view.formatted_currency_amount(charge.total, charge.currency) | safe }}
+        {% if not charge.beneficiary and not charge.what_for %}
+            for order {{ charge.merchant_order_id }}
+        {% endif %}
+        {% if charge.beneficiary and charge.what_for %}
+            to {{ charge.beneficiary }}
+            for {{ charge.what_for }}
+        {% endif %}
+        {% if charge.beneficiary and not charge.what_for %}
+            to {{ charge.beneficiary }}
+            for order {{ charge.merchant_order_id }}
+        {% endif %}
+        {% if not charge.beneficiary and charge.what_for %}
+            {{ charge.what_for }}
+        {% endif %}
+    {% endif %}
+</h2>

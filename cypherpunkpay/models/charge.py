@@ -119,7 +119,8 @@ class Charge:
             payload = self.payment_uri()
         qrcode = pyqrcode.create(payload, error='L')
         buffer = io.BytesIO()
-        qrcode.png(buffer, scale=8)
+        # 11, 13, 28
+        qrcode.png(buffer, scale=8, module_color=(35, 38, 60, 255), background=(175, 137, 232, 255))
         return buffer.getvalue()
 
     def qr_code_base64(self) -> str:

@@ -1,0 +1,99 @@
+.hero.is-white-cypherpunkpay {
+    background-color: #0b0d1c;
+    color: #ffffff;
+}
+
+.hero.is-white-cypherpunkpay.is-bold {
+    background-image: none;
+}
+
+.box {
+    background-color: #23263c;
+    color: #e7e8ec;
+}
+
+#charge .tabs ul {
+    border-bottom-color: #af89e8;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+}
+
+#charge .tabs li.is-active a {
+    background-color: #23263c;
+    border-color:     #af89e8;
+    color: #e7e8ec;
+}
+
+#charge .tabs a {
+    border-bottom-color: #af89e8;
+    color: #af89e8;
+}
+
+#charge .tabs.is-boxed a:hover {
+    background-color: #af89e8;
+    border-color:     #af89e8;
+    color: #e7e8ec;
+}
+
+.has-text-link-dark {
+    color: #ebecf0 !important;
+}
+
+.has-text-dark {
+    color: #ebecf0 !important;
+}
+
+.has-text-white {
+    color: #e7e8ec !important;
+}
+
+.button.is-outlined {
+    background-color: transparent;
+    border-color: #af89e8;
+    color: #af89e8;
+}
+
+.button.is-link.is-outlined {
+    background-color: transparent;
+    border-color: #af89e8;
+    color: #af89e8;
+}
+
+a {
+    color: #af89e8;
+}
+
+strong {
+    color: inherit;
+}
+
+code.has-text-link-dark {
+    color: #ff5555 !important;
+    background-color: #23263c;
+}
+
+#time-to-pay-bar {
+    height: 8px;
+    width: 168px;
+    background-color: #e7e8ec;
+}
+
+.progress.is-primary::-webkit-progress-value {
+    background-color: #4be575;
+}
+.progress.is-primary::-moz-progress-bar {
+    background-color: #4be575;
+}
+.progress.is-primary::-ms-fill {
+    background-color: #4be575;
+}
+
+
+.testnet {
+    background-image:none;
+    background-repeat:space;
+}
+.stagenet {
+    background-image:none;
+    background-repeat:space;
+}

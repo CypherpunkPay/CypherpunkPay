@@ -26,8 +26,12 @@
   font-size: 1em;
 }
 
+code {
+    font-size: 1em;
+}
+
 /*
-  Fix tabs insde .hero.is-white element by replacing broken .hero.is-white with ours .hero.is-white-cypherpunkpay.
+  Fix tabs inside .hero.is-white element by replacing broken .hero.is-white with ours .hero.is-white-cypherpunkpay.
  */
 .hero.is-white-cypherpunkpay {
   background-color: white;

@@ -1,0 +1,19 @@
+{% extends "layout.jinja2" %}
+
+{% block content%}
+    <div id="charge" class="box">
+        <h1 class="title has-text-link-dark">
+            Charge cancelled
+        </h1>
+        {% include 'partials/charge_description.jinja2' %}
+        <div class="content">
+            <p>
+                This charge has been cancelled. Please start over.
+            </p>
+            {% include 'partials/charge_reference_id.jinja2' %}
+        </div>
+        {% with button_label = 'Back' %}
+            {% include 'partials/back_from_charge_button.jinja2' %}
+        {% endwith %}
+    </div>
+{% endblock content %}
