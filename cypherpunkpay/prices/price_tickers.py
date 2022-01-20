@@ -30,6 +30,9 @@ class PriceTickers(object):
         }
 
     def price(self, coin: str, fiat: str) -> Decimal:
+        if coin == fiat:
+            return Decimal(1)
+
         coin = coin.casefold()
         if coin not in self._coin_usd_price.keys():
             raise PriceTickers.UnsupportedCurrency(coin)

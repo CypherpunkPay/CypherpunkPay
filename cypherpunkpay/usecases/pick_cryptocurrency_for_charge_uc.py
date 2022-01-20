@@ -22,6 +22,7 @@ class PickCryptocurrencyForChargeUC(BaseChargeUC):
 
     def exec(self):
         self.validate_inputs()
+        self.convert_sats_to_btc()
 
         charge = self.charge
 
@@ -65,6 +66,11 @@ class PickCryptocurrencyForChargeUC(BaseChargeUC):
         if self.cc_currency not in self.config.configured_coins():
             return {'cc_currency': f"No wallet configured for {self.config.cc_network(self.cc_currency)} {self.cc_currency}"}
         return {}
+
+    def convert_sats_to_btc(self):
+        if self.charge.currency == 'sats':
+            self.charge.currency = 'btc'
+            self.charge.total = self.charge.total / 10**8
 
     def create_lightning_payment_request(self) -> str:
         assert self.charge.cc_currency == 'btc'

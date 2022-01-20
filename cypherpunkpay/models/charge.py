@@ -112,24 +112,28 @@ class Charge:
         else:
             return CryptocurrencyPaymentUri.get(self.cc_currency, self.cc_address, amount=self.cc_remaining_total(), label=self.description)
 
-    def qr_code(self):
+    def qr_code(self, theme):
         if self.is_lightning():
             payload = self.cc_lightning_payment_request
         else:
             payload = self.payment_uri()
         qrcode = pyqrcode.create(payload, error='L')
         buffer = io.BytesIO()
-        # 11, 13, 28
-        qrcode.png(buffer, scale=8, module_color=(35, 38, 60, 255), background=(175, 137, 232, 255))
+        background = (255, 255, 255, 255)
+        module_color = (0, 0, 0, 255)
+        if theme == 'entertainment':
+            background = (175, 137, 232, 255)
+            module_color = (35, 38, 60, 255)
+        qrcode.png(buffer, scale=8, background=background, module_color=module_color)
         return buffer.getvalue()
 
-    def qr_code_base64(self) -> str:
-        return base64.standard_b64encode(self.qr_code()).decode('ascii')
+    def qr_code_base64(self, theme) -> str:
+        return base64.standard_b64encode(self.qr_code(theme)).decode('ascii')
 
-    def cached_qr_code_base64(self) -> str:
+    def cached_qr_code_base64(self, theme) -> str:
         key = self.payment_uri()
         if key not in self._qr_cache:
-            self._qr_cache[key] = self.qr_code_base64()
+            self._qr_cache[key] = self.qr_code_base64(theme)
         return self._qr_cache[key]
 
     def soft_time_to_pay(self) -> timedelta:

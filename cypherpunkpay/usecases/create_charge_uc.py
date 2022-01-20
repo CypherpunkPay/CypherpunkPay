@@ -45,48 +45,21 @@ class CreateChargeUC(BaseChargeUC):
     def exec(self) -> Charge:
         self.validate_inputs()
 
-        if self.currency in self.config.supported_fiats():
-            # draft charge (user will select cryptocurrency in the next step)
-            charge = Charge(
-                total=self.total,
-                currency=self.currency,
-                merchant_order_id=self.merchant_order_id,
-                time_to_pay_ms=int(self.time_to_pay_ms),
-                time_to_complete_ms=int(self.time_to_complete_ms),
-                qr_cache=self.qr_cache
-            )
-        else:
-            self.convert_sats_to_btc()
-
-            # ready charge (payment total specified in cryptocurrency)
-            charge = Charge(
-                total=self.total,
-                currency=self.currency,
-                merchant_order_id=self.merchant_order_id,
-                time_to_pay_ms=int(self.time_to_pay_ms),
-                time_to_complete_ms=int(self.time_to_complete_ms),
-                qr_cache=self.qr_cache
-            )
-            wallet_fingerprint, address_index, address = self.next_unused_address(self.currency)
-            charge.cc_total = self.total
-            charge.cc_currency = self.currency
-            cc_usd_price = self.price_tickers.usd_price(charge.cc_currency)
-            charge.usd_total = round(charge.cc_total * cc_usd_price, 2)
-            charge.wallet_fingerprint = wallet_fingerprint
-            charge.address_derivation_index = address_index
-            charge.cc_address = address
-            charge.advance_to_awaiting()
+        # Draft charge (user will select cryptocurrency in the next step)
+        charge = Charge(
+            total=self.total,
+            currency=self.currency,
+            merchant_order_id=self.merchant_order_id,
+            time_to_pay_ms=int(self.time_to_pay_ms),
+            time_to_complete_ms=int(self.time_to_complete_ms),
+            qr_cache=self.qr_cache
+        )
 
         charge.beneficiary = self.beneficiary
         charge.what_for = self.what_for
 
         self.db.insert(charge)
         return charge
-
-    def convert_sats_to_btc(self):
-        if self.currency == 'sats':
-            self.currency = 'btc'
-            self.total = self.total / 10**8
 
     def validate_inputs(self):
         errors = {}
@@ -131,6 +104,8 @@ class CreateChargeUC(BaseChargeUC):
         if self.currency == 'sats':
             if self.total < 1:
                 return {'total': 'Amount too small'}
+            if self.total != int(self.total):
+                return {'total': 'Amount in sats can\'t have decimals'}
         if self.total >= 92_233_720_369:
             # sqlite3 INTEGER is 8 bytes (including sign)
             # we use 8 digits (10**8) represent decimal part

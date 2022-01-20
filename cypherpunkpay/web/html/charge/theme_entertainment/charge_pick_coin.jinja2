@@ -3,7 +3,7 @@
 {% block content %}
     <div id="charge" class="box">
         <h1 class="title has-text-link-dark">
-            Pay {{ view.html_formatted_currency_amount(charge.total, charge.currency, select_amount=True) | safe }} with...
+            Pay {{ view.formatted_currency_amount(charge.total, charge.currency, select_amount=True) | safe }} with...
         </h1>
         {% include 'partials/charge_description.jinja2' %}
         {% include 'partials/try_again_we_are_initializing.jinja2' %}

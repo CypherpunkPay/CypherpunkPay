@@ -38,36 +38,46 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         res = self.webapp.post('/cypherpunkpay/charge', dict(total='25', curency='xxx'), status=302)
         self.assertRedirectsToDonationsWithErrorOn(res, 'currency')
 
-    def test_charge_btc_success_flow_auto(self):
+    def test_charge_btc_then_select_onchain_auto(self):
         # POST charge
-        res = self.webapp.post('/cypherpunkpay/charge', dict(total='0.00000307', currency='btc', beneficiary="Wiki Leaks", what_for="Free Assange Campaign"))
+        res = self.webapp.post('/cypherpunkpay/charge', dict(total='0.00003070', currency='btc', beneficiary="Wiki Leaks", what_for="Free Assange Campaign"))
         url = res.location
         self.assertEqual(302, res.status_int)
+
+        # GET pick_coin
+        res = self.webapp.get(url)
+        self.assertInBody(res, '0.0000307')
+        self.assertInBody(res, 'BTC with...')
+
+        # POST pick_coin
+        charge = App().db().get_last_charge()
+        res = self.webapp.post(f'/cypherpunkpay/charge/{charge.uid}/pick_coin', dict(cc_currency='btc'))
+        url = res.location
 
         # GET unpaid
         res = self.webapp.get(url)
         charge = App().db().get_last_charge()
-        self.assertInBody(res, '0.00000307')
+        self.assertInBody(res, '0.0000307')
         self.assertInBody(res, 'BTC')
         self.assertInBody(res, charge.cc_address)
         self.assertInBody(res, 'Wiki Leaks, Free Assange Campaign')
 
         # GET underpaid
         charge.pay_status = 'underpaid'
-        charge.cc_received_total = Decimal('0.00000300')
+        charge.cc_received_total = Decimal('0.0000300')
         App().db().save(charge)
         res = self.webapp.get(url)
-        self.assertInBody(res, '0.00000007')
+        self.assertInBody(res, '0.0000007')
         self.assertInBody(res, 'BTC')
         self.assertInBody(res, charge.cc_address)
         self.assertInBody(res, 'Wiki Leaks, Free Assange Campaign')
 
         # GET paid
         charge.pay_status = 'paid'
-        charge.cc_received_total = Decimal('0.00000308')   # slightly over pay
+        charge.cc_received_total = Decimal('0.0000308')   # slightly over pay
         App().db().save(charge)
         res = self.webapp.get(url)
-        self.assertInBody(res, '0.00000308')  # we noticed your incoming payment AMOUNT
+        self.assertInBody(res, '0.0000308')  # we noticed your incoming payment AMOUNT
         self.assertInBody(res, 'BTC')
         self.assertInBody(res, 'in progress')
         self.assertInBody(res, charge.uid)    # your reference charge ID
@@ -79,7 +89,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         charge.confirmations = 1
         App().db().save(charge)
         res = self.webapp.get(url)
-        self.assertInBody(res, '0.00000308')  # we noticed your incoming payment AMOUNT
+        self.assertInBody(res, '0.0000308')  # we noticed your incoming payment AMOUNT
         self.assertInBody(res, 'BTC')
         self.assertInBody(res, '1 network confirmation')
         self.assertInBody(res, charge.uid)    # your reference charge ID
@@ -92,18 +102,28 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         charge.confirmations = 2
         App().db().save(charge)
         res = self.webapp.get(url)
-        self.assertInBody(res, '0.00000308')  # we received AMOUNT
+        self.assertInBody(res, '0.0000308')  # we received AMOUNT
         self.assertInBody(res, 'BTC')
         self.assertInBody(res, 'completed')
         self.assertInBody(res, charge.uid)    # your reference charge ID
         self.assertNotInBody(res, charge.cc_address)  # address should no longer be displayed
         self.assertInBody(res, 'Wiki Leaks, Free Assange Campaign')
 
-    def test_charge_btc_success_flow_manual(self):
+    def test_charge_btc_then_select_onchain_manual(self):
         # POST charge
         res = self.webapp.post('/cypherpunkpay/charge', dict(total='37', currency='btc', beneficiary="Wiki Leaks", what_for="Free Assange Campaign"))
         url = res.location
         self.assertEqual(302, res.status_int)
+
+        # GET pick_coin
+        res = self.webapp.get(url)
+        self.assertInBody(res, '37')
+        self.assertInBody(res, 'BTC with...')
+
+        # POST pick_coin
+        charge = App().db().get_last_charge()
+        res = self.webapp.post(f'/cypherpunkpay/charge/{charge.uid}/pick_coin', dict(cc_currency='btc'))
+        url = res.location
 
         # GET unpaid
         res = self.webapp.get(url.replace('/auto', '/manual'))

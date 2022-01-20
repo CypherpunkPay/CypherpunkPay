@@ -88,6 +88,31 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
         self.pick_cryptocurrency_for_charge(charge, 'btc', config=config)
         assert charge.cc_address == 'bc1qfapr9g86wv4jy0l0n4zr7r6jn3tlayk2kj3ptd'
 
+    def test_btc_testnet_next_address(self):
+        class LocalExampleConfig(ExampleConfig):
+            def btc_account_xpub(self):
+                return 'vpub5UtSQhMcYBgGe3UxC5suwHbayv9Xw2raS9U4kyv5pTrikTNGLbxhBdogWm8TffqLHZhEYo7uBcouPiFQ8BNMP6JFyJmqjDxxUyToB1RcToF'
+
+            def btc_network(self):
+                return 'testnet'
+
+        config = LocalExampleConfig()
+
+        # First charge (pubkey derivation index 0)
+        charge = self.create_fiat_charge()
+        self.pick_cryptocurrency_for_charge(charge, 'btc', config=config)
+        self.assertEqual('tb1qhj6l7zh89ejysjhrlnjv6dypurlt2tz8kgg2kn', charge.cc_address)
+
+        # Second charge (pubkey derivation index 1)
+        charge = self.create_fiat_charge()
+        self.pick_cryptocurrency_for_charge(charge, 'btc', config=config)
+        self.assertEqual('tb1qdl2nh30pwy8pmhxy9upue34n9r3e6dpff88e3p', charge.cc_address)
+
+        # Third charge (pubkey derivation index 2)
+        charge = self.create_fiat_charge()
+        self.pick_cryptocurrency_for_charge(charge, 'btc', config=config)
+        self.assertEqual('tb1qqcc0s4hk73e4zr27w6y2m8eaz3600tpsrcupqz', charge.cc_address)
+
     # BTC LIGHTNING
 
     def test_btc_lightning(self):
@@ -113,7 +138,34 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
         )
         pick_cc.exec()
 
-        assert charge.cc_lightning_payment_request is not None
+        self.assertIsNotNone(charge.cc_lightning_payment_request)
+
+    def test_btc_lightning_sats(self):
+
+        class LndClientStub(object):
+            def addinvoice(self, total_btc, expiry_seconds, memo) -> str:
+                return CypherpunkpayTestCase.EXAMPLE_PAYMENT_REQUEST_TESTNET
+
+        class PickCryptocurrencyForChargeUCStub(PickCryptocurrencyForChargeUC):
+            def instantiate_lnd_client(self):
+                return LndClientStub()
+
+        charge = self.create_charge('123', 'sats')
+
+        pick_cc = PickCryptocurrencyForChargeUCStub(
+            charge=charge,
+            cc_currency='btc',
+            lightning=True,
+            config=ExampleConfig(),
+            db=self.db,
+            price_tickers=ExamplePriceTickers(),
+            http_client=DummyHttpClient()
+        )
+        pick_cc.exec()
+
+        self.assertIsNotNone(charge.cc_lightning_payment_request)
+        self.assertEqual(charge.cc_currency, 'btc')
+        self.assertEqual(charge.cc_total, Decimal('0.00000123'))
 
     # XMR ON-CHAIN
 
@@ -144,6 +196,34 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
         charge = self.create_fiat_charge()
         self.pick_cryptocurrency_for_charge(charge, 'xmr', config=config)
         assert charge.cc_address == '8AgpaxPWsabTwYieKdPzp8ZtrTykzVNLHLV9GmMBzV82avZ3v1V2oVYYQMYxYMoh9HQ48NdXah6vG7kCroMN8kyc2UpX8SB'
+
+    def test_xmr_stagenet_next_address(self):
+        class LocalExampleConfig(ExampleConfig):
+            def xmr_main_address(self) -> str:
+                return '5BKTP2n9Tto6fJ25fv5seHUwuyiSFk2kZJV5LKnQkXp4DknK1e28tPGiEWqbLMJ4wWamGACRW7aTZEXiqEsbgJGfK2QffLz'
+
+            def xmr_secret_view_key(self) -> str:
+                return '1543738e3ff094c144ed6697a26beb313c765ffd368b781bd4602a4c6153c305'
+
+            def xmr_network(self):
+                return 'stagenet'
+
+        config = LocalExampleConfig()
+
+        # First charge (pubkey derivation index 0)
+        charge = self.create_fiat_charge()
+        self.pick_cryptocurrency_for_charge(charge, 'xmr', config=config)
+        self.assertEqual('5BKTP2n9Tto6fJ25fv5seHUwuyiSFk2kZJV5LKnQkXp4DknK1e28tPGiEWqbLMJ4wWamGACRW7aTZEXiqEsbgJGfK2QffLz', charge.cc_address)
+
+        # Second charge (pubkey derivation index 1)
+        charge = self.create_fiat_charge()
+        self.pick_cryptocurrency_for_charge(charge, 'xmr', config=config)
+        self.assertEqual('74AVKsVDK8XPRjK6rBdwL5RVvjTgWvEudeDAcEpcVf4zYfNrDaz5K58AUbYTpUtahfNYeCnQAsebrGkevMvSeiKWNBFLdoA', charge.cc_address)
+
+        # Third charge (pubkey derivation index 2)
+        charge = self.create_fiat_charge()
+        self.pick_cryptocurrency_for_charge(charge, 'xmr', config=config)
+        self.assertEqual('75SWPExk4SoKSxTgFZfXH79bFHMkaYRiZLiCNLSZA7TrDBah2yHdkby4zfGabyNdJWez24Z1z7AznA2eK5hVReWdEH3EyFV', charge.cc_address)
 
     def create_fiat_charge(self):
         return self.create_charge('1', 'usd')

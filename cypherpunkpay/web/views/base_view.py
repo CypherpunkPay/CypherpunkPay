@@ -32,6 +32,12 @@ class BaseView(object):
                 significant = amount_s[:-4]
                 insignificant = amount_s[-4:]
 
+            if currency == 'sats':
+                amount = Decimal(value)  # / 10**8  # satoshi
+                amount_s = f'{amount}'
+                significant = amount_s[:-4]
+                insignificant = amount_s[-4:]
+
             if currency == 'xmr':
                 amount = Decimal(value)  # / 10**12  # piconero
                 amount_s = f'{amount:.12f}'
@@ -89,6 +95,12 @@ class BaseView(object):
         if currency == 'btc':
             amount = Decimal(value) #/ 10**8  # satoshi
             amount_s = f'{amount:.8f}'
+            amount_s = self.rstrip_amount(amount_s)
+            currency_s = self.coin_symbol(currency)
+
+        if currency == 'sats':
+            amount = Decimal(value) #/ 10**8  # satoshi
+            amount_s = f'{amount}'
             amount_s = self.rstrip_amount(amount_s)
             currency_s = self.coin_symbol(currency)
 
@@ -163,7 +175,7 @@ class BaseView(object):
         return currency.casefold() in self.fiat_locales().keys()
 
     def coin_symbol(self, currency: str):
-        return currency.upper()
+        return 'sats' if currency == 'sats' else currency.upper()
 
     def formatted_merchant_action(self, charge: Charge):
         if charge.is_draft():
