@@ -26,6 +26,10 @@
   font-size: 1em;
 }
 
+.control input[name=total] {
+    width: 8em;
+}
+
 code {
     font-size: 1em;
 }

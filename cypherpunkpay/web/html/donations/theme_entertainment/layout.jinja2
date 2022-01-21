@@ -6,13 +6,14 @@
 
     <link rel="stylesheet" href="{{ request.static_url('cypherpunkpay:web/css/bulma.min.css') }}">
     <link rel="stylesheet" href="{{ request.static_url('cypherpunkpay:web/css/main.css') }}">
+    <link rel="stylesheet" href="{{ request.static_url('cypherpunkpay:web/css/theme_entertainment.css') }}">
     <link rel="shortcut icon" href="{{ request.static_url('cypherpunkpay:web/png/bitcoin.ico') }}">
 
     <title>{{ title }} | CypherpunkPay</title>
 </head>
 <body>
 
-<section class="hero is-fullheight is-white is-bold">
+<section class="hero is-white-cypherpunkpay is-fullheight is-white is-bold">
     <div class="hero-head"></div>
     <div class="hero-body {{ view.background_coin_network_css_class() }}">
         <div class="container" style="max-width: 640px;">

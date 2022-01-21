@@ -50,11 +50,48 @@
 .button.is-outlined {
     background-color: transparent;
     border-color: #af89e8;
-    color: #af89e8;
+    color: #f3f4f8;
 }
-
 .button.is-link.is-outlined {
     background-color: transparent;
+    border-color: #af89e8;
+    color: #f3f4f8;
+}
+.button.is-link.is-outlined:hover {
+    background-color: #af89e8;
+    border-color: #e7e8ec;
+    color: #f3f4f8;
+}
+.button.is-link.is-outlined:focus {
+    background-color: rgba(175, 137, 232, 0.9);
+    border-color: rgba(175, 137, 232, 0.9);
+    color: #f3f4f8;
+}
+
+.button.is-link {
+    background-color: #af89e8;
+    border-color: #af89e8;
+    color: #23263c;
+}
+.button.is-link:hover {
+    background-color: #af89e8;
+    border-color: #e7e8ec;
+    color: #f3f4f8;
+}
+.button.is-link:focus {
+    background-color: rgba(175, 137, 232, 0.9);
+    border-color: #e7e8ec;
+    color: #f3f4f8;
+}
+
+.control input[name=total] {
+    width: 8em;
+    background-color: #ffffff;
+    border-color: #af89e8;
+    color: #af89e8;
+}
+.control select[name=currency] {
+    background-color: #ffffff;
     border-color: #af89e8;
     color: #af89e8;
 }
@@ -88,6 +125,9 @@ code.has-text-link-dark {
     background-color: #4be575;
 }
 
+.has-text-danger-dark {
+    color: #e34e51 !important;
+}
 
 .testnet {
     background-image:none;

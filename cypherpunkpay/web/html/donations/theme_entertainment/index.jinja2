@@ -59,7 +59,7 @@
                 <form action="{{ view.request.route_url('post_charge') }}" method="post">
                         <div class="field is-grouped">
                             <p class="control">
-                                <input type="text" name="total" value="" class="input is-link has-text-right {{ 'is-danger' if 'total' in errors }}" placeholder="100000" style="width: 8em;"/>
+                                <input type="text" name="total" value="" class="input is-link has-text-right {{ 'is-danger' if 'total' in errors }}" placeholder="50000"/>
                             </p>
                             <p class="control select is-link {{ 'is-danger' if 'currency' in errors }}">
                                 <select name="currency" class="small">

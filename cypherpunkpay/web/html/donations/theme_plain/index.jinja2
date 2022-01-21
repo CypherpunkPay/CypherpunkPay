@@ -1,0 +1,91 @@
+{% extends "layout.jinja2" %}
+
+{% block content %}
+    <div id="donate">
+
+        <div class="box">
+            <h1 class="title has-text-link-dark">
+                {{ title }}
+            </h1>
+
+            {% include '/web/html/charge/theme_' + view.theme() + "/partials/try_again_we_are_initializing.jinja2" %}
+
+            <div class="level">
+                <div class="level-left">
+                    <div class="level-item">
+                        <p>
+                            Pick {{ donations_fiat_currency.upper() }} amount to donate:
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="level">
+                <div class="level-left">
+                    {% for amount in donations_fiat_amounts -%}
+                        <form action="{{ view.request.route_url('post_charge') }}" method="post" class="level-item">
+                            <input type="hidden" name="total" value="{{ amount }}"/>
+                            <input type="hidden" name="currency" value="{{ donations_fiat_currency }}"/>
+                            {% if donations_cause %}
+                                <input type="hidden" name="beneficiary" value="{{ donations_cause }}">
+                            {% endif %}
+                            <button class="button is-link is-outlined" style="width: 100%">{{ view.formatted_currency_amount(amount, donations_fiat_currency) }}</button>
+                        </form>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <details style="border: 0;" {{ 'open' if errors }}>
+                <summary class="has-text-link-dark" style="cursor: pointer; width: max-content;">Customize</summary>
+
+                <div class="level" style="margin-top: 18px;">
+                    <div class="level-left">
+                        <div class="level-item">
+                            Enter your preferred amount and currency:
+                        </div>
+                    </div>
+                </div>
+
+                {% if errors -%}
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item has-text-danger-dark">
+                            {{ ' '.join(errors.values()) }}
+                        </div>
+                    </div>
+                </div>
+                {% endif -%}
+
+                <form action="{{ view.request.route_url('post_charge') }}" method="post">
+                        <div class="field is-grouped">
+                            <p class="control">
+                                <input type="text" name="total" value="" class="input is-link has-text-right {{ 'is-danger' if 'total' in errors }}" placeholder="50000"/>
+                            </p>
+                            <p class="control select is-link {{ 'is-danger' if 'currency' in errors }}">
+                                <select name="currency" class="small">
+                                    {% for currency in view.coin_denominations() %}
+                                        <option value="{{ currency }}">{{ 'sats' if currency == 'sats' else currency.upper() }}</option>
+                                    {% endfor %}
+                                    <option disabled>&mdash;&mdash;</option>
+                                    {% for currency in view.top_supported_fiats() %}
+                                        <option value="{{ currency }}">{{ currency.upper() }}</option>
+                                    {% endfor %}
+                                    <option disabled>&mdash;&mdash;</option>
+                                    {% for currency in view.bottom_supported_fiats() %}
+                                        <option value="{{ currency }}">{{ currency.upper() }}</option>
+                                    {% endfor %}
+                                </select>
+                            </p>
+                            {% if donations_cause %}
+                                <input type="hidden" name="beneficiary" value="{{ donations_cause }}">
+                            {% endif %}
+                            <p class="control">
+                                <button class="button is-link">Donate</button>
+                            </p>
+                        </div>
+                </form>
+
+            </details>
+        </div>
+    </div>
+{% endblock content %}
