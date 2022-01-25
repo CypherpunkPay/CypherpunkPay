@@ -129,6 +129,11 @@ code.has-text-link-dark {
     color: #e34e51 !important;
 }
 
+.notification.is-link.is-light {
+    background-color: #0b0d1c;
+    color: #e34e51;
+}
+
 .testnet {
     background-image:none;
     background-repeat:space;

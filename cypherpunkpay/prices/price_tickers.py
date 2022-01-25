@@ -1,7 +1,6 @@
-from decimal import Decimal
 from statistics import median
-from typing import Dict
 
+from cypherpunkpay.common import *
 from cypherpunkpay.net.http_client.tor_http_client import BaseHttpClient
 from cypherpunkpay.prices.cmc_coin_price_source import CmcCoinPriceSource
 from cypherpunkpay.prices.messari_coin_price_source import MessariCoinPriceSource
@@ -19,9 +18,12 @@ class PriceTickers(object):
     _coin_usd_price: Dict[str, Decimal]
     _fiat_usd_price: Dict[str, Decimal]
     _http_client: BaseHttpClient
+    _required_price_freshness_in_minutes: int = 20
+    _updated_at: datetime.datetime = None
 
-    def __init__(self, http_client):
+    def __init__(self, http_client, required_price_freshness_in_minutes: int = 20):
         self._http_client = http_client
+        self._required_price_freshness_in_minutes = required_price_freshness_in_minutes
         self._coin_usd_price = {'btc': None, 'xmr': None}
         self._fiat_usd_price = {
             'usd': Decimal(1),
@@ -46,6 +48,10 @@ class PriceTickers(object):
         fiat_price = self._fiat_usd_price[fiat]
         if fiat_price is None:
             raise PriceTickers.Missing(fiat)
+        if not self.is_up_to_date():
+            if self._updated_at:
+                log.error(f"PriceTickers are out of date. We can't create new charges. Active charges will be processed.")
+            raise PriceTickers.Missing()
 
         return coin_price * fiat_price
 
@@ -56,6 +62,7 @@ class PriceTickers(object):
         for coin in self._coin_usd_price.keys():
             self.update_coin(coin)
         self.update_fiats()
+        self._updated_at = utc_now()
 
     def update_coin(self, coin):
         coin_prices = list(filter(None, [
@@ -103,6 +110,11 @@ class PriceTickers(object):
         except self.Missing:
             return False
         return True
+
+    def is_up_to_date(self):
+        if self._updated_at is None:
+            return False
+        return self._updated_at > utc_ago(minutes=self._required_price_freshness_in_minutes)
 
 
 class ExamplePriceTickers(PriceTickers):
