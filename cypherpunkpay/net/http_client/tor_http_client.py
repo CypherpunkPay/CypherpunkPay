@@ -27,7 +27,9 @@ class TorHttpClient(BaseHttpClient):
                 }
             else:
                 combined_headers = headers or {}
-            return session.get(url, headers=combined_headers, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
+            res = session.get(url, headers=combined_headers, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
+            self.log_error_status_codes(res)
+            return res
         except requests.exceptions.RequestException as e:
             self._tor_circuits.mark_as_broken(privacy_context)
             raise e
@@ -47,7 +49,9 @@ class TorHttpClient(BaseHttpClient):
             combined_headers = headers or {}
         body = body or {}
         try:
-            return session.post(url, headers=combined_headers, data=body, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
+            res = session.post(url, headers=combined_headers, data=body, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
+            self.log_error_status_codes(res)
+            return res
         except requests.exceptions.RequestException as e:
             self._tor_circuits.mark_as_broken(privacy_context)
             raise e

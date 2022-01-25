@@ -1,6 +1,3 @@
-LN faucet:
-https://faucet.lightning.community/
-
 LND REST API reference:
 https://api.lightning.community/?shell#lnd-rest-api-reference
 

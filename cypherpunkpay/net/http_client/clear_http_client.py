@@ -26,7 +26,9 @@ class ClearHttpClient(BaseHttpClient):
         else:
             combined_headers = headers or {}
 
-        return self.session.get(url, headers=combined_headers, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
+        res = self.session.get(url, headers=combined_headers, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
+        self.log_error_status_codes(res)
+        return res
 
     def post(self, url, privacy_context, headers: dict = None, body: str = None, set_tor_browser_headers: bool = True, verify=None):
         if set_tor_browser_headers:
@@ -37,4 +39,6 @@ class ClearHttpClient(BaseHttpClient):
         else:
             combined_headers = headers or {}
         body = body or ''
-        return self.session.post(url, headers=combined_headers, data=body, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
+        res = self.session.post(url, headers=combined_headers, data=body, timeout=BaseHttpClient.DEFAULT_TIMEOUT, verify=verify)
+        self.log_error_status_codes(res)
+        return res

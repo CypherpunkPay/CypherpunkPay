@@ -1,3 +1,6 @@
+import logging as log
+from urllib.parse import urlparse
+
 import requests
 
 from cypherpunkpay.common import *
@@ -57,3 +60,8 @@ class BaseHttpClient(object):
 
     def post_return_text_or_None_on_error_while_accepting_linkability(self, url, headers: dict = None, body: str = None, set_tor_browser_headers: bool = True, verify=None) -> [str, None]:
         return self.post_return_text_or_None_on_error(url, BaseTorCircuits.SHARED_CIRCUIT_ID, headers, body, set_tor_browser_headers, verify=verify)
+
+    def log_error_status_codes(self, res):
+        if res.status_code >= 400:
+            parsed_url = urlparse(res.request.url)
+            log.warn(f'{res.status_code} <- {res.request.method} {parsed_url.scheme}://{parsed_url.hostname}/[cut]')
