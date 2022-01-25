@@ -386,4 +386,3 @@ class ExampleCharge:
         charge = cls.create(**kwargs)
         db.insert(charge)
         return charge
-
