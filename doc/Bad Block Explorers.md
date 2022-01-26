@@ -8,10 +8,11 @@ This is internal docs for CypherpunkPay developers.
 
 Verified BAD block explorers (not suitable for CypherpunkPay):
 
+* https://api-pub.bitfinex.com/v2/tickers?symbols=tBTCUSD,tXMRUSD  - CloudFlare CAPTCHA whem accessed programmatically (Tor Browser works)
 * https://chain.api.btc.com/v3/block/latest  - ClaudFlare CAPTCHA
 * https://api.blockcypher.com/v1/btc/test3  - Ban Tor or curl
 * https://api.blockchair.com/bitcoin  - Rate limit IP/Tor harshly
-* https://explorer.b.tc/  - Bitcoin Magazine offers no API and is based on calling blockstream anyway
+* https://explorer.b.tc/  - Bitcoin Magazine offers no API and is based on calling Blockstream anyway (we already have Blockstream)
 * https://explorer.lightnite.io/ -  Lightnite is just weird
 * https://www.blockonomics.co/  - Requires API key
 
