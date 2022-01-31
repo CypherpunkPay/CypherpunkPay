@@ -5,7 +5,7 @@ from pyramid.view import (view_config)
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound, HTTPBadRequest
 
 from cypherpunkpay.app import App
-from cypherpunkpay.lightning_node_clients.lnd_client import LightningException
+from cypherpunkpay.ln.lightning_client import LightningException
 from cypherpunkpay.models.charge import Charge
 
 from cypherpunkpay.prices.price_tickers import PriceTickers

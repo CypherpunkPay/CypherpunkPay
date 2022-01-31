@@ -1,5 +1,6 @@
 from cypherpunkpay.common import *
-from cypherpunkpay.lightning_node_clients.lnd_client import LndClient
+from cypherpunkpay.ln.lightning_client import LightningClient
+from cypherpunkpay.ln.lightning_lnd_client import LightningLndClient
 from cypherpunkpay.usecases.base_charge_uc import BaseChargeUC
 from cypherpunkpay.usecases.invalid_params import InvalidParams
 from cypherpunkpay.app import App
@@ -75,16 +76,16 @@ class PickCryptocurrencyForChargeUC(BaseChargeUC):
     def create_lightning_payment_request(self) -> str:
         assert self.charge.cc_currency == 'btc'
         lnd_client = self.instantiate_lnd_client()
-        payment_request = lnd_client.addinvoice(
+        payment_request = lnd_client.create_invoice(
             total_btc=self.charge.cc_total,
             memo=self.charge.description,
             expiry_seconds=self.config.charge_payment_timeout_in_minutes() * 60
         )
         return payment_request
 
-    def instantiate_lnd_client(self):
-        return LndClient(
+    def instantiate_lnd_client(self) -> LightningClient:
+        return LightningLndClient(
             lnd_node_url=self.config.btc_lightning_lnd_url(),
-            invoice_macaroon=self.config.btc_lightning_lnd_invoice_macaroon(),
+            lnd_invoice_macaroon=self.config.btc_lightning_lnd_invoice_macaroon(),
             http_client=self.http_client
         )

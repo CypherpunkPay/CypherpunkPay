@@ -2,6 +2,8 @@ from decimal import Decimal
 
 import pytest
 
+from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
+from cypherpunkpay.ln.lightning_client import LightningClient
 from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.net.http_client.dummy_http_client import DummyHttpClient
 from test.unit.config.example_config import ExampleConfig
@@ -117,9 +119,12 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
 
     def test_btc_lightning(self):
 
-        class LndClientStub(object):
-            def addinvoice(self, total_btc, expiry_seconds, memo) -> str:
+        class LndClientStub(LightningClient):
+            def create_invoice(self, total_btc, expiry_seconds, memo) -> str:
                 return CypherpunkpayTestCase.EXAMPLE_PAYMENT_REQUEST_TESTNET
+
+            def get_invoice(self, r_hash: bytes) -> LnInvoice:
+                return None
 
         class PickCryptocurrencyForChargeUCStub(PickCryptocurrencyForChargeUC):
             def instantiate_lnd_client(self):
@@ -142,9 +147,12 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
 
     def test_btc_lightning_sats(self):
 
-        class LndClientStub(object):
-            def addinvoice(self, total_btc, expiry_seconds, memo) -> str:
+        class LndClientStub(LightningClient):
+            def create_invoice(self, total_btc, expiry_seconds, memo) -> str:
                 return CypherpunkpayTestCase.EXAMPLE_PAYMENT_REQUEST_TESTNET
+
+            def get_invoice(self, r_hash: bytes) -> LnInvoice:
+                return None
 
         class PickCryptocurrencyForChargeUCStub(PickCryptocurrencyForChargeUC):
             def instantiate_lnd_client(self):

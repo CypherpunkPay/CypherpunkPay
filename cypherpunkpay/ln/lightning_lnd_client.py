@@ -6,30 +6,32 @@ from cypherpunkpay.common import *
 
 from cypherpunkpay import disable_unverified_certificate_warnings
 from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
+from cypherpunkpay.ln.lightning_client import LightningClient, LightningException, UnauthorizedLightningException, UnknownInvoiceLightningException
+from cypherpunkpay.net.http_client.base_http_client import BaseHttpClient
 from cypherpunkpay.net.http_client.clear_http_client import ClearHttpClient
 
 
-class LightningException(Exception):
-    pass
+class LightningLndClient(LightningClient):
 
-
-class InvalidMacaroonLightningException(LightningException):
-    pass
-
-
-class UnknownInvoiceLightningException(LightningException):
-    pass
-
-
-class LndClient(object):
-
-    def __init__(self, lnd_node_url, invoice_macaroon=None, http_client=None):
+    def __init__(self, lnd_node_url: str, lnd_invoice_macaroon: str = None, http_client: BaseHttpClient = None):
         self._lnd_node_url = lnd_node_url
-        self._invoice_macaroon = invoice_macaroon
+        self._lnd_invoice_macaroon = lnd_invoice_macaroon
         self._http_client = http_client if http_client else ClearHttpClient()
 
-    # Returns payment request string
-    def addinvoice(self, total_btc: [Decimal, None] = None, memo: str = None, expiry_seconds: [int, None] = None) -> str:
+    def create_invoice(self, total_btc: [Decimal, None] = None, memo: str = None, expiry_seconds: [int, None] = None) -> str:
+        if total_btc:
+            value_sats = round(total_btc * 10 ** 8)
+        else:
+            value_sats = None
+        return self._addinvoice(value_sats, memo, expiry_seconds)
+
+    def get_invoice(self, r_hash: bytes) -> LnInvoice:
+        self.assert_r_hash(r_hash)
+        return self._lookupinvoice(r_hash)
+
+    # LND specific:
+    # https://api.lightning.community/#addinvoice
+    def _addinvoice(self, value_sats: [Decimal, None] = None, memo: str = None, expiry_seconds: [int, None] = None) -> str:
         # URL
         lnd_node_url = urljoin(self._lnd_node_url, 'v1/invoices')
 
@@ -37,12 +39,13 @@ class LndClient(object):
         headers_d = self._auth_header()
 
         # Body
-        body_d = {'private': True}
+        body_d = {
+            'private': True
+        }
+        if value_sats:
+            body_d['value'] = str(value_sats)
         if memo:
             body_d['memo'] = memo
-        if total_btc:
-            total_satoshi = round(total_btc * 10 ** 8)
-            body_d['value'] = str(total_satoshi)
         if expiry_seconds:
             body_d['expiry'] = str(expiry_seconds)
         body_s = json.dumps(body_d)
@@ -79,7 +82,9 @@ class LndClient(object):
 
         return res_json['payment_request']
 
-    def lookupinvoice(self, r_hash: bytes) -> LnInvoice:
+    # LND specific:
+    # https://api.lightning.community/#lookupinvoice
+    def _lookupinvoice(self, r_hash: bytes) -> LnInvoice:
         # Sanity check
         assert isinstance(r_hash, bytes)
         assert len(r_hash) == 32
@@ -124,8 +129,8 @@ class LndClient(object):
     # private
 
     def _auth_header(self):
-        if self._invoice_macaroon:
-            return {'Grpc-Metadata-macaroon': self._invoice_macaroon}
+        if self._lnd_invoice_macaroon:
+            return {'Grpc-Metadata-macaroon': self._lnd_invoice_macaroon}
         else:
             return {}
 
@@ -137,3 +142,7 @@ class LndClient(object):
             set_tor_browser_headers=False,
             verify=False
         )
+
+
+class InvalidMacaroonLightningException(UnauthorizedLightningException):
+    pass

@@ -1,10 +1,11 @@
 from cypherpunkpay.app import App
 from cypherpunkpay.common import *
+from cypherpunkpay.ln.lightning_client import LightningClient, LightningException
+from cypherpunkpay.ln.lightning_lnd_client import LightningLndClient
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.credit import Credit
 from cypherpunkpay.usecases import UseCase
 from cypherpunkpay.bitcoin import btc_network_class
-from cypherpunkpay.lightning_node_clients.lnd_client import LndClient, LightningException
 from cypherpunkpay.bitcoin.electrum.lnaddr import lndecode
 
 
@@ -20,7 +21,7 @@ class FetchCreditsFromLightningNodeUC(UseCase):
         lnd_client = self.instantiate_lnd_client()
         payment_request = lndecode(self.cc_lightning_payment_request, net=btc_network_class(self.config.btc_network()))
         try:
-            ln_invoice = lnd_client.lookupinvoice(r_hash=payment_request.paymenthash)
+            ln_invoice = lnd_client.get_invoice(r_hash=payment_request.paymenthash)
         except LightningException:
             return None  # The exception has been logged upstream. The action will be retried. Safe to swallow.
 
@@ -35,9 +36,9 @@ class FetchCreditsFromLightningNodeUC(UseCase):
         return AddressCredits(credits, self.current_height)
 
     # MOCK ME
-    def instantiate_lnd_client(self):
-        return LndClient(
+    def instantiate_lnd_client(self) -> LightningClient:
+        return LightningLndClient(
             lnd_node_url=self.config.btc_lightning_lnd_url(),
-            invoice_macaroon=self.config.btc_lightning_lnd_invoice_macaroon(),
+            lnd_invoice_macaroon=self.config.btc_lightning_lnd_invoice_macaroon(),
             http_client=self.http_client
         )
