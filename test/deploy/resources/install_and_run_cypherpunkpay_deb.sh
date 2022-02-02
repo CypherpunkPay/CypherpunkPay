@@ -29,7 +29,7 @@ echo
 
 # Reinstall
 verify 'apt --assume-yes -qq remove cypherpunkpay || /bin/true'
-verify 'apt --assume-yes install --reinstall -o Dpkg::Options::="--force-confask,confnew,confmiss" ./cypherpunkpay_1.0.11_amd64.deb'
+verify 'apt --assume-yes install --reinstall -o Dpkg::Options::="--force-confask,confnew,confmiss" ./cypherpunkpay_1.0.12_amd64.deb'
 
 # Waiting for the cypherpunkpay.service to start after installation
 wait 6
