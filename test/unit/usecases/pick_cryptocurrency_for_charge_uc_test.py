@@ -73,6 +73,16 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
             def btc_network(self):
                 return 'mainnet'
 
+        class LocalExampleConfigWithOffset(ExampleConfig):
+            def btc_account_xpub(self):
+                return 'zpub6oMKbeQTqZyz7mbfjdSBXbHwyXYYwEN5sDSV48rLqRk6rnLELQCnnG1GqKju3DwjKX7C8MkfTWjLUPCM6RoCMnTskbvQqaDSaatwVtBQVPL'
+
+            def btc_network(self):
+                return 'mainnet'
+
+            def btc_account_offset(self):
+                return -1
+
         config = LocalExampleConfig()
 
         # First charge (pubkey derivation index 0)
@@ -89,6 +99,12 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
         charge = self.create_fiat_charge()
         self.pick_cryptocurrency_for_charge(charge, 'btc', config=config)
         assert charge.cc_address == 'bc1qfapr9g86wv4jy0l0n4zr7r6jn3tlayk2kj3ptd'
+
+        # Fourth charge (pubkey derivation index 3 - 1 (offset) = 2)
+        config_with_offset = LocalExampleConfigWithOffset()
+        charge = self.create_fiat_charge()
+        self.pick_cryptocurrency_for_charge(charge, 'btc', config=config_with_offset)
+        assert charge.cc_address == 'bc1qfapr9g86wv4jy0l0n4zr7r6jn3tlayk2kj3ptd'  # again, because -1 offset
 
     def test_btc_testnet_next_address(self):
         class LocalExampleConfig(ExampleConfig):

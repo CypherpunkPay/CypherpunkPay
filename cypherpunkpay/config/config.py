@@ -48,6 +48,12 @@ class Config(object):
         else:
             return self._dict.get('btc_testnet_account_xpub')
 
+    def btc_account_offset(self) -> [int, 0]:
+        if self.btc_mainnet():
+            return int(self._dict.get('btc_mainnet_account_offset', 0))
+        else:
+            return int(self._dict.get('btc_testnet_account_offset', 0))
+
     def xmr_secret_view_key(self) -> str:
         if self.xmr_mainnet():
             return self._dict.get('xmr_mainnet_secret_view_key')
@@ -59,6 +65,12 @@ class Config(object):
             return self._dict.get('xmr_mainnet_main_address')
         else:
             return self._dict.get('xmr_stagenet_main_address')
+
+    def xmr_account_offset(self) -> [int, 0]:
+        if self.xmr_mainnet():
+            return int(self._dict.get('xmr_mainnet_account_offset', 0))
+        else:
+            return int(self._dict.get('xmr_stagenet_account_offset', 0))
 
     def charge_payment_timeout_in_minutes(self) -> int:
         return int(self._dict.get('charge_payment_timeout_in_minutes', 15))
