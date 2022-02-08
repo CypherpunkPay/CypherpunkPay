@@ -1,5 +1,3 @@
-import logging
-
 from cypherpunkpay.common import *
 
 from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
@@ -64,7 +62,6 @@ class LightningLightningdClient(LightningClient):
 
         try:
             res: dict = self._listinvoices(payment_hash=payment_hash_str)
-            logging.info(res)
             if res.get('invoices'):
                 # {
                 #     'invoices': [
