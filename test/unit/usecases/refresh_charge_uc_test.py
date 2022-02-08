@@ -1,5 +1,5 @@
-from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
 from cypherpunkpay.common import *
+from cypherpunkpay.ln.lightning_dummy_client import LightningDummyClient
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.charge import ExampleCharge, Charge
 from cypherpunkpay.models.credit import Credit
@@ -13,7 +13,14 @@ class StubRefreshChargeUC(RefreshChargeUC):
 
     def __init__(self, charge_uid: str, credits: [List[Credit], None], blockchain_height=None, db=None):
         self._blockchain_height = blockchain_height or 2**31  # just big
-        super().__init__(charge_uid, current_height=self._blockchain_height, db=db, http_client=DummyHttpClient(), config=ExampleConfig())
+        super().__init__(
+            charge_uid,
+            current_height=self._blockchain_height,
+            db=db,
+            http_client=DummyHttpClient(),
+            ln_client=LightningDummyClient(),
+            config=ExampleConfig()
+        )
         self._mock_credits = credits
 
     def fetch_address_credits_from_explorers(self, charge):
@@ -27,7 +34,14 @@ class StubLnRefreshChargeUC(RefreshChargeUC):
 
     def __init__(self, charge_uid: str, credits: [List[Credit], None], db=None):
         self._blockchain_height = 2**31  # just big
-        super().__init__(charge_uid, current_height=self._blockchain_height, db=db, http_client=DummyHttpClient(), config=ExampleConfig())
+        super().__init__(
+            charge_uid,
+            current_height=self._blockchain_height,
+            db=db,
+            http_client=DummyHttpClient(),
+            ln_client=LightningDummyClient(),
+            config=ExampleConfig()
+        )
         self._mock_credits = credits
 
     def fetch_credits_from_lightning_node(self, charge) -> [AddressCredits, None]:
@@ -471,7 +485,7 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
     class MockLnRefreshChargeUC(RefreshChargeUC):
         def __init__(self, charge_uid: str, db=None):
             self._blockchain_height = 2**31  # just big
-            super().__init__(charge_uid, current_height=self._blockchain_height, db=db, http_client=DummyHttpClient(), config=ExampleConfig())
+            super().__init__(charge_uid, current_height=self._blockchain_height, db=db, http_client=DummyHttpClient(), ln_client=LightningDummyClient(), config=ExampleConfig())
 
         def fetch_credits_from_lightning_node(self, charge):
             raise Exception('This method should not be called -> test case failed')

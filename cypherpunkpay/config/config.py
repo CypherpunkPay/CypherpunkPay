@@ -166,6 +166,12 @@ class Config(object):
             ret.append('xmr')
         return ret
 
+    def btc_enabled(self) -> bool:
+        return 'btc' in self.configured_coins()
+
+    def xmr_enabled(self) -> bool:
+        return 'xmr' in self.configured_coins()
+
     def supported_currencies(self) -> List[str]:
         return self.supported_coins() + self.supported_fiats()
 
@@ -249,10 +255,13 @@ class Config(object):
         return self._dict.get('btc_lightning_enabled', 'false') == 'true'
 
     def btc_lightning_lnd_url(self) -> str:
-        return self._dict.get('btc_lightning_lnd_url', 'https://127.0.0.1:8081/')
+        return self._dict.get('btc_lightning_lnd_url')
 
     def btc_lightning_lnd_invoice_macaroon(self) -> str:
-        return self._dict.get('btc_lightning_lnd_invoice_macaroon', None)
+        return self._dict.get('btc_lightning_lnd_invoice_macaroon')
+
+    def btc_lightning_lightningd_socket_path(self) -> str:
+        return self._dict.get('btc_lightning_lightningd_socket_path')
 
     # Environments
 

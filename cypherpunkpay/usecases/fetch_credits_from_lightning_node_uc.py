@@ -1,7 +1,6 @@
 from cypherpunkpay.app import App
 from cypherpunkpay.common import *
 from cypherpunkpay.ln.lightning_client import LightningClient, LightningException
-from cypherpunkpay.ln.lightning_lnd_client import LightningLndClient
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.credit import Credit
 from cypherpunkpay.usecases import UseCase
@@ -11,17 +10,17 @@ from cypherpunkpay.bitcoin.electrum.lnaddr import lndecode
 
 class FetchCreditsFromLightningNodeUC(UseCase):
 
-    def __init__(self, cc_lightning_payment_request: str, current_height: int, http_client=None, config=None):
+    def __init__(self, cc_lightning_payment_request: str, current_height: int, http_client=None, ln_client=None, config=None):
         self.cc_lightning_payment_request = cc_lightning_payment_request
         self.current_height = current_height
         self.http_client = http_client if http_client else App().http_client()
+        self.ln_client = ln_client if ln_client else App().ln_client()
         self.config = config if config else App().config()
 
     def exec(self) -> [AddressCredits, None]:
-        lnd_client = self.instantiate_lnd_client()
         payment_request = lndecode(self.cc_lightning_payment_request, net=btc_network_class(self.config.btc_network()))
         try:
-            ln_invoice = lnd_client.get_invoice(r_hash=payment_request.paymenthash)
+            ln_invoice = self.ln_client.get_invoice(payment_hash=payment_request.paymenthash)
         except LightningException:
             return None  # The exception has been logged upstream. The action will be retried. Safe to swallow.
 
@@ -34,11 +33,3 @@ class FetchCreditsFromLightningNodeUC(UseCase):
             credit = Credit(total_paid_btc, self.current_height - 65535, has_replaceable_flag=False)
             credits.append(credit)
         return AddressCredits(credits, self.current_height)
-
-    # MOCK ME
-    def instantiate_lnd_client(self) -> LightningClient:
-        return LightningLndClient(
-            lnd_node_url=self.config.btc_lightning_lnd_url(),
-            lnd_invoice_macaroon=self.config.btc_lightning_lnd_invoice_macaroon(),
-            http_client=self.http_client
-        )

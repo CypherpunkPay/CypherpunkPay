@@ -1,0 +1,6 @@
+This is official Python client for c-lightning node.
+
+It was copied from the c-lightning project:
+https://github.com/ElementsProject/lightning/tree/master/contrib/pyln-client
+
+It was then trimmed down because we only need a tiny fraction of functionality.

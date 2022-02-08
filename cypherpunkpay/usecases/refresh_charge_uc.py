@@ -16,12 +16,13 @@ class RefreshChargeUC(UseCase):
 
     CONFIRMATIONS_TO_CONSIDER_COMPLETED = 2
 
-    def __init__(self, charge_uid: str, current_height=None, db=None, http_client=None, config=None):
+    def __init__(self, charge_uid: str, current_height=None, db=None, http_client=None, ln_client=None, config=None):
         self.charge_uid = charge_uid
         self._current_height = current_height
         self._db = db if db else App().db()
         self._config = config if config else App().config()
         self._http_client = http_client if http_client else App().http_client()
+        self._ln_client = ln_client if ln_client else App().ln_client()
 
     def exec(self):
         charge: Charge = self._db.get_charge_by_uid(self.charge_uid)
@@ -171,7 +172,8 @@ class RefreshChargeUC(UseCase):
             cc_lightning_payment_request=charge.cc_lightning_payment_request,
             current_height=self._current_height,
             config=self._config,
-            http_client=self._http_client
+            http_client=self._http_client,
+            ln_client=self._ln_client
         ).exec()
 
     # MOCK ME

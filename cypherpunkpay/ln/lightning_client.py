@@ -17,6 +17,11 @@ class UnknownInvoiceLightningException(LightningException):
 
 class LightningClient(ABC):
 
+    # Test connects to node:
+    @abstractmethod
+    def ping(self) -> None:
+        ...
+
     # Returns payment request string as defined in Bolt-11:
     # https://github.com/lightning/bolts/blob/master/11-payment-encoding.md
     # This string is suitable for the end-user.
@@ -26,9 +31,13 @@ class LightningClient(ABC):
 
     # The r_hash must be of type bytes and length 32
     @abstractmethod
-    def get_invoice(self, r_hash: bytes) -> LnInvoice:
+    def get_invoice(self, payment_hash: bytes) -> LnInvoice:
         ...
 
-    def assert_r_hash(self, r_hash: bytes):
+    @abstractmethod
+    def name(self) -> str:
+        ...
+
+    def assert_payment_hash(self, r_hash: bytes):
         assert isinstance(r_hash, bytes)
         assert len(r_hash) == 32

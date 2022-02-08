@@ -1,5 +1,8 @@
-LND REST API reference:
-https://api.lightning.community/?shell#lnd-rest-api-reference
+LND REST API reference: https://api.lightning.community/?shell#lnd-rest-api-reference
+LND GitHub: https://github.com/lightningnetwork/lnd
+
+c-lightning API reference: https://lightning.readthedocs.io/
+c-lightning GitHub: https://github.com/ElementsProject/lightning
 
 Inbound liquidity:
 https://openoms.gitbook.io/lightning-node-management/createinboundliquidity

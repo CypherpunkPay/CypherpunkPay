@@ -1,4 +1,8 @@
 
+* BUG: fetch_address_credits_from_full_node, missing param
+
+* BUG[?]: what if full node connection fails on App() init? review
+
 * Add BTC and sats denominations for custom amount
 
 * Homepage: make DONATE more visible (user feedback)

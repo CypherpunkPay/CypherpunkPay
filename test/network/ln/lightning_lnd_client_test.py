@@ -43,6 +43,12 @@ class LightningLndClientTest(CypherpunkpayNetworkTestCase):
         with pytest.raises(InvalidMacaroonLightningException):
             LightningLndClient(self.DEV_LND_URL, lnd_invoice_macaroon=self.DEV_LND_INVALID_INVOICE_MACAROON, http_client=self.clear_http_client).create_invoice()
 
+    # ping
+
+    def test_ping(self):
+        lightningd_client = LightningLndClient(self.DEV_LND_URL, lnd_invoice_macaroon=self.DEV_LND_INVOICE_MACAROON, http_client=self.clear_http_client)
+        lightningd_client.ping()
+
     # create_invoice
 
     def test_too_big_amount(self):
@@ -69,7 +75,7 @@ class LightningLndClientTest(CypherpunkpayNetworkTestCase):
 
     def test_success_with_memo(self):
         lnd_client = LightningLndClient(self.DEV_LND_URL, lnd_invoice_macaroon=self.DEV_LND_INVOICE_MACAROON, http_client=self.clear_http_client)
-        payment_request_bech32 = lnd_client.create_invoice(total_btc=0.06543210, memo='Ƀ')
+        payment_request_bech32 = lnd_client.create_invoice(total_btc=Decimal('0.06543210'), memo='Ƀ')
         payment_request = lndecode(payment_request_bech32, net=BitcoinTestnet)
         assert payment_request.get_amount_sat() == 6543210
         assert payment_request.get_description() == 'Ƀ'

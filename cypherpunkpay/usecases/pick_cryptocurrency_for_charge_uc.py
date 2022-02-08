@@ -1,6 +1,5 @@
 from cypherpunkpay.common import *
 from cypherpunkpay.ln.lightning_client import LightningClient
-from cypherpunkpay.ln.lightning_lnd_client import LightningLndClient
 from cypherpunkpay.usecases.base_charge_uc import BaseChargeUC
 from cypherpunkpay.usecases.invalid_params import InvalidParams
 from cypherpunkpay.app import App
@@ -12,14 +11,25 @@ class PickCryptocurrencyForChargeUC(BaseChargeUC):
     BTC_PRECISION = 8
     XMR_PRECISION = 12
 
-    def __init__(self, charge: Charge, cc_currency: str, lightning=False, config=None, db=None, price_tickers=None, http_client=None):
+    def __init__(self,
+                 charge: Charge,
+                 cc_currency: str,
+                 lightning=False,
+                 config=None,
+                 db=None,
+                 price_tickers=None,
+                 http_client=None,
+                 ln_client: LightningClient=None
+                 ):
+        self.charge = charge
+        self.cc_currency = cc_currency
+        self.lightning = lightning
         self.config = config if config else App().config()
         self.db = db if db else App().db()
         self.price_tickers = price_tickers if price_tickers else App().price_tickers()
         self.http_client = http_client if http_client else App().http_client()
-        self.charge = charge
-        self.cc_currency = cc_currency
-        self.lightning = lightning
+        if self.lightning:
+            self.ln_client = ln_client if ln_client else App().ln_client()
 
     def exec(self):
         self.validate_inputs()
@@ -75,17 +85,9 @@ class PickCryptocurrencyForChargeUC(BaseChargeUC):
 
     def create_lightning_payment_request(self) -> str:
         assert self.charge.cc_currency == 'btc'
-        lnd_client = self.instantiate_lnd_client()
-        payment_request = lnd_client.create_invoice(
+        payment_request = self.ln_client.create_invoice(
             total_btc=self.charge.cc_total,
             memo=self.charge.description,
             expiry_seconds=self.config.charge_payment_timeout_in_minutes() * 60
         )
         return payment_request
-
-    def instantiate_lnd_client(self) -> LightningClient:
-        return LightningLndClient(
-            lnd_node_url=self.config.btc_lightning_lnd_url(),
-            lnd_invoice_macaroon=self.config.btc_lightning_lnd_invoice_macaroon(),
-            http_client=self.http_client
-        )
