@@ -1,4 +1,4 @@
-from test.unit.test_case import CypherpunkpayTestCase
+from test.unit.test_case import *
 from cypherpunkpay.db.sqlite_db import SqliteDB
 
 
