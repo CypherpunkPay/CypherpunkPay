@@ -96,7 +96,7 @@ class RefreshChargeUC(UseCase):
             self._db.save(charge)
             return
 
-        total_paid = total(credits.any())
+        total_paid = total(credits.all())
 
         # Awaiting / paid
         if total_paid >= charge.cc_total:

@@ -80,9 +80,10 @@ class OfficialTorCircuitsTest(CypherpunkpayNetworkTestCase):
 
     def test_skip_tor_label_does_not_use_tor(self):
         session = self.official_tor.get_for(BaseTorCircuits.SKIP_TOR)
-
         ip_disabled_tor = self.get_ip(session)
-        ip_clear = self.get_ip(requests.Session())
+
+        with requests.Session() as session2:
+            ip_clear = self.get_ip(session2)
 
         self.assertEqual(ip_disabled_tor, ip_clear)
 

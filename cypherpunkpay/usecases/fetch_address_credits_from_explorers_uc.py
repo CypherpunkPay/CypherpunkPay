@@ -3,7 +3,7 @@ import importlib
 from cypherpunkpay.app import App
 from cypherpunkpay.common import *
 from cypherpunkpay.exceptions import UnsupportedCoin
-from cypherpunkpay.explorers.bitcoin.abs_block_explorer import AbsBlockExplorer
+from cypherpunkpay.explorers.bitcoin.block_explorer import BlockExplorer
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.usecases import UseCase
 
@@ -48,10 +48,10 @@ class FetchAddressCreditsFromExplorersUC(UseCase):
         self.block_explorer_1 = self._instantiate_explorer(self.block_explorer_1_s)
         self.block_explorer_2 = self._instantiate_explorer(self.block_explorer_2_s)
 
-    def _instantiate_explorer(self, module_klass: str) -> AbsBlockExplorer:
+    def _instantiate_explorer(self, module_klass: str) -> BlockExplorer:
         module_name, klass_name = module_klass.split()
         module = importlib.import_module(module_name)
-        klass: AbsBlockExplorer = getattr(module, klass_name)
+        klass: BlockExplorer = getattr(module, klass_name)
         # noinspection PyCallingNonCallable
         return klass(http_client=self.http_client, btc_network=self.config.btc_network(), use_tor=self.config.use_tor())
 

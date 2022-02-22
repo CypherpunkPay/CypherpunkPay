@@ -4,7 +4,7 @@ import re
 from typing import List, Dict
 
 from cypherpunkpay.explorers.supported_explorers import SupportedExplorers
-from cypherpunkpay.explorers.bitcoin.abs_block_explorer import AbsBlockExplorer
+from cypherpunkpay.explorers.bitcoin.block_explorer import BlockExplorer
 from cypherpunkpay.exceptions import UnsupportedCoin
 
 
@@ -142,7 +142,7 @@ class Config(object):
     def supported_coins(self) -> List[str]:
         return ['btc', 'xmr']
 
-    def supported_explorers(self, coin: str) -> List[AbsBlockExplorer]:
+    def supported_explorers(self, coin: str) -> List[BlockExplorer]:
         return SupportedExplorers().get(coin, self.cc_network(coin))
 
     @staticmethod

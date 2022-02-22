@@ -18,7 +18,7 @@ class BitapsExplorerTest(BlockExplorerTest):
             address='bc1qwqdg6squsna38e46795at95yu9atm8azzmyvckulcc7kytlcckxswvvzej',
             current_height=0
         )
-        self.assertNotEmpty(credits.any())
+        self.assertNotEmpty(credits.all())
 
     def test_get_address_credits_testnet(self):
         be = BitapsExplorer(self.tor_http_client, btc_network='testnet')
@@ -26,4 +26,4 @@ class BitapsExplorerTest(BlockExplorerTest):
             address='tb1q4cnvakxhuwrlfesn5uvj4haqp83t6zvpsxwzv8',
             current_height=0
         )
-        self.assertEqual(1, len(credits.any()))
+        self.assertEqual(1, len(credits.all()))

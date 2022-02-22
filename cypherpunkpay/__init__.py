@@ -3,11 +3,10 @@ import secrets
 import time
 
 from pyramid.config import Configurator
-from pyramid.authentication import AuthTktAuthenticationPolicy
-from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.static import QueryStringConstantCacheBuster
 
 from cypherpunkpay.app import App
+from cypherpunkpay.auth_policy import AuthPolicy
 from cypherpunkpay.common import *
 from cypherpunkpay.config.config import Config
 from cypherpunkpay.config.config_parser import ConfigParser
@@ -47,7 +46,6 @@ def main(global_config, **settings):
 
 
 def start_application_singleton_or_exit(settings):
-    log = logging.getLogger()
     if settings.get('test_env'):
         # Application already instantiated by tests setup
         pass
@@ -63,18 +61,15 @@ def start_application_singleton_or_exit(settings):
 
 def configure_pyramid_authn_and_authz(pyramid):
     authn_secret = secrets.token_bytes(nbytes=64)  # generating this dynamically will invalidate sessions on app restart
-    authn_policy = AuthTktAuthenticationPolicy(
+    auth_policy = AuthPolicy(
         authn_secret,
         hashalg='sha512',
         timeout=3600,
         reissue_time=60,
         path=f'{App().config().path_prefix()}/admin',
-        http_only=True,
-        callback=(lambda user_login, request: ['group:admins'] if user_login == 'admin' else [])  # return groups for specific user
+        http_only=True
     )
-    authz_policy = ACLAuthorizationPolicy()
-    pyramid.set_authentication_policy(authn_policy)
-    pyramid.set_authorization_policy(authz_policy)
+    pyramid.set_security_policy(auth_policy)
 
 
 def routing_config(pyramid):

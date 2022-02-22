@@ -1,10 +1,7 @@
-from decimal import Decimal
-
-from cypherpunkpay.app import App
-from test.acceptance.app_test_case import CypherpunkpayAppTestCase
+from test.acceptance.acceptance_test_case import CypherpunkpayAcceptanceTestCase, Decimal
 
 
-class ChargeViewsTest(CypherpunkpayAppTestCase):
+class ChargeViewsTest(CypherpunkpayAcceptanceTestCase):
 
     def test_get_charge_root(self):
         res = self.webapp.get('/cypherpunkpay/charge/abcd1234', status=302)
@@ -50,13 +47,13 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, 'BTC with...')
 
         # POST pick_coin
-        charge = App().db().get_last_charge()
+        charge = self.app.db().get_last_charge()
         res = self.webapp.post(f'/cypherpunkpay/charge/{charge.uid}/pick_coin', dict(cc_currency='btc'))
         url = res.location
 
         # GET unpaid
         res = self.webapp.get(url)
-        charge = App().db().get_last_charge()
+        charge = self.app.db().get_last_charge()
         self.assertInBody(res, '0.0000307')
         self.assertInBody(res, 'BTC')
         self.assertInBody(res, charge.cc_address)
@@ -65,7 +62,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         # GET underpaid
         charge.pay_status = 'underpaid'
         charge.cc_received_total = Decimal('0.0000300')
-        App().db().save(charge)
+        self.app.db().save(charge)
         res = self.webapp.get(url)
         self.assertInBody(res, '0.0000007')
         self.assertInBody(res, 'BTC')
@@ -75,7 +72,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         # GET paid
         charge.pay_status = 'paid'
         charge.cc_received_total = Decimal('0.0000308')   # slightly over pay
-        App().db().save(charge)
+        self.app.db().save(charge)
         res = self.webapp.get(url)
         self.assertInBody(res, '0.0000308')  # we noticed your incoming payment AMOUNT
         self.assertInBody(res, 'BTC')
@@ -87,7 +84,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         # GET confirmed
         charge.pay_status = 'confirmed'
         charge.confirmations = 1
-        App().db().save(charge)
+        self.app.db().save(charge)
         res = self.webapp.get(url)
         self.assertInBody(res, '0.0000308')  # we noticed your incoming payment AMOUNT
         self.assertInBody(res, 'BTC')
@@ -100,7 +97,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         charge.pay_status = 'confirmed'
         charge.status = 'completed'
         charge.confirmations = 2
-        App().db().save(charge)
+        self.app.db().save(charge)
         res = self.webapp.get(url)
         self.assertInBody(res, '0.0000308')  # we received AMOUNT
         self.assertInBody(res, 'BTC')
@@ -121,13 +118,13 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, 'BTC with...')
 
         # POST pick_coin
-        charge = App().db().get_last_charge()
+        charge = self.app.db().get_last_charge()
         res = self.webapp.post(f'/cypherpunkpay/charge/{charge.uid}/pick_coin', dict(cc_currency='btc'))
         url = res.location
 
         # GET unpaid
         res = self.webapp.get(url.replace('/auto', '/manual'))
-        charge = App().db().get_last_charge()
+        charge = self.app.db().get_last_charge()
         self.assertInBody(res, '37')
         self.assertInBody(res, 'BTC')
         self.assertInBody(res, charge.cc_address)
@@ -136,7 +133,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         # GET underpaid
         charge.pay_status = 'underpaid'
         charge.cc_received_total = Decimal('11')
-        App().db().save(charge)
+        self.app.db().save(charge)
         res = self.webapp.get(url.replace('/auto', '/manual'))
         self.assertInBody(res, '26')
         self.assertInBody(res, 'BTC')
@@ -146,7 +143,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         # GET paid
         charge.pay_status = 'paid'
         charge.cc_received_total = Decimal('37')
-        App().db().save(charge)
+        self.app.db().save(charge)
         res = self.webapp.get(url.replace('/auto', '/manual'))
         self.assertInBody(res, '37')  # we noticed your incoming payment AMOUNT
         self.assertInBody(res, 'BTC')
@@ -158,7 +155,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         # GET confirmed
         charge.pay_status = 'confirmed'
         charge.confirmations = 1
-        App().db().save(charge)
+        self.app.db().save(charge)
         res = self.webapp.get(url.replace('/auto', '/manual'))
         self.assertInBody(res, '37')  # we noticed your incoming payment AMOUNT
         self.assertInBody(res, 'BTC')
@@ -171,7 +168,7 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         charge.pay_status = 'confirmed'
         charge.status = 'completed'
         charge.confirmations = 2
-        App().db().save(charge)
+        self.app.db().save(charge)
         res = self.webapp.get(url.replace('/auto', '/manual'))
         self.assertInBody(res, '37')  # we received AMOUNT
         self.assertInBody(res, 'BTC')
@@ -191,13 +188,13 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, '$10.73')
 
         # POST pick_coin
-        charge = App().db().get_last_charge()
+        charge = self.app.db().get_last_charge()
         res = self.webapp.post(f'/cypherpunkpay/charge/{charge.uid}/pick_coin', dict(cc_currency='btc'))
         url = res.location
 
         # GET unpaid
         res = self.webapp.get(url)
-        charge = App().db().get_last_charge()
+        charge = self.app.db().get_last_charge()
         self.assertInBody(res, 'BTC')
         self.assertInBody(res, charge.cc_address)
 
@@ -212,13 +209,13 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, '10.73\xa0€')
 
         # POST pick_coin
-        charge = App().db().get_last_charge()
+        charge = self.app.db().get_last_charge()
         res = self.webapp.post(f'/cypherpunkpay/charge/{charge.uid}/pick_coin', dict(cc_currency='xmr'))
         url = res.location
 
         # GET unpaid
         res = self.webapp.get(url)
-        charge = App().db().get_last_charge()
+        charge = self.app.db().get_last_charge()
         self.assertInBody(res, 'XMR')
         self.assertInBody(res, charge.cc_address)
 
@@ -226,13 +223,13 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
         # POST charge
         res = self.webapp.post('/cypherpunkpay/charge', dict(total='0.00005', currency='btc'))
         url = res.location
-        charge = App().db().get_last_charge()
+        charge = self.app.db().get_last_charge()
 
         res = self.webapp.get(f'/cypherpunkpay/charge/{charge.uid}/state_hash')
         hash_before = res.body.decode('utf-8')
 
         charge.pay_status = 'paid'
-        App().db().save(charge)
+        self.app.db().save(charge)
 
         res = self.webapp.get(f'/cypherpunkpay/charge/{charge.uid}/state_hash')
         hash_after = res.body.decode('utf-8')
@@ -242,11 +239,11 @@ class ChargeViewsTest(CypherpunkpayAppTestCase):
     def test_cancel_charge(self):
         # POST charge
         res = self.webapp.post('/cypherpunkpay/charge', dict(total='0.1', currency='btc'))
-        charge = App().db().get_last_charge()
+        charge = self.app.db().get_last_charge()
 
         # Cancel charge
         res = self.webapp.post(f'/cypherpunkpay/charge/{charge.uid}/cancel')
-        charge = App().db().reload(charge)
+        charge = self.app.db().reload(charge)
 
         donations_url = res.location
         self.assertTrue('/cypherpunkpay/donations' in res.location)

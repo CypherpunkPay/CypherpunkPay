@@ -1,10 +1,10 @@
 from cypherpunkpay.common import *
-from cypherpunkpay.explorers.bitcoin.abs_block_explorer import AbsBlockExplorer
+from cypherpunkpay.explorers.bitcoin.block_explorer import BlockExplorer
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.credit import Credit
 
 
-class BitapsExplorer(AbsBlockExplorer):
+class BitapsExplorer(BlockExplorer):
 
     # Returns None on any error
     def get_height(self) -> [int, None]:
@@ -46,18 +46,10 @@ class BitapsExplorer(AbsBlockExplorer):
     def api_endpoint(self):
         # The onion services for BitAps are misconfigured.
         # For rate limiting purposes the onion services merge together all incoming traffic (all IP addresses),
-        # and we very soon hit the per-second limit, depsite connecting from various IPs.
+        # and we very soon hit the per-second limit, despite connecting from various IPs.
         #
         # That's why we use clearnet version of the API.
         if self.mainnet():
             return 'https://api.bitaps.com/btc/v1/blockchain'
-            # if self.use_tor():
-            #     return 'http://bitaps4nifcusilt.onion/btc/v1/blockchain'
-            # else:
-            #     return 'https://api.bitaps.com/btc/v1/blockchain'
         else:
             return 'https://api.bitaps.com/btc/testnet/v1/blockchain'
-            # if self.use_tor():
-            #     return 'http://bitaps4nifcusilt.onion/btc/testnet/v1/blockchain'
-            # else:
-            #     return 'https://api.bitaps.com/btc/testnet/v1/blockchain'

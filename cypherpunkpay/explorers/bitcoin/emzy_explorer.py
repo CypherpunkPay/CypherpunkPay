@@ -1,8 +1,8 @@
 from cypherpunkpay.exceptions import UnsupportedNetwork
-from cypherpunkpay.explorers.bitcoin.abs_esplora_explorer import AbsEsploraExplorer
+from cypherpunkpay.explorers.bitcoin.esplora_explorer import EsploraExplorer
 
 
-class EmzyExplorer(AbsEsploraExplorer):
+class EmzyExplorer(EsploraExplorer):
 
     def api_endpoint(self) -> str:
         if self.mainnet():

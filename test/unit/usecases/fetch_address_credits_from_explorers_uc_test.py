@@ -1,5 +1,5 @@
 from test.unit.config.example_config import ExampleConfig
-from cypherpunkpay.explorers.bitcoin.abs_block_explorer import AbsBlockExplorer
+from cypherpunkpay.explorers.bitcoin.block_explorer import BlockExplorer
 from cypherpunkpay.explorers.bitcoin.blockstream_explorer import BlockstreamExplorer
 from cypherpunkpay.explorers.bitcoin.trezor_explorer import TrezorExplorer
 from cypherpunkpay.models.address_credits import AddressCredits
@@ -9,7 +9,7 @@ from cypherpunkpay.net.http_client.dummy_http_client import DummyHttpClient
 from cypherpunkpay.usecases.fetch_address_credits_from_explorers_uc import FetchAddressCreditsFromExplorersUC
 
 
-class StubBlockExplorer(AbsBlockExplorer):
+class StubBlockExplorer(BlockExplorer):
 
     def __init__(self, address_credits: [AddressCredits, None]):
         super().__init__(DummyHttpClient())
@@ -88,7 +88,7 @@ class FetchAddressCreditsFromExplorersUCTest(CypherpunkpayDBTestCase):
             AddressCredits([], 1000)
         ).exec()
         self.assertTrue(address_credits)
-        self.assertEqual([], address_credits.any())
+        self.assertEqual([], address_credits.all())
         self.assertEqual(1000, address_credits.blockchain_height())
 
     def test_when_both_same__return_credits(self):
@@ -97,7 +97,7 @@ class FetchAddressCreditsFromExplorersUCTest(CypherpunkpayDBTestCase):
             AddressCredits([Credit(1, None, False)], 2000)
         ).exec()
         self.assertTrue(address_credits)
-        self.assertEqual(1, len(address_credits.any()))
+        self.assertEqual(1, len(address_credits.all()))
         self.assertEqual(2000, address_credits.blockchain_height())
 
     def test_when_both_same_except_order__return_credits(self):
@@ -106,5 +106,5 @@ class FetchAddressCreditsFromExplorersUCTest(CypherpunkpayDBTestCase):
             AddressCredits([Credit(2, None, False), Credit(1, None, False)], 2000)
         ).exec()
         self.assertTrue(address_credits)
-        self.assertEqual(2, len(address_credits.any()))
+        self.assertEqual(2, len(address_credits.all()))
         self.assertEqual(2000, address_credits.blockchain_height())

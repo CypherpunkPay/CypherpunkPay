@@ -134,3 +134,7 @@ class DB(ABC):
 
     def raise_unknown_type(self, obj):
         raise Exception(f"Unknown type {type(obj)}")
+
+    @abstractmethod
+    def reset_for_tests(self) -> None:
+        ...

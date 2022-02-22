@@ -7,8 +7,6 @@ from base64 import b64encode
 
 import requests
 
-from cypherpunkpay.net.http_client.clear_http_client import ClearHttpClient
-
 
 class JsonRpcClient(object):
     __id_count = 0
@@ -23,7 +21,7 @@ class JsonRpcClient(object):
         authpair_bytes = user_bytes + b':' + passwd_bytes
         self.__auth_header = b'Basic ' + b64encode(authpair_bytes)
 
-        self.__http_client = http_client if http_client else ClearHttpClient()
+        self.__http_client = http_client
         self.__service_name = service_name
 
     def __getattr__(self, name):

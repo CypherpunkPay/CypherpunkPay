@@ -1,10 +1,10 @@
 from cypherpunkpay.common import *
-from cypherpunkpay.explorers.bitcoin.abs_block_explorer import AbsBlockExplorer
+from cypherpunkpay.explorers.bitcoin.block_explorer import BlockExplorer
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.credit import Credit
 
 
-class TrezorExplorer(AbsBlockExplorer):
+class TrezorExplorer(BlockExplorer):
     # https://github.com/trezor/blockbook/blob/master/docs/api.md
 
     # Returns None on any error

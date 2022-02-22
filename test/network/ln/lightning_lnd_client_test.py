@@ -106,6 +106,7 @@ class LightningLndClientTest(CypherpunkpayNetworkTestCase):
         class StubLightningLndClient(LightningLndClient):
             def _http_get(self, headers_d, lnd_node_url):
                 response_text = Path(f"{CypherpunkpayTestCase.examples_dir(__file__)}/lnd_lookupinvoice_settled_2sats.json").read_text()
+                from types import SimpleNamespace
                 return SimpleNamespace(text=response_text)
 
         lnd_client = StubLightningLndClient(self.DEV_LND_URL, lnd_invoice_macaroon=self.DEV_LND_INVOICE_MACAROON, http_client=self.clear_http_client)

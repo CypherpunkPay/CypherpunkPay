@@ -1,4 +1,4 @@
-from pyramid.security import Allow, Deny, Everyone
+from pyramid.authorization import Allow, Deny, Everyone
 
 
 class RootACL(object):

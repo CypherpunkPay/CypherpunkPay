@@ -13,7 +13,7 @@ class AddressCreditsTest(CypherpunkpayTestCase):
             Credit(1, None, True),
             Credit(1, None, False)
         ], 1)
-        self.assertEqual(4, len(account_credits.any()))
+        self.assertEqual(4, len(account_credits.all()))
 
     def test_unconfirmed_replaceable(self):
         account_credits = AddressCredits([

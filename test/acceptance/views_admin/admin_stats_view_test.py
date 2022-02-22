@@ -1,9 +1,9 @@
-from test.acceptance.app_test_case import CypherpunkpayAppTestCase
+from test.acceptance.acceptance_test_case import CypherpunkpayAcceptanceTestCase
 
 
-class AdminStatsViewTest(CypherpunkpayAppTestCase):
+class AdminStatsViewTest(CypherpunkpayAcceptanceTestCase):
 
     def test_get_admin_stats(self):
         self.login()
-        res = self.webapp.get(f'/cypherpunkpay/admin/{self.admin_prefix()}/stats', status=200)
+        res = self.webapp.get(f'/cypherpunkpay/admin/eeec6kyl2rqhys72b6encxxrte/stats', status=200)
         self.assertInBody(res, 'Stats')

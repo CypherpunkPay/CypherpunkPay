@@ -26,7 +26,7 @@ class BlockstreamExplorerTest(BlockExplorerTest):
             address='bc1qwqdg6squsna38e46795at95yu9atm8azzmyvckulcc7kytlcckxswvvzej',
             current_height=0
         )
-        self.assertNotEmpty(credits.any())
+        self.assertNotEmpty(credits.all())
 
     def test_get_address_credits_testnet(self):
         be = BlockstreamExplorer(self.tor_http_client, btc_network='testnet', use_tor=True)
@@ -34,4 +34,4 @@ class BlockstreamExplorerTest(BlockExplorerTest):
             address='tb1q4cnvakxhuwrlfesn5uvj4haqp83t6zvpsxwzv8',
             current_height=0
         )
-        self.assertEqual(1, len(credits.any()))
+        self.assertEqual(1, len(credits.all()))

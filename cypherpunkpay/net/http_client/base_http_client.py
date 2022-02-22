@@ -1,4 +1,3 @@
-import logging as log
 from urllib.parse import urlparse
 
 import requests
@@ -25,11 +24,13 @@ class BaseHttpClient(object):
         'TE': 'Trailers'
     }
 
+    @abstractmethod
     def get(self, url, privacy_context, headers: dict = None, set_tor_browser_headers: bool = True, verify=None) -> requests.Response:
-        raise NotImplementedError()
+        ...
 
+    @abstractmethod
     def post(self, url, privacy_context, headers: dict = None, body: str = None, set_tor_browser_headers: bool = True, verify=None) -> requests.Response:
-        raise NotImplementedError()
+        ...
 
     def get_accepting_linkability(self, url: str, headers: dict = None, set_tor_browser_headers: bool = True, verify=None) -> requests.Response:
         return self.get(url, privacy_context=BaseTorCircuits.SHARED_CIRCUIT_ID, headers=headers, set_tor_browser_headers=set_tor_browser_headers, verify=verify)
@@ -64,4 +65,4 @@ class BaseHttpClient(object):
     def log_error_status_codes(self, res):
         if res.status_code >= 400:
             parsed_url = urlparse(res.request.url)
-            log.warn(f'{res.status_code} <- {res.request.method} {parsed_url.scheme}://{parsed_url.hostname}/[cut]')
+            log.warning(f'{res.status_code} <- {res.request.method} {parsed_url.scheme}://{parsed_url.hostname}/[cut]')

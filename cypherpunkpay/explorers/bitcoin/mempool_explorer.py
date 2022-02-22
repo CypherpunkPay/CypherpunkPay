@@ -1,7 +1,7 @@
-from cypherpunkpay.explorers.bitcoin.abs_esplora_explorer import AbsEsploraExplorer
+from cypherpunkpay.explorers.bitcoin.esplora_explorer import EsploraExplorer
 
 
-class MempoolExplorer(AbsEsploraExplorer):
+class MempoolExplorer(EsploraExplorer):
 
     def api_endpoint(self) -> str:
         if self.mainnet():

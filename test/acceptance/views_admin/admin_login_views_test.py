@@ -1,8 +1,7 @@
-from test.acceptance.app_test_case import CypherpunkpayAppTestCase
-from cypherpunkpay import App
+from test.acceptance.acceptance_test_case import CypherpunkpayAcceptanceTestCase
 
 
-class AdminLoginViewsTest(CypherpunkpayAppTestCase):
+class AdminLoginViewsTest(CypherpunkpayAcceptanceTestCase):
 
     VALID_USERNAME = 'admin'
     VALID_PASSWORD = 'admin123'
@@ -56,23 +55,23 @@ class AdminLoginViewsTest(CypherpunkpayAppTestCase):
     # Register
 
     def test_login_redirects_to_register_if_no_users(self):
-        App().db().delete_all_users()
+        self.app.db().delete_all_users()
         res = self.webapp.get(f'/cypherpunkpay/admin/eeec6kyl2rqhys72b6encxxrte/login', status=302)
         self.assertMatch(f'http://localhost/cypherpunkpay/admin/eeec6kyl2rqhys72b6encxxrte/register', res.location)
 
     def test_get_admin_register(self):
-        App().db().delete_all_users()
+        self.app.db().delete_all_users()
         res = self.webapp.get(f'/cypherpunkpay/admin/eeec6kyl2rqhys72b6encxxrte/register', status=200)
         self.assertInBody(res, 'Register')
 
     def test_post_admin_register__empty_password(self):
-        App().db().delete_all_users()
+        self.app.db().delete_all_users()
         res = self.webapp.post(f'/cypherpunkpay/admin/eeec6kyl2rqhys72b6encxxrte/register', [('password', '  ')], status=200)
         self.assertInBody(res, 'Register')
         self.assertInBody(res, 'Password cannot be empty')
 
     def test_post_admin_register__password_confirmation_mismatch(self):
-        App().db().delete_all_users()
+        self.app.db().delete_all_users()
         res = self.webapp.post(f'/cypherpunkpay/admin/eeec6kyl2rqhys72b6encxxrte/register', [
             ('password', 'abc'),
             ('password_conf', 'bbb')
@@ -81,13 +80,13 @@ class AdminLoginViewsTest(CypherpunkpayAppTestCase):
         self.assertInBody(res, 'Password and password confirmation do not match')
 
     def test_post_admin_register__valid(self):
-        App().db().delete_all_users()
+        self.app.db().delete_all_users()
         res = self.webapp.post(f'/cypherpunkpay/admin/eeec6kyl2rqhys72b6encxxrte/register', [
             ('password', 'Test1234'),
             ('password_conf', 'Test1234')
         ], status=302)
         self.assertMatch(f'http://localhost/cypherpunkpay/admin/eeec6kyl2rqhys72b6encxxrte/login', res.location)
-        self.assertEqual(App().db().get_users_count(), 1)
+        self.assertEqual(self.app.db().get_users_count(), 1)
 
     def assert_redirected_to_login(self, url):
         res = self.webapp.get(url, status=302)

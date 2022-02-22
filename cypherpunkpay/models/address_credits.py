@@ -14,7 +14,7 @@ class AddressCredits:
         self._credits = sorted(credits, key=Credit.sorting_key)
         self._blockchain_height = blockchain_height
 
-    def any(self) -> List[Credit]:
+    def all(self) -> List[Credit]:
         return self._credits
 
     def unconfirmed_replaceable(self):

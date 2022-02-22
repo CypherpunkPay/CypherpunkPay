@@ -1,9 +1,16 @@
+# !!! READ BEFORE MODIFYING !!!
+#
+# Python convenience utilities NOT specific to the project.
+#
+# All imports and definitions in this file are GLOBAL beause all files import * from this file.
+# This is for pragmatism and covenience but beware of potential name clashes.
+
 import logging as log
 
 import os
-import pytz
 import sys
 import re
+import pytz
 
 import datetime
 from datetime import timedelta, timezone
@@ -22,8 +29,6 @@ from typing import List, Dict
 from pprint import pprint
 
 from pathlib import Path
-
-from types import SimpleNamespace
 
 
 def utc_now():

@@ -1,11 +1,9 @@
-from decimal import Decimal
+from test.acceptance.acceptance_test_case import CypherpunkpayAcceptanceTestCase, Decimal
 
-from cypherpunkpay.app import App
-from test.acceptance.app_test_case import CypherpunkpayAppTestCase
 from cypherpunkpay.models.dummy_store_order import DummyStoreOrder
 
 
-class DummystoreViewsTest(CypherpunkpayAppTestCase):
+class DummystoreViewsTest(CypherpunkpayAcceptanceTestCase):
 
     def test_get_dummystore_root(self):
         res = self.webapp.get('/cypherpunkpay/dummystore/', status=200)
@@ -26,14 +24,14 @@ class DummystoreViewsTest(CypherpunkpayAppTestCase):
 
     def test_post_cypherpunkpay_payment_completed__body_is_not_json(self):
         order = DummyStoreOrder(uid='ord-1', item_id=0, total=10, currency='usd')
-        App().db().insert(order)
+        self.app.db().insert(order)
         data_broken_json = '{ fsdfsd'
         res = self.webapp.post('/cypherpunkpay/dummystore/cypherpunkpay_payment_completed', headers=self.correct_auth_header(), params=data_broken_json, expect_errors=True)
         self.assertEqual(400, res.status_int)
 
     def test_post_cypherpunkpay_payment_completed__total_counterfeited(self):
         order = DummyStoreOrder(uid='ord-2', item_id=0, total=10, currency='usd')
-        App().db().insert(order)
+        self.app.db().insert(order)
         data_total_counterfeited = """
         {
             "untrusted": {
@@ -52,7 +50,7 @@ class DummystoreViewsTest(CypherpunkpayAppTestCase):
 
     def test_post_cypherpunkpay_payment_completed__currency_counterfeited(self):
         order = DummyStoreOrder(uid='ord-3', item_id=0, total=10, currency='usd')
-        App().db().insert(order)
+        self.app.db().insert(order)
         data_currency_counterfeited = """
         {
             "untrusted": {
@@ -71,7 +69,7 @@ class DummystoreViewsTest(CypherpunkpayAppTestCase):
 
     def test_post_cypherpunkpay_payment_completed__ships_order(self):
         order = DummyStoreOrder(uid='ord-4', item_id=0, total=10, currency='USD')
-        App().db().insert(order)
+        self.app.db().insert(order)
         data_correct = """
         {
             "untrusted": {
@@ -86,14 +84,14 @@ class DummystoreViewsTest(CypherpunkpayAppTestCase):
         }
         """
         res = self.webapp.post('/cypherpunkpay/dummystore/cypherpunkpay_payment_completed', headers=self.correct_auth_header(), params=data_correct, expect_errors=False)
-        order = App().db().get_order_by_uid('ord-4')
+        order = self.app.db().get_order_by_uid('ord-4')
         self.assertEqual(Decimal('0.000197'), order.cc_total)
         self.assertEqual('btc', order.cc_currency)
         self.assertEqual(200, res.status_int)
 
     def test_post_cypherpunkpay_payment_failed__does_not_ship(self):
         order = DummyStoreOrder(uid='ord-140', item_id=0, total=10, currency='USD')
-        App().db().insert(order)
+        self.app.db().insert(order)
         data_correct = """
         {
             "untrusted": {
@@ -106,7 +104,7 @@ class DummystoreViewsTest(CypherpunkpayAppTestCase):
         }
         """
         res = self.webapp.post('/cypherpunkpay/dummystore/cypherpunkpay_payment_failed', headers=self.correct_auth_header(), params=data_correct, expect_errors=False)
-        order = App().db().get_order_by_uid('ord-140')
+        order = self.app.db().get_order_by_uid('ord-140')
         self.assertIsNone(order.cc_total)
         self.assertIsNone(order.cc_currency)
         self.assertEqual(200, res.status_int)

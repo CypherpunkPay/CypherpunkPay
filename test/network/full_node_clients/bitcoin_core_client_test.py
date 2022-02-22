@@ -55,17 +55,17 @@ class BitcoinCoreClientTest(CypherpunkpayNetworkTestCase):
 
         # Single payment of 1 satoshi to the first address
         credits = client.get_address_credits(wallet_fingerprint, BitcoinCoreClientTest.UNSPENT_ADDRESS_0_0, example_height)
-        total_credited = sum(map(lambda c: c.value(), credits.any()))
+        total_credited = sum(map(lambda c: c.value(), credits.all()))
         self.assertEqual(Decimal('0.00000001'), total_credited)
 
         # Address received funds got spent - we still expect these received funds to be properly recognized
         credits = client.get_address_credits(wallet_fingerprint, BitcoinCoreClientTest.SPENT_ADDRESS_0_1, example_height)
-        total_credited = sum(map(lambda c: c.value(), credits.any()))
+        total_credited = sum(map(lambda c: c.value(), credits.all()))
         self.assertEqual(Decimal('0.00013007'), total_credited)
 
         # Multiple payments to the address
         credits = client.get_address_credits(wallet_fingerprint, BitcoinCoreClientTest.UNSPENT_ADDRESS_0_20, example_height)
-        total_credited = sum(map(lambda c: c.value(), credits.any()))
+        total_credited = sum(map(lambda c: c.value(), credits.all()))
         self.assertEqual(
             Decimal('0.00003738') + Decimal('0.00009351') + Decimal('0.00018651') + Decimal('0.00003731') + Decimal('0.00003731'),
             total_credited
@@ -73,5 +73,5 @@ class BitcoinCoreClientTest(CypherpunkpayNetworkTestCase):
 
         # Big gap address (/0/101) is recognized
         credits = client.get_address_credits(wallet_fingerprint, BitcoinCoreClientTest.UNSPENT_ADDRESS_0_101, example_height)
-        total_credited = sum(map(lambda c: c.value(), credits.any()))
+        total_credited = sum(map(lambda c: c.value(), credits.all()))
         self.assertEqual(Decimal('0.00001869'), total_credited)

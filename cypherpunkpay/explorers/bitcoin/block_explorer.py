@@ -4,7 +4,7 @@ from cypherpunkpay.net.http_client.base_http_client import BaseHttpClient
 from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits
 
 
-class AbsBlockExplorer(ABC):
+class BlockExplorer(ABC):
 
     http_client: BaseHttpClient = None
     btc_network: str = None

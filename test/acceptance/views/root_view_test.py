@@ -1,7 +1,7 @@
-from test.acceptance.app_test_case import CypherpunkpayAppTestCase
+from test.acceptance.acceptance_test_case import CypherpunkpayAcceptanceTestCase
 
 
-class RootViewTest(CypherpunkpayAppTestCase):
+class RootViewTest(CypherpunkpayAcceptanceTestCase):
 
     def test_get_not_prefixed_root(self):
         res = self.webapp.get('/', status=302)
