@@ -7,7 +7,7 @@ from pyramid.view import (view_config)
 
 from cypherpunkpay import App
 from cypherpunkpay.db.dev_examples import DevExamples
-from cypherpunkpay.web.views.base_view import BaseView
+from cypherpunkpay.web.base_view import BaseView
 
 
 class DummystoreViews(BaseView):

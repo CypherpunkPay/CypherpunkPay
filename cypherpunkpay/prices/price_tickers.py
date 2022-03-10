@@ -29,7 +29,7 @@ class PriceTickers(object):
         self._fiat_usd_price = {
             'usd': Decimal(1),
             'eur': None, 'gbp': None, 'chf': None, 'cny': None, 'jpy': None,
-            'cad': None, 'aud': None, 'nzd': None, 'rub': None, 'inr': None, 'krw': None, 'brl': None, 'mxn': None, 'pln': None, 'czk': None, 'zar': None
+            'cad': None, 'aud': None, 'nzd': None, 'inr': None, 'krw': None, 'brl': None, 'mxn': None, 'pln': None, 'czk': None, 'zar': None
         }
 
     def price(self, coin: str, fiat: str) -> Decimal:
@@ -124,5 +124,5 @@ class ExamplePriceTickers(PriceTickers):
     def __init__(self):
         super().__init__(None)
         self._coin_usd_price = {'btc': Decimal(10_000), 'xmr': Decimal(90)}
-        self._fiat_usd_price = {'usd': Decimal('1'), 'eur': Decimal('0.9162'), 'gbp': Decimal('0.7701'), 'chf': Decimal('0.9753'), 'cny': Decimal('6.9702'), 'jpy': Decimal('109.9780'), 'cad': Decimal('1.3256'), 'aud': Decimal('1.4820'), 'nzd': Decimal('1.5422'), 'rub': Decimal('62.9952'), 'inr': Decimal('71.3161'), 'krw': Decimal('1180.1356'), 'brl': Decimal('4.3326'), 'mxn': Decimal('18.6250'), 'pln': Decimal('3.8990'), 'czk': Decimal('22.7945'), 'zar': Decimal('14.7760')}
+        self._fiat_usd_price = {'usd': Decimal('1'), 'eur': Decimal('0.9162'), 'gbp': Decimal('0.7701'), 'chf': Decimal('0.9753'), 'cny': Decimal('6.9702'), 'jpy': Decimal('109.9780'), 'cad': Decimal('1.3256'), 'aud': Decimal('1.4820'), 'nzd': Decimal('1.5422'), 'inr': Decimal('71.3161'), 'krw': Decimal('1180.1356'), 'brl': Decimal('4.3326'), 'mxn': Decimal('18.6250'), 'pln': Decimal('3.8990'), 'czk': Decimal('22.7945'), 'zar': Decimal('14.7760')}
         self._updated_at = utc_now()

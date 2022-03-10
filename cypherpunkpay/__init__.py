@@ -6,7 +6,7 @@ from pyramid.config import Configurator
 from pyramid.static import QueryStringConstantCacheBuster
 
 from cypherpunkpay.app import App
-from cypherpunkpay.auth_policy import AuthPolicy
+from cypherpunkpay.web.security.auth_policy import AuthPolicy
 from cypherpunkpay.common import *
 from cypherpunkpay.config.config import Config
 from cypherpunkpay.config.config_parser import ConfigParser
@@ -120,7 +120,8 @@ def routing_config(pyramid):
 
 
 def scan_views(pyramid):
-    pyramid.scan('cypherpunkpay.web.views')
+    pyramid.scan('cypherpunkpay.web.views_root')
+    pyramid.scan('cypherpunkpay.web.views_charges')
     if App().config().path_prefix():
         pyramid.scan('cypherpunkpay.web.views_prefix')
     if App().config().donations_enabled():

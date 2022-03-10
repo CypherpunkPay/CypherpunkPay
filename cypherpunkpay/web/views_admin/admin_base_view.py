@@ -1,4 +1,4 @@
-from cypherpunkpay.web.views.base_view import BaseView
+from cypherpunkpay.web.base_view import BaseView
 
 
 class AdminBaseView(BaseView):

@@ -3,7 +3,7 @@ import json
 from pyramid.view import view_config
 
 from cypherpunkpay.app import App
-from cypherpunkpay.web.views.base_view import BaseView
+from cypherpunkpay.web.base_view import BaseView
 
 
 class DonationsViews(BaseView):

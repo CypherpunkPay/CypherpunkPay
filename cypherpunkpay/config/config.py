@@ -151,7 +151,7 @@ class Config(object):
         return [
             'usd',
             'eur', 'cny', 'gbp',
-            'aud', 'brl', 'cad', 'chf', 'czk', 'inr', 'jpy', 'krw', 'mxn', 'pln', 'rub', 'zar'
+            'aud', 'brl', 'cad', 'chf', 'czk', 'inr', 'jpy', 'krw', 'mxn', 'pln', 'zar'
         ]
 
     @staticmethod

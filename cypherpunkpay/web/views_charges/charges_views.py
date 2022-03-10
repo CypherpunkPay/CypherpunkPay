@@ -13,10 +13,10 @@ from cypherpunkpay.usecases.cancel_charge_uc import CancelChargeUC
 from cypherpunkpay.usecases.create_charge_uc import CreateChargeUC
 from cypherpunkpay.usecases.invalid_params import InvalidParams
 from cypherpunkpay.usecases.pick_cryptocurrency_for_charge_uc import PickCryptocurrencyForChargeUC
-from cypherpunkpay.web.views.base_view import BaseView
+from cypherpunkpay.web.base_view import BaseView
 
 
-class ChargeViews(BaseView):
+class ChargesViews(BaseView):
 
     def __init__(self, request):
         self.request = request

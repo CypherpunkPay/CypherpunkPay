@@ -1,6 +1,6 @@
 from test.unit.test_case import CypherpunkpayTestCase, Decimal
 
-from cypherpunkpay.web.views.base_view import BaseView
+from cypherpunkpay.web.base_view import BaseView
 
 
 class BaseViewTest(CypherpunkpayTestCase):
@@ -15,7 +15,6 @@ class BaseViewTest(CypherpunkpayTestCase):
         self.assertCurrencyFormat('1099.4 ', 'cad', '$1099.40')
         self.assertCurrencyFormat('1099.4 ', 'aud', '$1099.40')
         self.assertCurrencyFormat('1099.4 ', 'nzd', '$1099.40')
-        self.assertCurrencyFormat('1099.4 ', 'rub', '1099.40\xa0₽')
         self.assertCurrencyFormat('1099.4 ', 'brl', 'R$\xa01099.40')
         self.assertCurrencyFormat('1099.4 ', 'krw', '₩1099.40')
         self.assertCurrencyFormat('1099.4 ', 'czk', '1099.40\xa0Kč')
@@ -31,7 +30,6 @@ class BaseViewTest(CypherpunkpayTestCase):
         # self.assertCurrencyFormat('1099.4 ', 'cad', '$1,099.40')
         # self.assertCurrencyFormat('1099.4 ', 'aud', '$1,099.40')
         # self.assertCurrencyFormat('1099.4 ', 'nzd', '$1,099.40')
-        # self.assertCurrencyFormat('1099.4 ', 'rub', '1\xa0099,40\xa0₽')
         # self.assertCurrencyFormat('1099.4 ', 'brl', 'R$\xa01.099,40')
         # self.assertCurrencyFormat('1099.4 ', 'krw', '₩1,099')
         # self.assertCurrencyFormat('1099.4 ', 'czk', '1\xa0099,40\xa0Kč')

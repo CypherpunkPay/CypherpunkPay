@@ -142,7 +142,6 @@ class BaseView(object):
             'cad': 'en_CA',
             'aud': 'en_AU',
             'nzd': 'en_NZ',
-            'rub': 'ru_RU',
             'inr': 'hi_IN',
             'krw': 'ko_KR',
             'brl': 'pt_BR',
