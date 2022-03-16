@@ -41,29 +41,29 @@ class CallPaymentCompletedUrlUCTest(CypherpunkpayDBTestCase):
         CallPaymentCompletedUrlUC(charge=charge, db=self.db, config=ExampleConfig(), http_client=mock_http_client).exec()
 
         # Calls the right URL
-        self.assertEqual('http://127.0.0.1:6543/cypherpunkpay/dummystore/cypherpunkpay_payment_completed', mock_http_client.url)
+        assert mock_http_client.url == 'http://127.0.0.1:6543/cypherpunkpay/dummystore/cypherpunkpay_payment_completed'
 
         # With tor privacy context
-        self.assertEqual(BaseTorCircuits.SHARED_CIRCUIT_ID, mock_http_client.privacy_context)
+        assert mock_http_client.privacy_context == BaseTorCircuits.SHARED_CIRCUIT_ID
 
         # Has the right headers
-        self.assertEqual('Bearer nsrzukv53xjhmw4w5ituyk5cre', mock_http_client.headers.get('Authorization'))
-        self.assertEqual('application/json', mock_http_client.headers.get('Content-Type'))
+        assert mock_http_client.headers.get('Authorization') == 'Bearer nsrzukv53xjhmw4w5ituyk5cre'
+        assert mock_http_client.headers.get('Content-Type') == 'application/json'
 
         # Renders body correctly
         body = mock_http_client.body
         import json
         parsed_body = json.loads(body)
-        self.assertEqual(parsed_body['untrusted']['merchant_order_id'], 'ord-1')
-        self.assertEqual(parsed_body['untrusted']['total'], '1234567890.00000001')
-        self.assertEqual(parsed_body['untrusted']['currency'], 'usd')
-        self.assertEqual(parsed_body['status'], 'completed')
-        self.assertEqual(parsed_body['cc_total'], '1000.000000000001')
-        self.assertEqual(parsed_body['cc_currency'], 'btc')
+        assert parsed_body['untrusted']['merchant_order_id'] == 'ord-1'
+        assert parsed_body['untrusted']['total'] == '1234567890.00000001'
+        assert parsed_body['untrusted']['currency'] == 'usd'
+        assert parsed_body['status'] == 'completed'
+        assert parsed_body['cc_total'] == '1000.000000000001'
+        assert parsed_body['cc_currency'] == 'btc'
 
         # Marks charge as notified
         charge_reloaded = self.db.get_charge_by_uid('1')
-        self.assertIsNotNone(charge_reloaded.merchant_callback_url_called_at)
+        assert charge_reloaded.merchant_callback_url_called_at is not None
 
     def test_exec_without_tor(self):
         charge = ExampleCharge.db_create(self.db, uid='1', total=Decimal('1234567890.00000001'), currency='usd', status='completed', merchant_order_id='ord-1', cc_total=Decimal('1000.000000000001'), cc_currency='btc')
@@ -76,7 +76,7 @@ class CallPaymentCompletedUrlUCTest(CypherpunkpayDBTestCase):
         CallPaymentCompletedUrlUC(charge=charge, db=self.db, config=config, http_client=mock_http_client).exec()
 
         # Calls the right URL
-        self.assertEqual('http://127.0.0.1:6543/cypherpunkpay/dummystore/cypherpunkpay_payment_completed', mock_http_client.url)
+        assert 'http://127.0.0.1:6543/cypherpunkpay/dummystore/cypherpunkpay_payment_completed' == mock_http_client.url
 
         # With SKIP_TOR privacy context
-        self.assertEqual(BaseTorCircuits.SKIP_TOR, mock_http_client.privacy_context)
+        assert BaseTorCircuits.SKIP_TOR == mock_http_client.privacy_context
