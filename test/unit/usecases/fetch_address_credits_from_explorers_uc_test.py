@@ -58,53 +58,53 @@ class FetchAddressCreditsFromExplorersUCTest(CypherpunkpayDBTestCase):
             config=ExampleConfig()
         )
         uc._instantiate_block_explorers()
-        self.assertIsInstance(uc.block_explorer_1, BlockstreamExplorer)
-        self.assertIsInstance(uc.block_explorer_2, TrezorExplorer)
+        assert isinstance(uc.block_explorer_1, BlockstreamExplorer)
+        assert isinstance(uc.block_explorer_2, TrezorExplorer)
 
     def test_when_first_None__return_None(self):
         address_credits = StubFetchAddressCreditsFromExplorersUC(
             None,
             AddressCredits([Credit(1, None, False)], 2000)
         ).exec()
-        self.assertIsNone(address_credits)
+        assert address_credits is None
 
     def test_when_last_None__return_None(self):
         address_credits = StubFetchAddressCreditsFromExplorersUC(
             AddressCredits([Credit(1, None, False)], 2000),
             None
         ).exec()
-        self.assertIsNone(address_credits)
+        assert address_credits is None
 
     def test_when_discrepancy__return_None(self):
         address_credits = StubFetchAddressCreditsFromExplorersUC(
             AddressCredits([Credit(1, None, False), Credit(2, None, False)], 2000),
             AddressCredits([Credit(1, None, False)], 2000)
         ).exec()
-        self.assertIsNone(address_credits)
+        assert address_credits is None
 
     def test_when_both_empty__return_empty_credits(self):
         address_credits = StubFetchAddressCreditsFromExplorersUC(
             AddressCredits([], 1000),
             AddressCredits([], 1000)
         ).exec()
-        self.assertTrue(address_credits)
-        self.assertEqual([], address_credits.all())
-        self.assertEqual(1000, address_credits.blockchain_height())
+        assert address_credits
+        assert address_credits.all() == []
+        assert address_credits.blockchain_height() == 1000
 
     def test_when_both_same__return_credits(self):
         address_credits = StubFetchAddressCreditsFromExplorersUC(
             AddressCredits([Credit(1, None, False)], 2000),
             AddressCredits([Credit(1, None, False)], 2000)
         ).exec()
-        self.assertTrue(address_credits)
-        self.assertEqual(1, len(address_credits.all()))
-        self.assertEqual(2000, address_credits.blockchain_height())
+        assert address_credits
+        assert len(address_credits.all()) == 1
+        assert address_credits.blockchain_height() == 2000
 
     def test_when_both_same_except_order__return_credits(self):
         address_credits = StubFetchAddressCreditsFromExplorersUC(
             AddressCredits([Credit(1, None, False), Credit(2, None, False)], 2000),
             AddressCredits([Credit(2, None, False), Credit(1, None, False)], 2000)
         ).exec()
-        self.assertTrue(address_credits)
-        self.assertEqual(2, len(address_credits.all()))
-        self.assertEqual(2000, address_credits.blockchain_height())
+        assert address_credits
+        assert len(address_credits.all()) == 2
+        assert address_credits.blockchain_height() == 2000

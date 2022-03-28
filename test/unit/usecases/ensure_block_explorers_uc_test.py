@@ -12,12 +12,12 @@ class EnsureBlockExplorersUCTest(CypherpunkpayDBTestCase):
 
         EnsureBlockExplorersUC(charge, config=ExampleConfig()).exec()
 
-        self.assertIsNotNone(charge.block_explorer_1)
-        self.assertIsNotNone(charge.block_explorer_2)
-        self.assertTrue(charge.block_explorer_1.startswith('cypherpunkpay.'))
-        self.assertTrue(charge.block_explorer_2.startswith('cypherpunkpay.'))
-        self.assertTrue(charge.block_explorer_1.endswith('Explorer'))
-        self.assertTrue(charge.block_explorer_2.endswith('Explorer'))
+        assert charge.block_explorer_1 is not None
+        assert charge.block_explorer_2 is not None
+        assert charge.block_explorer_1.startswith('cypherpunkpay.')
+        assert charge.block_explorer_2.startswith('cypherpunkpay.')
+        assert charge.block_explorer_1.endswith('Explorer')
+        assert charge.block_explorer_2.endswith('Explorer')
 
     def test_does_not_change_fine_explorers(self):
         charge = ExampleCharge.create()
@@ -27,8 +27,8 @@ class EnsureBlockExplorersUCTest(CypherpunkpayDBTestCase):
 
         EnsureBlockExplorersUC(charge, config=ExampleConfig()).exec()
 
-        self.assertEqual('cypherpunkpay.explorers.bitcoin.mempool_explorer MempoolExplorer', charge.block_explorer_1)
-        self.assertEqual('cypherpunkpay.explorers.bitcoin.blockstream_explorer BlockstreamExplorer', charge.block_explorer_2)
+        assert charge.block_explorer_1 == 'cypherpunkpay.explorers.bitcoin.mempool_explorer MempoolExplorer'
+        assert charge.block_explorer_2 == 'cypherpunkpay.explorers.bitcoin.blockstream_explorer BlockstreamExplorer'
 
     def test_resets_explorers_if_subsequent_discrepancies_reached_threshold(self):
         good_luck = 0

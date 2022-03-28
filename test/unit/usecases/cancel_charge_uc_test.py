@@ -9,4 +9,4 @@ class CancelChargeUCTest(CypherpunkpayDBTestCase):
         charge = ExampleCharge.db_create(db=self.db)
         CancelChargeUC(charge=charge, db=self.db).exec()
         charge = self.db.reload(charge)
-        self.assertEqual('cancelled', charge.status)
+        assert charge.status == 'cancelled'
