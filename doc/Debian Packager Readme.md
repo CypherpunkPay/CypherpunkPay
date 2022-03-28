@@ -37,7 +37,7 @@ Build deb package:
 `bin/package-for-debian`
 
 Install deb package:
-`sudo dpkg -i dist/debian/cypherpunkpay_1.0.14_amd64.deb`
+`sudo dpkg -i dist/debian/cypherpunkpay_1.0.15_amd64.deb`
 
 Verify it is installed:
 `ls -lha /opt/venvs/cypherpunkpay/`
