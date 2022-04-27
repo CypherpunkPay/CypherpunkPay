@@ -1,4 +1,3 @@
-from cypherpunkpay import bitcoin
 from pathlib import Path
 
 from cypherpunkpay.tools.safe_uid import SafeUid
@@ -19,7 +18,8 @@ def main():
         marker = '# btc_testnet_account_xpub = REPLACE_ME_WITH_BTC_TESTNET_ACCOUNT_XPUB'
         if marker in filedata:
             print(f'Writing example testnet wallet to {cypherpunkpay_conf} [wallets] btc_testnet_account_xpub = ...')
-            xprv, xpub = bitcoin.Bip32.generate_testnet_p2wpkh_wallet()
+            from cypherpunkpay.bitcoin.bip32 import Bip32
+            xprv, xpub = Bip32.generate_testnet_p2wpkh_wallet()
             filedata = filedata.replace(marker, f'btc_testnet_account_xpub = {xpub}')
             if Path(discard).exists():
                 with open(f'{discard}/example_btc_testnet_xprv', 'w') as file_xprv:

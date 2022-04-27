@@ -3,8 +3,8 @@ from cypherpunkpay.common import *
 from cypherpunkpay.ln.lightning_client import LightningClient, LightningException
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.credit import Credit
-from cypherpunkpay.usecases import UseCase
-from cypherpunkpay.bitcoin import btc_network_class
+from cypherpunkpay.usecases.use_case import UseCase
+from cypherpunkpay.bitcoin.helpers import btc_network_class
 from cypherpunkpay.bitcoin.electrum.lnaddr import lndecode
 
 

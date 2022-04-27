@@ -11,7 +11,7 @@ from cypherpunkpay.explorers.bitcoin.trezor_explorer import TrezorExplorer
 from cypherpunkpay.exceptions import UnsupportedCoin
 from cypherpunkpay.full_node_clients.bitcoin_core_client import BitcoinCoreClient
 from cypherpunkpay.full_node_clients.json_rpc_client import JsonRpcError
-from cypherpunkpay.usecases import UseCase
+from cypherpunkpay.usecases.use_case import UseCase
 
 
 class FetchBlockchainHeightUC(UseCase):

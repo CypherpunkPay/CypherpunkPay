@@ -1,6 +1,6 @@
 from cypherpunkpay.app import App
 from cypherpunkpay.common import *
-from cypherpunkpay.usecases import UseCase
+from cypherpunkpay.usecases.use_case import UseCase
 from cypherpunkpay.usecases.fetch_blockchain_height_uc import FetchBlockchainHeightUC
 
 

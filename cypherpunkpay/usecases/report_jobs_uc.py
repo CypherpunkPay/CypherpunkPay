@@ -3,7 +3,7 @@ from apscheduler.job import Job
 from cypherpunkpay.common import *
 from cypherpunkpay.jobs.job_scheduler import JobScheduler
 from cypherpunkpay.models.job_report import JobReport
-from cypherpunkpay.usecases import UseCase
+from cypherpunkpay.usecases.use_case import UseCase
 
 
 class ReportJobsUC(UseCase):

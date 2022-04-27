@@ -1,5 +1,5 @@
 from cypherpunkpay.db.db import DB
-from cypherpunkpay.usecases import UseCase
+from cypherpunkpay.usecases.use_case import UseCase
 from cypherpunkpay.usecases.call_payment_completed_url_uc import CallPaymentCompletedUrlUC
 
 

@@ -8,7 +8,7 @@ from cypherpunkpay.common import *
 from cypherpunkpay.db.db import DB
 from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.jobs.job_scheduler import JobScheduler
-from cypherpunkpay.usecases import UseCase
+from cypherpunkpay.usecases.use_case import UseCase
 
 
 class UpdateChargeJobsUC(UseCase):

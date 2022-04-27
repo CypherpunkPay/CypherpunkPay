@@ -3,7 +3,7 @@ from cypherpunkpay.common import *
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.models.credit import Credit
-from cypherpunkpay.usecases import UseCase
+from cypherpunkpay.usecases.use_case import UseCase
 from cypherpunkpay.usecases.ensure_block_explorers_uc import EnsureBlockExplorersUC
 from cypherpunkpay.usecases.fetch_address_credits_from_explorers_uc import FetchAddressCreditsFromExplorersUC
 from cypherpunkpay.usecases.fetch_address_credits_from_full_node_uc import FetchAddressCreditsFromFullNodeUC

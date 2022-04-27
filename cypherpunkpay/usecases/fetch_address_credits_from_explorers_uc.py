@@ -5,7 +5,7 @@ from cypherpunkpay.common import *
 from cypherpunkpay.exceptions import UnsupportedCoin
 from cypherpunkpay.explorers.bitcoin.block_explorer import BlockExplorer
 from cypherpunkpay.models.address_credits import AddressCredits
-from cypherpunkpay.usecases import UseCase
+from cypherpunkpay.usecases.use_case import UseCase
 
 
 class FetchAddressCreditsFromExplorersUC(UseCase):

@@ -1,4 +1,4 @@
-from cypherpunkpay.bitcoin import Bip32
+from cypherpunkpay.bitcoin.bip32 import Bip32
 from cypherpunkpay.common import *
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.credit import Credit

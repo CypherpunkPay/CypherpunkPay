@@ -6,6 +6,7 @@ import pkg_resources
 from pathlib import Path
 
 from cypherpunkpay import bitcoin
+from cypherpunkpay.bitcoin.bip32 import Bip32
 from cypherpunkpay.config.config import Config
 from cypherpunkpay.monero.monero_wallet import MoneroWallet
 
@@ -131,7 +132,7 @@ class ConfigParser(object):
             for coin in candidate.configured_coins():
                 error = None
                 if coin == 'btc':
-                    error = bitcoin.Bip32.validate_p2wpkh_xpub(candidate.btc_network(), candidate.btc_account_xpub())
+                    error = Bip32.validate_p2wpkh_xpub(candidate.btc_network(), candidate.btc_account_xpub())
                 if coin == 'xmr':
                     error = MoneroWallet.validate_viewkey_mainaddress(candidate.xmr_network(), candidate.xmr_secret_view_key(), candidate.xmr_main_address())
                 if error:

@@ -8,7 +8,7 @@ from cypherpunkpay import utc_now
 from cypherpunkpay.app import App
 from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits
-from cypherpunkpay.usecases import UseCase
+from cypherpunkpay.usecases.use_case import UseCase
 
 
 class CallMerchantBaseUC(UseCase, ABC):

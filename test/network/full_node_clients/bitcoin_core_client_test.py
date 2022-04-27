@@ -1,5 +1,5 @@
 from cypherpunkpay.common import *
-from cypherpunkpay.bitcoin import Bip32
+from cypherpunkpay.bitcoin.bip32 import Bip32
 from cypherpunkpay.full_node_clients.bitcoin_core_client import BitcoinCoreClient
 from cypherpunkpay.full_node_clients.json_rpc_client import JsonRpcError
 

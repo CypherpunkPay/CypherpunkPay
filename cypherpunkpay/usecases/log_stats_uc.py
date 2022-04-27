@@ -1,6 +1,6 @@
 from cypherpunkpay import Config, App
 from cypherpunkpay.common import *
-from cypherpunkpay.usecases import UseCase
+from cypherpunkpay.usecases.use_case import UseCase
 from cypherpunkpay.usecases.report_charges_uc import ReportChargesUC
 from cypherpunkpay.usecases.report_jobs_uc import ReportJobsUC
 

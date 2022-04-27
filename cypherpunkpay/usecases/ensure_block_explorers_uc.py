@@ -5,7 +5,7 @@ from cypherpunkpay import App, Config
 from cypherpunkpay.common import *
 from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.net.http_client.dummy_http_client import DummyHttpClient
-from cypherpunkpay.usecases import UseCase
+from cypherpunkpay.usecases.use_case import UseCase
 
 
 class EnsureBlockExplorersUC(UseCase):

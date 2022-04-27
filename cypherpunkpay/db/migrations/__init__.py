@@ -1,1 +1,0 @@
-__transactional__ = True

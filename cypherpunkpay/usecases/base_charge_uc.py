@@ -5,9 +5,9 @@ from monero.backends.offline import OfflineWallet
 from monero.wallet import Wallet
 
 from cypherpunkpay import bitcoin
-from cypherpunkpay.bitcoin import Bip32
+from cypherpunkpay.bitcoin.bip32 import Bip32
 from cypherpunkpay.exceptions import UnsupportedCoin
-from cypherpunkpay.usecases import UseCase
+from cypherpunkpay.usecases.use_case import UseCase
 
 
 class BaseChargeUC(UseCase, ABC):
@@ -18,7 +18,7 @@ class BaseChargeUC(UseCase, ABC):
             wallet_fingerprint = Bip32.wallet_fingerprint(xpub)
             address_index = self.db.count_charges_where_wallet_fingerprint_is(wallet_fingerprint)
             address_offset = self.config.btc_account_offset()
-            address = bitcoin.Bip32.p2wpkh_address_at(self.config.btc_network(), xpub, [0, address_index + address_offset])
+            address = Bip32.p2wpkh_address_at(self.config.btc_network(), xpub, [0, address_index + address_offset])
         elif cc_currency == 'xmr':
             main_address = self.config.xmr_main_address()
             secret_view_key = self.config.xmr_secret_view_key()
