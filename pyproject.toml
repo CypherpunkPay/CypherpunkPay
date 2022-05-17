@@ -14,12 +14,12 @@ waitress = "^2.1.1"
 PyQRCode = "^1.2.1"
 pypng = "^0.0.20"
 ecdsa = "^0.17.0"
-APScheduler = "^3.7.0"
+APScheduler = "^3.9.1"
 requests = "^2.26"
 PySocks = "^1.7.1"
 yoyo-migrations = "^7.3.2"
 bitstring = '^3.1.9'
-monero = "^0.99"
+monero = "^1.0"
 tzlocal = "2.1"  # newer tzlocal forces pytz shim which de facto requires Python 3.9 (breakes apscheduler)
 cffi = "1.15.0"  # pin precise version because we distribute *.so binaries that must precisely match (a hack to support Python 3.6, 3.7, 3.8, 3.9 all at once)
 

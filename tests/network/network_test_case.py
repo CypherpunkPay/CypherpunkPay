@@ -7,6 +7,9 @@ from cypherpunkpay.net.tor_client.official_tor_circuits import OfficialTorCircui
 
 class CypherpunkpayNetworkTestCase(CypherpunkpayTestCase):
 
+    XMR_STAGENET_REMOTE_HOST = 'stagenet.community.rino.io'
+    XMR_STAGENET_REMOTE_PORT = 38081
+
     @classmethod
     def setUpClass(cls):
         cls.official_tor = OfficialTorCircuits(config=ExampleConfig())

@@ -18,7 +18,6 @@ class PickCryptocurrencyForChargeUC(BaseChargeUC):
                  config=None,
                  db=None,
                  price_tickers=None,
-                 http_client=None,
                  ln_client: LightningClient=None
                  ):
         self.charge = charge
@@ -27,7 +26,6 @@ class PickCryptocurrencyForChargeUC(BaseChargeUC):
         self.config = config if config else App().config()
         self.db = db if db else App().db()
         self.price_tickers = price_tickers if price_tickers else App().price_tickers()
-        self.http_client = http_client if http_client else App().http_client()
         if self.lightning:
             self.ln_client = ln_client if ln_client else App().ln_client()
 

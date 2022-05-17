@@ -1,3 +1,5 @@
+import pytest
+
 from cypherpunkpay.common import *
 from cypherpunkpay.tools.safe_uid import SafeUid
 
@@ -5,6 +7,19 @@ from tests.unit.test_case import CypherpunkpayTestCase
 
 
 class CommonTest(CypherpunkpayTestCase):
+
+    def test_utc_from_str(self):
+        dt = utc_from_str('2022-02-11 16:43:25')
+        assert dt.tzname() == 'UTC'
+        assert dt.year == 2022
+        assert dt.month == 2
+        assert dt.day == 11
+        assert dt.hour == 16
+        assert dt.minute == 43
+        assert dt.second == 25
+
+        with pytest.raises(ValueError):
+            utc_from_str('2022-02-11 16:43:25+01:00')
 
     def test_utc_now(self):
         assert utc_now().tzname() == 'UTC'

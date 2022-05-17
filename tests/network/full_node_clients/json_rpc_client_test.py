@@ -36,7 +36,7 @@ class JsonRpcClientTest(CypherpunkpayNetworkTestCase):
 
     def test_bad_method(self):
         json_rpc_client = JsonRpcClient('http://127.0.0.1:18332', user='bitcoin', passwd='secret', http_client=self.clear_http_client)
-        with self.assertRaises(JsonRpcCallError):
+        with self.assertRaises(JsonRpcRequestError):
             json_rpc_client.non_existing_method()
 
     def test_bad_param(self):

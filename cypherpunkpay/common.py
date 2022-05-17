@@ -2,8 +2,8 @@
 #
 # Python convenience utilities NOT specific to the project.
 #
-# All imports and definitions in this file are GLOBAL beause all files import * from this file.
-# This is for pragmatism and covenience but beware of potential name clashes.
+# All imports and definitions in this file are GLOBAL because all files import * from this file.
+# While convenient and pragmatic beware of potential name clashes.
 
 import logging as log
 
@@ -29,6 +29,13 @@ from typing import List, Dict
 from pprint import pprint
 
 from pathlib import Path
+
+
+def utc_from_str(s: str) -> datetime.datetime:
+    if '+' in s:
+        raise ValueError('Please do NOT pass the timezone. This method enforces UTC.')
+    s += '+00:00'  # enforce UTC
+    return datetime.datetime.fromisoformat(s)
 
 
 def utc_now():

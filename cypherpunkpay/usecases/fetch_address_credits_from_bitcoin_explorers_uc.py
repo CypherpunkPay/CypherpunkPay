@@ -2,16 +2,14 @@ import importlib
 
 from cypherpunkpay.app import App
 from cypherpunkpay.common import *
-from cypherpunkpay.exceptions import UnsupportedCoin
 from cypherpunkpay.explorers.bitcoin.block_explorer import BlockExplorer
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.usecases.use_case import UseCase
 
 
-class FetchAddressCreditsFromExplorersUC(UseCase):
+class FetchAddressCreditsFromBitcoinExplorersUC(UseCase):
 
-    def __init__(self, cc_currency: str, address: str, block_explorer_1: str, block_explorer_2: str, current_height=None, http_client=None, config=None, charge_short_uid=None):
-        self.cc_currency = cc_currency
+    def __init__(self, address: str, block_explorer_1: str, block_explorer_2: str, current_height=None, http_client=None, config=None, charge_short_uid=None):
         self.address = address
         self.block_explorer_1_s = block_explorer_1
         self.block_explorer_2_s = block_explorer_2
@@ -23,26 +21,18 @@ class FetchAddressCreditsFromExplorersUC(UseCase):
         self.charge_short_uid = charge_short_uid  # for logging only
 
     def exec(self) -> [AddressCredits, None]:
-        if self.cc_currency == 'btc':
-            self._instantiate_block_explorers()
+        self._instantiate_block_explorers()
 
-            address_credits_1 = self.block_explorer_1.get_address_credits(address=self.address, current_height=self.current_height)
-            address_credits_2 = self.block_explorer_2.get_address_credits(address=self.address, current_height=self.current_height)
+        address_credits_1 = self.block_explorer_1.get_address_credits(address=self.address, current_height=self.current_height)
+        address_credits_2 = self.block_explorer_2.get_address_credits(address=self.address, current_height=self.current_height)
 
-            # Both explorers must give exactly the same answer
-            if address_credits_1 == address_credits_2:
-                return address_credits_1
+        # Both explorers must give exactly the same answer
+        if address_credits_1 == address_credits_2:
+            return address_credits_1
 
-            # Discrepancy between block explorers. This is natural temporarily.
-            self._log_discrepancy(address_credits_1, address_credits_2)
-            return None
-
-        elif self.cc_currency == 'xmr':
-            # TODO: implement
-            # self._instantiate_block_explorers()
-            return AddressCredits([], 0)
-        else:
-            raise UnsupportedCoin(self.cc_currency)
+        # Discrepancy between block explorers. This is natural temporarily.
+        self._log_discrepancy(address_credits_1, address_credits_2)
+        return None
 
     def _instantiate_block_explorers(self):
         self.block_explorer_1 = self._instantiate_explorer(self.block_explorer_1_s)

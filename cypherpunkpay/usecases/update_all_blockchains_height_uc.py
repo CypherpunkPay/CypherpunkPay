@@ -1,5 +1,5 @@
-from cypherpunkpay.app import App
 from cypherpunkpay.common import *
+from cypherpunkpay.app import App
 from cypherpunkpay.usecases.use_case import UseCase
 from cypherpunkpay.usecases.fetch_blockchain_height_uc import FetchBlockchainHeightUC
 
@@ -12,7 +12,7 @@ class UpdateAllBlockchainsHeightUC(UseCase):
         self._db = db if db else App().db()
 
     def exec(self):
-        for coin in self._config.supported_coins():
+        for coin in self._config.configured_coins():
             height = FetchBlockchainHeightUC(coin, config=self._config, http_client=self._http_client).exec()
             if height:
                 self._db.update_blockchain_height(coin, self._config.cc_network(coin), height)

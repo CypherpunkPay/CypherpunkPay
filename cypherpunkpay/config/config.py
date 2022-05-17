@@ -114,6 +114,24 @@ class Config(object):
         else:
             return self._dict.get('xmr_stagenet_node_enabled', 'false') == 'true'
 
+    def xmr_node_rpc_url(self) -> str:
+        if self.xmr_mainnet():
+            return self._dict.get('xmr_mainnet_node_rpc_url', 'http://127.0.0.1:18081')
+        else:
+            return self._dict.get('xmr_stagenet_node_rpc_url', 'http://127.0.0.1:38081')
+
+    def xmr_node_rpc_user(self) -> str:
+        if self.xmr_mainnet():
+            return self._dict.get('xmr_mainnet_node_rpc_user')
+        else:
+            return self._dict.get('xmr_stagenet_node_rpc_user')
+
+    def xmr_node_rpc_password(self) -> str:
+        if self.xmr_mainnet():
+            return self._dict.get('xmr_mainnet_node_rpc_password')
+        else:
+            return self._dict.get('xmr_stagenet_node_rpc_password')
+
     def btc_network(self):
         return self._dict.get('btc_network', 'testnet')
 
@@ -139,7 +157,8 @@ class Config(object):
     def xmr_stagenet(self):
         return self.xmr_network() == 'stagenet'
 
-    def supported_coins(self) -> List[str]:
+    @staticmethod
+    def supported_coins() -> List[str]:
         return ['btc', 'xmr']
 
     def supported_explorers(self, coin: str) -> List[BlockExplorer]:
@@ -160,17 +179,17 @@ class Config(object):
 
     def configured_coins(self) -> List[str]:
         ret = []
-        if self.btc_account_xpub():
+        if self.btc_enabled():
             ret.append('btc')
-        if self.xmr_secret_view_key() and self.xmr_main_address():
+        if self.xmr_enabled():
             ret.append('xmr')
         return ret
 
     def btc_enabled(self) -> bool:
-        return 'btc' in self.configured_coins()
+        return bool(self.btc_account_xpub())
 
     def xmr_enabled(self) -> bool:
-        return 'xmr' in self.configured_coins()
+        return bool(self.xmr_secret_view_key() and self.xmr_main_address())
 
     def supported_currencies(self) -> List[str]:
         return self.supported_coins() + self.supported_fiats()

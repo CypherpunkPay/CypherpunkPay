@@ -4,7 +4,6 @@ import pytest
 
 from cypherpunkpay.ln.lightning_dummy_client import LightningDummyClient
 from cypherpunkpay.models.charge import Charge
-from cypherpunkpay.net.http_client.dummy_http_client import DummyHttpClient
 from tests.unit.config.example_config import ExampleConfig
 from cypherpunkpay.usecases.invalid_params import InvalidParams
 from cypherpunkpay.usecases.pick_cryptocurrency_for_charge_uc import PickCryptocurrencyForChargeUC
@@ -147,7 +146,6 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
             config=ExampleConfig(),
             db=self.db,
             price_tickers=ExamplePriceTickers(),
-            http_client=DummyHttpClient(),
             ln_client=LightningClientStub()
         )
         pick_cc.exec()
@@ -169,7 +167,6 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
             config=ExampleConfig(),
             db=self.db,
             price_tickers=ExamplePriceTickers(),
-            http_client=DummyHttpClient(),
             ln_client=LightningClientStub()
         )
         pick_cc.exec()
@@ -258,6 +255,5 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
             lightning=False,
             config=config,
             db=self.db,
-            price_tickers=ExamplePriceTickers(),
-            http_client=DummyHttpClient()
+            price_tickers=ExamplePriceTickers()
         ).exec()

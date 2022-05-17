@@ -1,6 +1,6 @@
 [[package]]
 name = "apscheduler"
-version = "3.8.1"
+version = "3.9.1"
 description = "In-process task scheduler with Cron-like capabilities"
 category = "main"
 optional = false
@@ -19,7 +19,7 @@ mongodb = ["pymongo (>=3.0)"]
 redis = ["redis (>=3.0)"]
 rethinkdb = ["rethinkdb (>=2.4.0)"]
 sqlalchemy = ["sqlalchemy (>=0.8)"]
-testing = ["pytest (<6)", "pytest-cov", "pytest-tornado5", "mock", "pytest-asyncio (<0.6)", "pytest-asyncio"]
+testing = ["pytest", "pytest-cov", "pytest-tornado5", "mock", "pytest-asyncio (<0.6)", "pytest-asyncio"]
 tornado = ["tornado (>=4.3)"]
 twisted = ["twisted"]
 zookeeper = ["kazoo"]
@@ -228,7 +228,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "monero"
-version = "0.99"
+version = "1.0"
 description = "A comprehensive Python module for handling Monero cryptocurrency"
 category = "main"
 optional = false
@@ -237,7 +237,7 @@ python-versions = "*"
 [package.dependencies]
 ipaddress = "*"
 pycryptodomex = ">=3.10,<4.0"
-pynacl = ">=1.4.0,<1.5.0"
+pynacl = ">=1.4,<2.0"
 requests = "*"
 six = ">=1.12.0"
 varint = "*"
@@ -701,12 +701,12 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "da0bd3d7b2062839d983cca69e96af3d588b204a90419a8fb2b98dcf79333918"
+content-hash = "0e926d6e2d4adfcde72c326e8798d91554e869abecdf092a7bf9faaa4decba86"
 
 [metadata.files]
 apscheduler = [
-    {file = "APScheduler-3.8.1-py2.py3-none-any.whl", hash = "sha256:c22cb14b411a31435eb2c530dfbbec948ac63015b517087c7978adb61b574865"},
-    {file = "APScheduler-3.8.1.tar.gz", hash = "sha256:5cf344ebcfbdaa48ae178c029c055cec7bc7a4a47c21e315e4d1f08bd35f2355"},
+    {file = "APScheduler-3.9.1-py2.py3-none-any.whl", hash = "sha256:ddc25a0ddd899de44d7f451f4375fb971887e65af51e41e5dcf681f59b8b2c9a"},
+    {file = "APScheduler-3.9.1.tar.gz", hash = "sha256:65e6574b6395498d371d045f2a8a7e4f7d50c6ad21ef7313d15b1c7cf20df1e3"},
 ]
 atomicwrites = [
     {file = "atomicwrites-1.4.0-py2.py3-none-any.whl", hash = "sha256:6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197"},
@@ -930,7 +930,7 @@ markupsafe = [
     {file = "MarkupSafe-2.0.1.tar.gz", hash = "sha256:594c67807fb16238b30c44bdf74f36c02cdf22d1c8cda91ef8a0ed8dabf5620a"},
 ]
 monero = [
-    {file = "monero-0.99.tar.gz", hash = "sha256:9b778b24129c657cba7d232eed48eda0e120afda7c5d9ef4518d7306026970c2"},
+    {file = "monero-1.0.tar.gz", hash = "sha256:c1dc19753f5346d37f78521af4068ec9f8e00a22e740126b10f1265a1b8fae9b"},
 ]
 packaging = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},

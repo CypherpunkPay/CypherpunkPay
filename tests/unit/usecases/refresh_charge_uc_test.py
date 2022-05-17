@@ -23,7 +23,7 @@ class StubRefreshChargeUC(RefreshChargeUC):
         )
         self._mock_credits = credits
 
-    def fetch_address_credits_from_explorers(self, charge):
+    def fetch_address_credits_from_btc_explorers(self, charge):
         if self._mock_credits is None:
             return None
         else:
@@ -33,7 +33,7 @@ class StubRefreshChargeUC(RefreshChargeUC):
 class StubLnRefreshChargeUC(RefreshChargeUC):
 
     def __init__(self, charge_uid: str, credits: [List[Credit], None], db=None):
-        self._blockchain_height = 2**31  # just big
+        self._blockchain_height = 2**31  # impossibly big because it shouldn't matter for LN
         super().__init__(
             charge_uid,
             current_height=self._blockchain_height,
@@ -44,7 +44,7 @@ class StubLnRefreshChargeUC(RefreshChargeUC):
         )
         self._mock_credits = credits
 
-    def fetch_credits_from_lightning_node(self, charge) -> [AddressCredits, None]:
+    def fetch_credits_from_btc_lightning_node(self, charge) -> [AddressCredits, None]:
         return AddressCredits(self._mock_credits, self._blockchain_height)
 
 
@@ -466,6 +466,7 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
     def test_lightning_unpaid_to_completed(self):
         charge = Charge(total=self.ONE_SATOSHI, currency='btc', time_to_pay_ms=15*60*1000, time_to_complete_ms=60*60*1000)
         charge.cc_total = charge.total
+        charge.cc_currency = 'btc'
         charge.activated_at = utc_now()
         charge.status = 'awaiting'
         charge.cc_lightning_payment_request = self.EXAMPLE_PAYMENT_REQUEST_TESTNET
@@ -481,13 +482,13 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         assert charge.paid_at is not None
         assert charge.completed_at is not None
 
-    # Mock checking fetch_credits_from_lightning_node will NOT be called
+    # Mock checking fetch_credits_from_btc_lightning_node will NOT be called
     class MockLnRefreshChargeUC(RefreshChargeUC):
         def __init__(self, charge_uid: str, db=None):
             self._blockchain_height = 2**31  # just big
             super().__init__(charge_uid, current_height=self._blockchain_height, db=db, http_client=DummyHttpClient(), ln_client=LightningDummyClient(), config=ExampleConfig())
 
-        def fetch_credits_from_lightning_node(self, charge):
+        def fetch_credits_from_btc_lightning_node(self, charge):
             raise Exception('This method should not be called -> test case failed')
 
     def test_lightning_expired_wont_refresh(self):

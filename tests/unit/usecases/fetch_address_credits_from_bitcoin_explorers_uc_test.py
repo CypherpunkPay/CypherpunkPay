@@ -6,7 +6,7 @@ from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.credit import Credit
 from tests.unit.db_test_case import CypherpunkpayDBTestCase
 from cypherpunkpay.net.http_client.dummy_http_client import DummyHttpClient
-from cypherpunkpay.usecases.fetch_address_credits_from_explorers_uc import FetchAddressCreditsFromExplorersUC
+from cypherpunkpay.usecases.fetch_address_credits_from_bitcoin_explorers_uc import FetchAddressCreditsFromBitcoinExplorersUC
 
 
 class StubBlockExplorer(BlockExplorer):
@@ -25,11 +25,10 @@ class StubBlockExplorer(BlockExplorer):
         pass
 
 
-class StubFetchAddressCreditsFromExplorersUC(FetchAddressCreditsFromExplorersUC):
+class StubFetchAddressCreditsFromExplorersUC(FetchAddressCreditsFromBitcoinExplorersUC):
 
     def __init__(self, address_credits_1, address_credits_2):
         super().__init__(
-            'btc',
             'bc1quwtrymfzavun8awsv9fqv36wlk0058puuw7mer',
             'cypherpunkpay.explorers.bitcoin.some_exmplorer SomeExplorer',
             'cypherpunkpay.explorers.bitcoin.another_explorer AnotherExplorer',
@@ -45,11 +44,10 @@ class StubFetchAddressCreditsFromExplorersUC(FetchAddressCreditsFromExplorersUC)
         self.block_explorer_2 = StubBlockExplorer(self.stub_address_credits_2)
 
 
-class FetchAddressCreditsFromExplorersUCTest(CypherpunkpayDBTestCase):
+class FetchAddressCreditsFromBitcoinExplorersUCTest(CypherpunkpayDBTestCase):
 
     def test_instantiates_block_explorers(self):
-        uc = FetchAddressCreditsFromExplorersUC(
-            'btc',
+        uc = FetchAddressCreditsFromBitcoinExplorersUC(
             'bc1quwtrymfzavun8awsv9fqv36wlk0058puuw7mer',
             'cypherpunkpay.explorers.bitcoin.blockstream_explorer BlockstreamExplorer',
             'cypherpunkpay.explorers.bitcoin.trezor_explorer TrezorExplorer',

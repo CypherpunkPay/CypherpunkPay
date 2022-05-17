@@ -5,8 +5,8 @@ from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.models.credit import Credit
 from cypherpunkpay.usecases.use_case import UseCase
 from cypherpunkpay.usecases.ensure_block_explorers_uc import EnsureBlockExplorersUC
-from cypherpunkpay.usecases.fetch_address_credits_from_explorers_uc import FetchAddressCreditsFromExplorersUC
-from cypherpunkpay.usecases.fetch_address_credits_from_full_node_uc import FetchAddressCreditsFromFullNodeUC
+from cypherpunkpay.usecases.fetch_address_credits_from_bitcoin_explorers_uc import FetchAddressCreditsFromBitcoinExplorersUC
+from cypherpunkpay.usecases.fetch_address_credits_from_bitcoin_full_node_uc import FetchAddressCreditsFromBitcoinFullNodeUC
 from cypherpunkpay.usecases.fetch_credits_from_lightning_node_uc import FetchCreditsFromLightningNodeUC
 
 
@@ -137,26 +137,26 @@ class RefreshChargeUC(UseCase):
             return
 
     def fetch_credits(self, charge) -> [AddressCredits, None]:
-        if charge.is_lightning():
-            return self.fetch_credits_from_lightning_node(charge)
-        if self.full_node_enabled(charge):
-            return self.fetch_address_credits_from_full_node(charge)
-        else:
-            self.ensure_valid_block_explorers(charge)
-            credits = self.fetch_address_credits_from_explorers(charge)
-            self._db.reload(charge)  # reload the charge - by now it could have been updated by other job
-            if credits is None:
-                # We couldn't determine address credits. Block explorer calls failed or there was a discrepancy among explorers.
-                self.increment_subsequent_discrepancies(charge)
-                return None
-            self.reset_subsequent_discrepancies(charge)
-            return credits
-
-    def full_node_enabled(self, charge):
         if charge.cc_currency == 'btc':
-            return self._config.btc_node_enabled()
+            if charge.is_lightning():
+                return self.fetch_credits_from_btc_lightning_node(charge)
+            if self.btc_full_node_enabled(charge):
+                return self.fetch_address_credits_from_bitcoin_full_node(charge)
+            else:
+                self.ensure_valid_block_explorers(charge)
+                credits = self.fetch_address_credits_from_btc_explorers(charge)
+                self._db.reload(charge)  # reload the charge - by now it could have been updated by other job
+                if credits is None:
+                    # We couldn't determine address credits. Block explorer calls failed or there was a discrepancy among explorers.
+                    self.increment_subsequent_discrepancies(charge)
+                    return None
+                self.reset_subsequent_discrepancies(charge)
+                return credits
         if charge.cc_currency == 'xmr':
-            return self._config.xmr_node_enabled()
+            return self.fetch_address_credits_from_monero_open_node(charge)
+
+    def btc_full_node_enabled(self, charge):
+        return self._config.btc_node_enabled()
 
     def ensure_valid_block_explorers(self, charge):
         if charge.cc_currency == 'btc':
@@ -167,7 +167,7 @@ class RefreshChargeUC(UseCase):
             pass  # XMR empty list of available block explorers cannot be used with EnsureBlockExplorer so we pass here
 
     # MOCK ME
-    def fetch_credits_from_lightning_node(self, charge) -> [AddressCredits, None]:
+    def fetch_credits_from_btc_lightning_node(self, charge) -> [AddressCredits, None]:
         return FetchCreditsFromLightningNodeUC(
             cc_lightning_payment_request=charge.cc_lightning_payment_request,
             current_height=self._current_height,
@@ -177,23 +177,37 @@ class RefreshChargeUC(UseCase):
         ).exec()
 
     # MOCK ME
-    def fetch_address_credits_from_full_node(self, charge) -> [AddressCredits, None]:
-        return FetchAddressCreditsFromFullNodeUC(
+    def fetch_address_credits_from_bitcoin_full_node(self, charge) -> [AddressCredits, None]:
+        return FetchAddressCreditsFromBitcoinFullNodeUC(
+            address=charge.cc_address,
+            wallet_fingerprint=charge.wallet_fingerprint,
             current_height=self._current_height,
             http_client=self._http_client
         ).exec()
 
     # MOCK ME
-    def fetch_address_credits_from_explorers(self, charge) -> [AddressCredits, None]:
-        return FetchAddressCreditsFromExplorersUC(
-            charge.cc_currency,
-            charge.cc_address,
-            charge.block_explorer_1,
-            charge.block_explorer_2,
+    def fetch_address_credits_from_btc_explorers(self, charge) -> [AddressCredits, None]:
+        return FetchAddressCreditsFromBitcoinExplorersUC(
+            address=charge.cc_address,
+            block_explorer_1=charge.block_explorer_1,
+            block_explorer_2=charge.block_explorer_2,
             current_height=self._current_height,
             http_client=self._http_client,
             charge_short_uid=charge.short_uid()
         ).exec()
+
+    # MOCK ME
+    def fetch_address_credits_from_monero_open_node(self, charge) -> [AddressCredits, None]:
+        # TODO
+        pass
+        # return FetchAddressCreditsFromMoneroOpenNodeUC(
+        #     monero_tx_pool=MoneroTxPool(),
+        #     since=charge.activated_at,
+        #     address=charge.cc_address,
+        #     wallet_fingerprint=charge.wallet_fingerprint,
+        #     current_height=self._current_height,
+        #     http_client=self._http_client
+        # ).exec()
 
     def increment_subsequent_discrepancies(self, charge: Charge):
         charge.subsequent_discrepancies += 1

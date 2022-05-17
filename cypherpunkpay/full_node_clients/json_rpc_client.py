@@ -11,7 +11,7 @@ import requests
 class JsonRpcClient(object):
     __id_count = 0
 
-    def __init__(self, service_url, user='bitcoin', passwd='secret', http_client=None, service_name=None):
+    def __init__(self, service_url, user='bitcoin', passwd='secret', http_client=None, service_name=None, path=''):
         self.__service_url = service_url
 
         self.__user = user
@@ -23,6 +23,7 @@ class JsonRpcClient(object):
 
         self.__http_client = http_client
         self.__service_name = service_name
+        self.__path = path
 
     def __getattr__(self, name):
         if name.startswith('__') and name.endswith('__'):
@@ -30,19 +31,21 @@ class JsonRpcClient(object):
             raise AttributeError
         if self.__service_name is not None:
             name = "%s.%s" % (self.__service_name, name)
-        return JsonRpcClient(self.__service_url, self.__user, self.__passwd, http_client=self.__http_client, service_name=name)
+        return JsonRpcClient(self.__service_url, self.__user, self.__passwd, http_client=self.__http_client, service_name=name, path=self.__path)
 
     def __call__(self, *args) -> [Dict, None]:
         JsonRpcClient.__id_count += 1
         log.debug("-%s-> %s %s" % (JsonRpcClient.__id_count, self.__service_name, json.dumps(args, default=decimal_to_float)))
 
-        # Hack to extract the path from params
-        path = ''
+        path = self.__path
+
+        # Bitcoin specific hack to extract path from params based on the wallet name
         if self._last_argument_is_wallet_path(args):
             path = args[-1]
             args = tuple(args[0:-1])
             if len(args) == 1 and isinstance(args[0], Dict):
                 args = args[0]
+        # END of the hack
 
         headers_d = {
             'Authorization': self.__auth_header,
@@ -59,8 +62,9 @@ class JsonRpcClient(object):
         )
 
         try:
+            url = self.__service_url + path
             response = self.__http_client.post_accepting_linkability(
-                self.__service_url + path,
+                url,
                 headers=headers_d,
                 body=body_s,
                 set_tor_browser_headers=False
@@ -72,14 +76,17 @@ class JsonRpcClient(object):
         if response.status_code == 401:
             log.warning(f'Error authenticating to {self.__service_url} Check RPC rpcuser, rpcpassword.')
             raise JsonRpcAuthenticationError()
+        if response.status_code == 404:
+            log.warning(f'POST {url} returned 404 Not Found')
+            raise JsonRpcRequestError()
 
         response_text = response.text
-        #log.info(f'response_text={response_text}')
+        #log.debug(f'response_text={response_text}')
 
         try:
             response_json = json.loads(response_text, parse_float=decimal.Decimal)
         except JSONDecodeError as e:
-            log.warning(f'[{self.__service_name}] Unexpected non-JSON API response: {response_text}')
+            log.warning(f'[{self.__service_name}] Unexpected non-JSON API response: [{response.status_code}] {response_text}')
             raise JsonRpcParsingError() from e
 
         if response_json.get('error') is not None:

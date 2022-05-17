@@ -12,6 +12,7 @@ from cypherpunkpay.exceptions import UnsupportedCoin
 from cypherpunkpay.full_node_clients.bitcoin_core_client import BitcoinCoreClient
 from cypherpunkpay.full_node_clients.json_rpc_client import JsonRpcError
 from cypherpunkpay.usecases.use_case import UseCase
+from cypherpunkpay.full_node_clients.monero_node_client import MoneroNodeClient
 
 
 class FetchBlockchainHeightUC(UseCase):
@@ -28,8 +29,10 @@ class FetchBlockchainHeightUC(UseCase):
             else:
                 return self.btc_height_from_explorers()
         elif self.coin == 'xmr':
-            # TODO: implement
-            return 1
+            if self.config.xmr_node_enabled():
+                return self.xmr_height_from_node()
+            else:
+                return self.xmr_height_from_untrusted_node()
         else:
             raise UnsupportedCoin(self.coin)
 
@@ -63,5 +66,32 @@ class FetchBlockchainHeightUC(UseCase):
                 rpc_password=self.config.btc_node_rpc_password(),
                 http_client=self.http_client
             ).get_height()
+        except JsonRpcError:
+            return None  # The exception has been logged upstream. The action will be retried. Safe to swallow.
+
+    def xmr_height_from_node(self) -> [int, None]:
+        try:
+            return MoneroNodeClient(
+                url=self.config.xmr_node_rpc_url(),
+                rpc_user=self.config.xmr_node_rpc_user(),
+                rpc_password=self.config.xmr_node_rpc_password(),
+                http_client=self.http_client
+            ).get_height()
+        except JsonRpcError:
+            return None  # The exception has been logged upstream. The action will be retried. Safe to swallow.
+
+    def xmr_height_from_untrusted_node(self) -> [int, None]:
+        try:
+            # TODO: use a pool of open nodes
+            if self.config.xmr_mainnet():
+                return MoneroNodeClient(
+                    url='http://node.community.rino.io:18081',
+                    http_client=self.http_client
+                ).get_height()
+            else:
+                return MoneroNodeClient(
+                    url='http://stagenet.community.rino.io:38081',
+                    http_client=self.http_client
+                ).get_height()
         except JsonRpcError:
             return None  # The exception has been logged upstream. The action will be retried. Safe to swallow.
