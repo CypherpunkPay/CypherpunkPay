@@ -1,4 +1,4 @@
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.explorers.bitcoin.block_explorer import BlockExplorer
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.credit import Credit
@@ -53,3 +53,28 @@ class BitapsExplorer(BlockExplorer):
             return 'https://api.bitaps.com/btc/v1/blockchain'
         else:
             return 'https://api.bitaps.com/btc/testnet/v1/blockchain'
+
+
+# This function was found on the Internet
+def deep_dict_merge(*args, add_keys=True):
+    assert len(args) >= 2, "dict_merge requires at least two dicts to merge"
+    rtn_dct = args[0].copy()
+    merge_dicts = args[1:]
+    for merge_dct in merge_dicts:
+        if add_keys is False:
+            merge_dct = {key: merge_dct[key] for key in set(rtn_dct).intersection(set(merge_dct))}
+        for k, v in merge_dct.items():
+            from collections.abc import Mapping
+            if not rtn_dct.get(k):
+                rtn_dct[k] = v
+            elif k in rtn_dct and type(v) != type(rtn_dct[k]):
+                raise TypeError(f"Overlapping keys exist with different types: original is {type(rtn_dct[k])}, new value is {type(v)}")
+            elif isinstance(rtn_dct[k], dict) and isinstance(merge_dct[k], Mapping):
+                rtn_dct[k] = deep_dict_merge(rtn_dct[k], merge_dct[k], add_keys=add_keys)
+            elif isinstance(v, list):
+                for list_value in v:
+                    if list_value not in rtn_dct[k]:
+                        rtn_dct[k].append(list_value)
+            else:
+                rtn_dct[k] = v
+    return rtn_dct

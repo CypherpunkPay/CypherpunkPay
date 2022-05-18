@@ -2,7 +2,7 @@ import random
 import importlib
 
 from cypherpunkpay import App, Config
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.net.http_client.dummy_http_client import DummyHttpClient
 from cypherpunkpay.usecases.use_case import UseCase

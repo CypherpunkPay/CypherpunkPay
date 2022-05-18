@@ -1,5 +1,5 @@
 from cypherpunkpay.app import App
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.ln.lightning_client import LightningClient, LightningException
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.credit import Credit

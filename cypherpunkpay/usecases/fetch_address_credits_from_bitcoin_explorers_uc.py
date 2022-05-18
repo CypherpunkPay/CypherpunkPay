@@ -1,7 +1,7 @@
 import importlib
 
 from cypherpunkpay.app import App
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.explorers.bitcoin.block_explorer import BlockExplorer
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.usecases.use_case import UseCase

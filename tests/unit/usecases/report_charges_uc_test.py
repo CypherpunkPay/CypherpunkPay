@@ -1,4 +1,4 @@
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.models.charge import ExampleCharge
 from cypherpunkpay.usecases.report_charges_uc import ReportChargesUC
 

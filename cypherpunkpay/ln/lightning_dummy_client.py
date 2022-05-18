@@ -1,4 +1,4 @@
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 
 from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
 from cypherpunkpay.ln.lightning_client import LightningClient

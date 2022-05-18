@@ -1,4 +1,6 @@
-from cypherpunkpay.common import *
+from abc import ABC, abstractmethod
+
+from cypherpunkpay.globals import *
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.net.http_client.base_http_client import BaseHttpClient
 from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits

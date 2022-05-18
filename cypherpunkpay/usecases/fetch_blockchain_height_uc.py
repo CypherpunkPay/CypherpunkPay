@@ -1,6 +1,6 @@
 from statistics import median_low
 
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.app import App
 from cypherpunkpay.explorers.bitcoin.bitaps_explorer import BitapsExplorer
 from cypherpunkpay.explorers.bitcoin.bitaroo_explorer import BitarooExplorer

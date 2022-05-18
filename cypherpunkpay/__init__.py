@@ -5,9 +5,9 @@ import time
 from pyramid.config import Configurator
 from pyramid.static import QueryStringConstantCacheBuster
 
+from cypherpunkpay.globals import *
 from cypherpunkpay.app import App
 from cypherpunkpay.web.security.auth_policy import AuthPolicy
-from cypherpunkpay.common import *
 from cypherpunkpay.config.config import Config
 from cypherpunkpay.config.config_parser import ConfigParser
 from cypherpunkpay.bitcoin.electrum.constants import set_btc_mainnet, set_btc_testnet

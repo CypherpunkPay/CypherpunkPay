@@ -1,9 +1,10 @@
 from apscheduler.triggers.interval import IntervalTrigger
 
-from cypherpunkpay.common import *
-from tests.unit.db_test_case import CypherpunkpayDBTestCase
+from cypherpunkpay.globals import *
 from cypherpunkpay.jobs.job_scheduler import JobScheduler
 from cypherpunkpay.usecases.report_jobs_uc import ReportJobsUC
+
+from tests.unit.db_test_case import CypherpunkpayDBTestCase
 
 
 def empty():

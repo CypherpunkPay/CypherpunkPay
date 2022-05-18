@@ -1,7 +1,6 @@
-from decimal import Decimal
-
 import pytest
 
+from cypherpunkpay.globals import *
 from cypherpunkpay.ln.lightning_dummy_client import LightningDummyClient
 from cypherpunkpay.models.charge import Charge
 from tests.unit.config.example_config import ExampleConfig

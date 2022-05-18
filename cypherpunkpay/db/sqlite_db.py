@@ -2,7 +2,7 @@ import sqlite3
 import threading
 from sqlite3 import Cursor
 
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.db.db import DB
 from cypherpunkpay.db.sqlite_type_assertions import assert_charge_types, assert_user_types
 from cypherpunkpay.models.charge import Charge
@@ -49,7 +49,7 @@ class SqliteDB(DB):
     def reset_for_tests(self) -> None:
         with self.lock:
             self.disconnect()
-            remove_file_if_present(self._db_file_path)
+            Path(self._db_file_path).unlink(missing_ok=True)
             self.connect()
             self.migrate()
 
@@ -207,7 +207,7 @@ class SqliteDB(DB):
                 charges.append(self.charge_from_row(row))
             return charges
 
-    def get_recently_created_charges(self, delta: [datetime.timedelta, None] = None) -> List[Charge]:
+    def get_recently_created_charges(self, delta: [timedelta, None] = None) -> List[Charge]:
         with self.lock:
             if delta is not None:
                 after = utc_now() - delta
@@ -221,7 +221,7 @@ class SqliteDB(DB):
                 charges.append(self.charge_from_row(row))
             return charges
 
-    def get_recently_activated_charges(self, delta: [datetime.timedelta, None] = None) -> List[Charge]:
+    def get_recently_activated_charges(self, delta: [timedelta, None] = None) -> List[Charge]:
         with self.lock:
             if delta is not None:
                 after = utc_now() - delta
@@ -566,7 +566,7 @@ class SqliteDB(DB):
     @staticmethod
     def soft_apply_utc(dt: datetime.datetime):
         if dt:
-            return dt.replace(tzinfo=timezone.utc)
+            return dt.replace(tzinfo=datetime.timezone.utc)
         else:
             return dt
 

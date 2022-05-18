@@ -4,7 +4,7 @@ from apscheduler.job import Job
 from apscheduler.jobstores.base import JobLookupError
 from apscheduler.schedulers.background import BackgroundScheduler
 
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 
 
 class JobScheduler(object):

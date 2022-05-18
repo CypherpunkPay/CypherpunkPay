@@ -4,7 +4,7 @@ from monero.wallet import Wallet as MoneroWallet
 from monero.account import Account
 from monero.address import address
 
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.credit import Credit
 from cypherpunkpay.monero.monero_tx_db import MoneroTxDb
@@ -77,4 +77,4 @@ class CalcMoneroAddressCreditsUC(UseCase):
         #
         # Assuming most miners use honest time, we believe the difference between block timestamp and honest clock
         # shouldn't be more than 60 blocks worth of time or 120 minutes.
-        return self.since - datetime.timedelta(minutes=120)
+        return self.since - timedelta(minutes=120)

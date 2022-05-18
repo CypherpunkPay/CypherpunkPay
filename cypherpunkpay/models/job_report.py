@@ -1,6 +1,6 @@
 from apscheduler.job import Job
 
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 
 
 class JobReport(object):

@@ -2,9 +2,8 @@ from urllib.parse import urljoin
 
 import requests
 
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 
-from cypherpunkpay import disable_unverified_certificate_warnings
 from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
 from cypherpunkpay.ln.lightning_client import LightningClient, LightningException, UnauthorizedLightningException, UnknownInvoiceLightningException
 from cypherpunkpay.net.http_client.base_http_client import BaseHttpClient
@@ -43,7 +42,7 @@ class LightningLndClient(LightningClient):
 
         try:
             log.debug(f'Calling LND REST API: GET {lnd_node_url}')
-            disable_unverified_certificate_warnings()
+            globally_disable_unverified_certificate_warnings()
             res = self._http_client.get_accepting_linkability(
                 url=lnd_node_url,
                 headers=headers_d,
@@ -86,7 +85,7 @@ class LightningLndClient(LightningClient):
 
         try:
             log.debug(f'Calling LND REST API: POST {lnd_node_url} with body={body_s}')
-            disable_unverified_certificate_warnings()
+            globally_disable_unverified_certificate_warnings()
             res = self._http_client.post_accepting_linkability(
                 url=lnd_node_url,
                 headers=headers_d,
@@ -127,7 +126,7 @@ class LightningLndClient(LightningClient):
 
         try:
             log.debug(f'Calling LND REST API: GET {lnd_node_url}')
-            disable_unverified_certificate_warnings()
+            globally_disable_unverified_certificate_warnings()
             res = self._http_get(headers_d, lnd_node_url)
         except requests.exceptions.RequestException as e:
             log.error(f'Error connecting to LND: {e}')
@@ -179,3 +178,10 @@ class LightningLndClient(LightningClient):
 
 class InvalidMacaroonLightningException(UnauthorizedLightningException):
     pass
+
+
+# This is used to skip certificate based authentication when connecting to LND
+# We assume authentication to network level for example 1) localhost, 2) onion, 3) wireguard
+def globally_disable_unverified_certificate_warnings():
+    import urllib3.exceptions
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

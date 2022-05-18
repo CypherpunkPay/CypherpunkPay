@@ -4,7 +4,7 @@ import random
 from apscheduler.job import Job
 from apscheduler.triggers.interval import IntervalTrigger
 
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.db.db import DB
 from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.jobs.job_scheduler import JobScheduler
@@ -33,7 +33,7 @@ class UpdateChargeJobsUC(UseCase):
 
     # MOCKME
     def _db_get_recently_activated_charges(self) -> List[Charge]:
-        return self._db.get_recently_activated_charges(datetime.timedelta(days=7))
+        return self._db.get_recently_activated_charges(timedelta(days=7))
 
     def _get_refresh_jobs(self):
         return list(filter(lambda job: job.id.startswith('refresh_charge_'), self._job_scheduler.get_all_jobs()))
@@ -85,7 +85,7 @@ class UpdateChargeJobsUC(UseCase):
         return IntervalTrigger(seconds=2)
 
     def _job_for_charge(self, charge: Charge) -> Job:
-        return first_true(self._jobs, pred=lambda job: job.id == charge.refresh_job_id(), default=None)
+        return first(lambda job: job.id == charge.refresh_job_id(), self._jobs)
 
     def _no_job_for(self, charge: Charge):
         return not any(refresh_job.id == charge.refresh_job_id() for refresh_job in self._jobs)

@@ -1,5 +1,5 @@
 from cypherpunkpay.app import App
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.models.credit import Credit

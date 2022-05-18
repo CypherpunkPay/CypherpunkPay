@@ -1,7 +1,6 @@
-from cypherpunkpay.common import *
-
 import pytest
 
+from cypherpunkpay.globals import *
 from cypherpunkpay.bitcoin.electrum.constants import BitcoinTestnet
 from cypherpunkpay.ln.lightning_client import LightningException, UnknownInvoiceLightningException
 from cypherpunkpay.ln.lightning_lnd_client import LightningLndClient, InvalidMacaroonLightningException

@@ -1,4 +1,6 @@
-from cypherpunkpay.common import *
+from abc import ABC, abstractmethod
+
+from cypherpunkpay.globals import *
 
 from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
 

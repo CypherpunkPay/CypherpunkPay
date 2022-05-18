@@ -1,7 +1,7 @@
 import webtest
 
+from cypherpunkpay.globals import *
 import cypherpunkpay
-from cypherpunkpay.common import *
 
 from tests.unit.test_case import CypherpunkpayTestCase
 

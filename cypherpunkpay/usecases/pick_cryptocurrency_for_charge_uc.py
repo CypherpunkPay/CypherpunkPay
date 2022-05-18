@@ -1,4 +1,4 @@
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.ln.lightning_client import LightningClient
 from cypherpunkpay.usecases.base_charge_uc import BaseChargeUC
 from cypherpunkpay.usecases.invalid_params import InvalidParams

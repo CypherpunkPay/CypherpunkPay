@@ -1,4 +1,4 @@
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.app import App
 from cypherpunkpay.full_node_clients.bitcoin_core_client import BitcoinCoreClient
 from cypherpunkpay.full_node_clients.json_rpc_client import JsonRpcError

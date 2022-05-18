@@ -1,6 +1,6 @@
 from statistics import median
 
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.net.http_client.tor_http_client import BaseHttpClient
 from cypherpunkpay.prices.cmc_coin_price_source import CmcCoinPriceSource
 from cypherpunkpay.prices.messari_coin_price_source import MessariCoinPriceSource

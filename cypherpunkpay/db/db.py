@@ -1,4 +1,6 @@
-from cypherpunkpay.common import *
+from abc import ABC, abstractmethod
+
+from cypherpunkpay.globals import *
 from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.models.user import User
 from cypherpunkpay.models.dummy_store_order import DummyStoreOrder
@@ -63,11 +65,11 @@ class DB(ABC):
         ...
 
     @abstractmethod
-    def get_recently_created_charges(self, delta: [datetime.timedelta, None] = None) -> List[Charge]:
+    def get_recently_created_charges(self, delta: [timedelta, None] = None) -> List[Charge]:
         ...
 
     @abstractmethod
-    def get_recently_activated_charges(self, delta: [datetime.timedelta, None] = None) -> List[Charge]:
+    def get_recently_activated_charges(self, delta: [timedelta, None] = None) -> List[Charge]:
         ...
 
     @abstractmethod

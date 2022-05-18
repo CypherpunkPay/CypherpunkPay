@@ -1,8 +1,9 @@
+from abc import abstractmethod
 from urllib.parse import urlparse
 
 import requests
 
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits
 
 

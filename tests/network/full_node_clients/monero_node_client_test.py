@@ -1,4 +1,4 @@
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.full_node_clients.json_rpc_client import JsonRpcError
 from cypherpunkpay.full_node_clients.monero_node_client import MoneroNodeClient
 

@@ -1,5 +1,5 @@
+from cypherpunkpay.globals import *
 from tests.unit.config.example_config import ExampleConfig
-from cypherpunkpay.common import *
 from tests.unit.db_test_case import CypherpunkpayDBTestCase
 from cypherpunkpay.models.charge import ExampleCharge
 from cypherpunkpay.usecases.ensure_block_explorers_uc import EnsureBlockExplorersUC

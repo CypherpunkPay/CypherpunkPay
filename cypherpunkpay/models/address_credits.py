@@ -1,4 +1,4 @@
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 
 from cypherpunkpay.models.credit import Credit
 

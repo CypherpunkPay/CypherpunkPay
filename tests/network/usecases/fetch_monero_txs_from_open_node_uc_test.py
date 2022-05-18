@@ -1,5 +1,5 @@
+from cypherpunkpay.globals import *
 from cypherpunkpay import ExamplePriceTickers
-from cypherpunkpay.common import *
 from cypherpunkpay.db.sqlite_db import SqliteDB
 from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.usecases.create_charge_uc import CreateChargeUC
@@ -47,9 +47,9 @@ class FetchMoneroTxsFromOpenNodeUCTest(CypherpunkpayNetworkTestCase):
 
     def insert_xmr_charge(self, total: str, created_at=None, activated_at=None) -> Charge:
         if isinstance(created_at, str):
-            created_at = utc_from_str(created_at)
+            created_at = utc_from_iso(created_at)
         if isinstance(activated_at, str):
-            activated_at = utc_from_str(activated_at)
+            activated_at = utc_from_iso(activated_at)
         if activated_at is None:
             activated_at = created_at
         charge = CreateChargeUC(

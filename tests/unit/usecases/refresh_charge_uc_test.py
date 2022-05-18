@@ -1,4 +1,4 @@
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.ln.lightning_dummy_client import LightningDummyClient
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.charge import ExampleCharge, Charge

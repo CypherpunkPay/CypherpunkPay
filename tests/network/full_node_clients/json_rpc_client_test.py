@@ -1,6 +1,7 @@
-from cypherpunkpay.common import *
-from tests.network.network_test_case import CypherpunkpayNetworkTestCase
+from cypherpunkpay.globals import *
 from cypherpunkpay.full_node_clients.json_rpc_client import JsonRpcClient, JsonRpcRequestError, JsonRpcAuthenticationError, JsonRpcCallError
+
+from tests.network.network_test_case import CypherpunkpayNetworkTestCase
 
 
 class JsonRpcClientTest(CypherpunkpayNetworkTestCase):

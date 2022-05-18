@@ -1,4 +1,4 @@
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.db.db import DB
 from cypherpunkpay.db.sqlite_db import db_int8_to_decimal     # this should be in DB; layers violation
 from cypherpunkpay.models.charge_report import ChargeReport

@@ -1,8 +1,9 @@
 import requests
 
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.net.http_client.base_http_client import BaseHttpClient
 from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits
+from cypherpunkpay.tools.net import is_local_network, get_host_or_ip
 
 
 class TorHttpClient(BaseHttpClient):
@@ -17,7 +18,7 @@ class TorHttpClient(BaseHttpClient):
         if is_local_network(url):
             privacy_context = BaseTorCircuits.SKIP_TOR
         if privacy_context == BaseTorCircuits.SHARED_CIRCUIT_ID:
-            privacy_context = get_domain_or_ip(url)
+            privacy_context = get_host_or_ip(url)
         session = self._tor_circuits.get_for(privacy_context)
         try:
             if set_tor_browser_headers:
@@ -38,7 +39,7 @@ class TorHttpClient(BaseHttpClient):
         if is_local_network(url):
             privacy_context = BaseTorCircuits.SKIP_TOR
         if privacy_context == BaseTorCircuits.SHARED_CIRCUIT_ID:
-            privacy_context = get_domain_or_ip(url)
+            privacy_context = get_host_or_ip(url)
         session = self._tor_circuits.get_for(privacy_context)
         if set_tor_browser_headers:
             combined_headers = {

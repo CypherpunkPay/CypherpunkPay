@@ -1,4 +1,4 @@
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.models.user import User
 from cypherpunkpay.tools.pbkdf2 import PBKDF2
 from cypherpunkpay.tools.safe_uid import SafeUid

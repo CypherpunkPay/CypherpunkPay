@@ -4,7 +4,7 @@ from pyramid.view import (view_config, forbidden_view_config)
 from pyramid.security import (remember, forget)
 
 from cypherpunkpay import App
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.models.user import User
 from cypherpunkpay.tools.pbkdf2 import PBKDF2
 from cypherpunkpay.web.views_admin.admin_base_view import AdminBaseView
@@ -62,7 +62,7 @@ class AdminLoginViews(AdminBaseView):
             username = 'admin'
             password = request.params.get('password')
             password_conf = request.params.get('password_conf')
-            if is_blank(password):
+            if not password:
                 message = 'Password cannot be empty'
             elif password != password_conf:
                 message = 'Password and password confirmation do not match'

@@ -1,7 +1,7 @@
 from apscheduler.job import Job
 from apscheduler.triggers.interval import IntervalTrigger
 
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.jobs.job_scheduler import JobScheduler
 from cypherpunkpay.usecases.update_charge_jobs_uc import UpdateChargeJobsUC
 from cypherpunkpay.models.charge import ExampleCharge
@@ -72,10 +72,10 @@ class UpdateChargeJobsUCTest(CypherpunkpayDBTestCase):
         self.assertTrue('refresh_charge_3' in updated_jobs)
         self.assertTrue('refresh_charge_4' in updated_jobs)
 
-        job_2: Job = first_true(self.job_scheduler.get_all_jobs(), pred=lambda job: job.id == 'refresh_charge_2')
+        job_2: Job = first(lambda job: job.id == 'refresh_charge_2', self.job_scheduler.get_all_jobs())
         self.assertEqual(self.EXPECTED_INTERVAL_FOR_AWAITING_PAYMENT, round(job_2.trigger.interval_length))
 
-        job_3: Job = first_true(self.job_scheduler.get_all_jobs(), pred=lambda job: job.id == 'refresh_charge_3')
+        job_3: Job = first(lambda job: job.id == 'refresh_charge_3', self.job_scheduler.get_all_jobs())
         self.assertEqual(self.EXPECTED_INTERVAL_FOR_FINAL, round(job_3.trigger.interval_length))
 
     def test_reschedules_jobs_according_to_charge_state(self):
@@ -104,28 +104,28 @@ class UpdateChargeJobsUCTest(CypherpunkpayDBTestCase):
         updated_jobs = self.job_scheduler.get_all_jobs()
         self.assertEqual(8, len(updated_jobs))
 
-        self.assertFalse(first_true(updated_jobs, pred=lambda job: job.id == 'refresh_charge_1'))
+        self.assertFalse(first(lambda job: job.id == 'refresh_charge_1'), updated_jobs)
 
-        job_2: Job = first_true(updated_jobs, pred=lambda job: job.id == 'refresh_charge_2')
+        job_2: Job = first(lambda job: job.id == 'refresh_charge_2', updated_jobs)
         self.assertEqual(self.EXPECTED_INTERVAL_FOR_AWAITING_PAYMENT, round(job_2.trigger.interval_length))
 
-        job_3: Job = first_true(updated_jobs, pred=lambda job: job.id == 'refresh_charge_3')
+        job_3: Job = first(lambda job: job.id == 'refresh_charge_3', updated_jobs)
         self.assertEqual(self.EXPECTED_INTERVAL_FOR_AWAITING_PAYMENT, round(job_3.trigger.interval_length))
 
-        job_4: Job = first_true(updated_jobs, pred=lambda job: job.id == 'refresh_charge_4')
+        job_4: Job = first(lambda job: job.id == 'refresh_charge_4', updated_jobs)
         self.assertEqual(self.EXPECTED_INTERVAL_FOR_AWAITING_CONFIRMATION, round(job_4.trigger.interval_length))
 
-        job_5: Job = first_true(updated_jobs, pred=lambda job: job.id == 'refresh_charge_5')
+        job_5: Job = first(lambda job: job.id == 'refresh_charge_5', updated_jobs)
         self.assertEqual(self.EXPECTED_INTERVAL_FOR_AWAITING_CONFIRMATION, round(job_5.trigger.interval_length))
 
-        job_6: Job = first_true(updated_jobs, pred=lambda job: job.id == 'refresh_charge_6')
+        job_6: Job = first(lambda job: job.id == 'refresh_charge_6', updated_jobs)
         self.assertEqual(self.EXPECTED_INTERVAL_FOR_FINAL, round(job_6.trigger.interval_length))
 
-        job_7: Job = first_true(updated_jobs, pred=lambda job: job.id == 'refresh_charge_7')
+        job_7: Job = first(lambda job: job.id == 'refresh_charge_7', updated_jobs)
         self.assertEqual(self.EXPECTED_INTERVAL_FOR_FINAL, round(job_7.trigger.interval_length))
 
-        job_8: Job = first_true(updated_jobs, pred=lambda job: job.id == 'refresh_charge_8')
+        job_8: Job = first(lambda job: job.id == 'refresh_charge_8', updated_jobs)
         self.assertEqual(self.EXPECTED_INTERVAL_FOR_FINAL, round(job_8.trigger.interval_length))
 
-        job_9: Job = first_true(updated_jobs, pred=lambda job: job.id == 'refresh_charge_9')
+        job_9: Job = first(lambda job: job.id == 'refresh_charge_9', updated_jobs)
         self.assertEqual(self.EXPECTED_INTERVAL_FOR_FINAL, round(job_9.trigger.interval_length))

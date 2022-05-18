@@ -1,6 +1,6 @@
 from typing import Union, Iterable
 
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 from cypherpunkpay.bitcoin.electrum.constants import BitcoinMainnet, BitcoinTestnet, AbstractNet
 from cypherpunkpay.bitcoin.electrum.bitcoin import public_key_to_p2wpkh_addr, InvalidChecksum
 from cypherpunkpay.bitcoin.electrum.bip32 import BIP32Node

@@ -1,8 +1,8 @@
-from cypherpunkpay.common import *
-
+from cypherpunkpay.globals import *
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.monero.monero_tx_db import MoneroTxDb
 from cypherpunkpay.usecases.calc_monero_address_credits_uc import CalcMoneroAddressCreditsUC
+
 from tests.unit.db_test_case import CypherpunkpayDBTestCase
 
 

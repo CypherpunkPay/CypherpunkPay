@@ -1,6 +1,6 @@
 from apscheduler.triggers import interval
 
-from cypherpunkpay.common import *
+from cypherpunkpay.globals import *
 
 
 class JobAdder(object):
