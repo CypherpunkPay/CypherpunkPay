@@ -1,6 +1,6 @@
-from tests.test_utils import *
 from tests.network.explorers.bitcoin.block_explorer_test import BlockExplorerTest
 
+from cypherpunkpay.globals import *
 from cypherpunkpay.net.http_client.dummy_http_client import DummyHttpClient
 from cypherpunkpay.explorers.bitcoin.blockstream_explorer import BlockstreamExplorer
 
@@ -52,7 +52,7 @@ class BlockstreamExplorerTest(BlockExplorerTest):
             address='bc1quwtrymfzavun8awsv9fqv36wlk0058puuw7mer',
             current_height=1
         )
-        assert is_empty(credits.all())
+        assert len(credits.all()) == 0
 
     def test_confirmed_skips_unrelated_utxo(self):
         credits = self.blockstream_explorer(
@@ -116,4 +116,4 @@ class StubHttpClient(DummyHttpClient):
     def get_text_or_None_on_error(self, url: str, privacy_context: str, verify=None) -> [str, None]:
         if self.response_filename is None:
             return None
-        return (this_dir(__file__) / 'test_data' / 'blockstream' / self.response_filename).read_text()
+        return (dir_of(__file__) / 'test_data' / 'blockstream' / self.response_filename).read_text()

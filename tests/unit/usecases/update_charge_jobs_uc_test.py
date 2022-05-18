@@ -104,7 +104,7 @@ class UpdateChargeJobsUCTest(CypherpunkpayDBTestCase):
         updated_jobs = self.job_scheduler.get_all_jobs()
         self.assertEqual(8, len(updated_jobs))
 
-        self.assertFalse(first(lambda job: job.id == 'refresh_charge_1'), updated_jobs)
+        self.assertFalse(first(lambda job: job.id == 'refresh_charge_1', updated_jobs))
 
         job_2: Job = first(lambda job: job.id == 'refresh_charge_2', updated_jobs)
         self.assertEqual(self.EXPECTED_INTERVAL_FOR_AWAITING_PAYMENT, round(job_2.trigger.interval_length))

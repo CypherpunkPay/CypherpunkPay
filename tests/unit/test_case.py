@@ -1,7 +1,8 @@
-from tempfile import NamedTemporaryFile
-from unittest.case import TestCase
+from unittest import TestCase
 
-from tests.test_utils import *
+import pytest
+
+from cypherpunkpay.globals import *
 
 
 class CypherpunkpayTestCase(TestCase):
@@ -29,5 +30,6 @@ class CypherpunkpayTestCase(TestCase):
         self.assertRegex(expr, expected_regex, msg)
 
     def gen_tmp_file_path(self, suffix=None):
+        from tempfile import NamedTemporaryFile
         with NamedTemporaryFile(mode='w+b', prefix='cypherpunkpay-test-', suffix=suffix) as file:
             return file.name

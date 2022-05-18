@@ -1,4 +1,5 @@
 from cypherpunkpay.bitcoin.bip32 import Bip32
+
 from tests.unit.test_case import *
 
 

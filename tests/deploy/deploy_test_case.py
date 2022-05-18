@@ -10,7 +10,7 @@ from unittest.case import skip
 import pysftp
 
 from tempfile import NamedTemporaryFile
-from unittest.case import TestCase
+from unittest import TestCase
 
 
 class DeployTestCase(TestCase):
