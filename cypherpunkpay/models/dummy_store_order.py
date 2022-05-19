@@ -1,5 +1,4 @@
-import logging as log
-from decimal import Decimal
+from cypherpunkpay.globals import *
 
 
 class DummyStoreOrder:

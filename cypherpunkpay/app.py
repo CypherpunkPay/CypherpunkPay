@@ -1,6 +1,4 @@
-import logging as log
-from typing import Dict
-
+from cypherpunkpay.globals import *
 from cypherpunkpay.config.config import Config
 from cypherpunkpay.db.db import DB
 from cypherpunkpay.db.sqlite_db import SqliteDB

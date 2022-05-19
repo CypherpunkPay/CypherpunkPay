@@ -66,15 +66,21 @@ class AdminLoginViewsTest(CypherpunkpayAcceptanceTestCase):
 
     def test_post_admin_register__empty_password(self):
         self.app.db().delete_all_users()
-        res = self.webapp.post(f'/cypherpunkpay/admin/eeec6kyl2rqhys72b6encxxrte/register', [('password', '  ')], status=200)
+        res = self.webapp.post(f'/cypherpunkpay/admin/eeec6kyl2rqhys72b6encxxrte/register', [('password', '')], status=200)
         self.assertInBody(res, 'Register')
         self.assertInBody(res, 'Password cannot be empty')
+
+    def test_post_admin_register__short_password(self):
+        self.app.db().delete_all_users()
+        res = self.webapp.post(f'/cypherpunkpay/admin/eeec6kyl2rqhys72b6encxxrte/register', [('password', '1234567')], status=200)
+        self.assertInBody(res, 'Register')
+        self.assertInBody(res, 'Password must be at least 8 characters long')
 
     def test_post_admin_register__password_confirmation_mismatch(self):
         self.app.db().delete_all_users()
         res = self.webapp.post(f'/cypherpunkpay/admin/eeec6kyl2rqhys72b6encxxrte/register', [
-            ('password', 'abc'),
-            ('password_conf', 'bbb')
+            ('password', 'test1234'),
+            ('password_conf', 'test1235')
         ], status=200)
         self.assertInBody(res, 'Register')
         self.assertInBody(res, 'Password and password confirmation do not match')

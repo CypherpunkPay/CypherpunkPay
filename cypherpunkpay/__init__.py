@@ -1,4 +1,3 @@
-import logging
 import secrets
 import time
 
@@ -73,8 +72,6 @@ def configure_pyramid_authn_and_authz(pyramid):
 
 
 def routing_config(pyramid):
-    log = logging.getLogger()
-
     pyramid.add_static_view('js', 'web/js')
     pyramid.add_static_view('css', 'web/css')
     pyramid.add_static_view('png', 'web/png')

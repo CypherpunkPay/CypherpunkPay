@@ -55,6 +55,7 @@ class AdminLoginViews(AdminBaseView):
         request: Request = self.request
 
         if self.db().get_users_count() > 0:
+            # Can't register more than one admin user
             return HTTPFound(location=request.route_url('admin_login'))
 
         message = ''
@@ -64,6 +65,8 @@ class AdminLoginViews(AdminBaseView):
             password_conf = request.params.get('password_conf')
             if not password:
                 message = 'Password cannot be empty'
+            elif len(password) < 8:
+                message = 'Password must be at least 8 characters long'
             elif password != password_conf:
                 message = 'Password and password confirmation do not match'
             else:

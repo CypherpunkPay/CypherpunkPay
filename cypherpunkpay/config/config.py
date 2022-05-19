@@ -1,8 +1,4 @@
-import logging as log
-import re
-
-from typing import List, Dict
-
+from cypherpunkpay.globals import *
 from cypherpunkpay.explorers.supported_explorers import SupportedExplorers
 from cypherpunkpay.explorers.bitcoin.block_explorer import BlockExplorer
 from cypherpunkpay.exceptions import UnsupportedCoin
@@ -13,7 +9,7 @@ class Config(object):
     class Invalid(Exception):
         pass
 
-    _dict: dict
+    _dict: Dict
 
     def __init__(self, settings=None, env='test'):
         if settings:

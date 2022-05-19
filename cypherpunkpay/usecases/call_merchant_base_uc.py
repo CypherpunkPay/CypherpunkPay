@@ -1,10 +1,9 @@
-import logging as log
 from abc import ABC
 
 import requests
 from requests import Response
 
-from cypherpunkpay import utc_now
+from cypherpunkpay.globals import *
 from cypherpunkpay.app import App
 from cypherpunkpay.models.charge import Charge
 from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits

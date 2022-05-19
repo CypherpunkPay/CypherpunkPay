@@ -1,11 +1,10 @@
-import logging as log
-import sys
 import threading
 import time
 
 import requests
 from requests import Session
 
+from cypherpunkpay.globals import *
 from cypherpunkpay.config.config import Config
 from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits
 

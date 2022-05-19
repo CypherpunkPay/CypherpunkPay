@@ -1,15 +1,10 @@
 import argparse
 import configparser
-import logging
-import os
 import pkg_resources
-from pathlib import Path
 
-from cypherpunkpay import bitcoin
+from cypherpunkpay.globals import *
 from cypherpunkpay.bitcoin.bip32 import Bip32
 from cypherpunkpay.config.config import Config
-
-log = logging.getLogger()
 
 
 class ConfigParser(object):

@@ -1,11 +1,8 @@
-import decimal
-import json
-import logging as log
-from json.decoder import JSONDecodeError
-from typing import Dict, List
 from base64 import b64encode
 
 import requests
+
+from cypherpunkpay.globals import *
 
 
 class JsonRpcClient(object):
@@ -84,7 +81,7 @@ class JsonRpcClient(object):
         #log.debug(f'response_text={response_text}')
 
         try:
-            response_json = json.loads(response_text, parse_float=decimal.Decimal)
+            response_json = json.loads(response_text, parse_float=Decimal)
         except JSONDecodeError as e:
             log.warning(f'[{self.__service_name}] Unexpected non-JSON API response: [{response.status_code}] {response_text}')
             raise JsonRpcParsingError() from e
@@ -112,7 +109,7 @@ class JsonRpcClient(object):
 
 
 def decimal_to_float(obj):
-    if isinstance(obj, decimal.Decimal):
+    if isinstance(obj, Decimal):
         return float(round(obj, 8))
     raise TypeError(repr(obj) + " is not JSON serializable")
 

@@ -1,4 +1,4 @@
-import logging as log
+from cypherpunkpay.globals import *
 
 
 class Job(object):
@@ -11,5 +11,5 @@ class Job(object):
     def __call__(self, *args, **kwargs):
         try:
             self.job()
-        except BaseException as e:
+        except Exception:
             log.exception(f'Job "{self.job_id}" raised exception')
