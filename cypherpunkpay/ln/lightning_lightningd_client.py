@@ -1,6 +1,6 @@
 from cypherpunkpay.globals import *
 
-from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
+from cypherpunkpay.models.ln_invoice_status import LnInvoiceStatus
 from cypherpunkpay.bitcoin.pylnclient.lightning import LightningRpc, RpcError
 from cypherpunkpay.ln.lightning_client import LightningClient, LightningException, UnauthorizedLightningException, UnknownInvoiceLightningException
 from cypherpunkpay.tools.safe_uid import SafeUid
@@ -55,7 +55,7 @@ class LightningLightningdClient(LightningClient):
             log.error(e)
             raise LightningException(e)
 
-    def get_invoice(self, payment_hash: bytes) -> LnInvoice:
+    def get_invoice(self, payment_hash: bytes) -> LnInvoiceStatus:
         # The relevant RPC call: https://lightning.readthedocs.io/lightning-listinvoices.7.html?highlight=listinvoices
         self.assert_payment_hash(payment_hash)
         payment_hash_str: str = payment_hash.hex()
@@ -70,7 +70,7 @@ class LightningLightningdClient(LightningClient):
                 #     ]
                 # }
                 invoice = res['invoices'][0]
-                ln_invoice = LnInvoice()
+                ln_invoice = LnInvoiceStatus()
                 if invoice['status'] == 'paid':
                     ln_invoice.is_settled = True
                     ln_invoice.amt_paid_msat = invoice['amount_received_msat']

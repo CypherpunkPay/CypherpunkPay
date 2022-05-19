@@ -4,7 +4,7 @@ import requests
 
 from cypherpunkpay.globals import *
 
-from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
+from cypherpunkpay.models.ln_invoice_status import LnInvoiceStatus
 from cypherpunkpay.ln.lightning_client import LightningClient, LightningException, UnauthorizedLightningException, UnknownInvoiceLightningException
 from cypherpunkpay.net.http_client.base_http_client import BaseHttpClient
 from cypherpunkpay.net.http_client.clear_http_client import ClearHttpClient
@@ -27,7 +27,7 @@ class LightningLndClient(LightningClient):
             value_sats = None
         return self._addinvoice(value_sats, memo, expiry_seconds)
 
-    def get_invoice(self, payment_hash: bytes) -> LnInvoice:
+    def get_invoice(self, payment_hash: bytes) -> LnInvoiceStatus:
         self.assert_payment_hash(payment_hash)
         return self._lookupinvoice(payment_hash)
 
@@ -117,7 +117,7 @@ class LightningLndClient(LightningClient):
 
     # LND specific:
     # https://api.lightning.community/#lookupinvoice
-    def _lookupinvoice(self, r_hash: bytes) -> LnInvoice:
+    def _lookupinvoice(self, r_hash: bytes) -> LnInvoiceStatus:
         # URL
         lnd_node_url = urljoin(self._lnd_node_url, f'v1/invoice/{r_hash.hex()}')
 
@@ -147,7 +147,7 @@ class LightningLndClient(LightningClient):
                 raise UnknownInvoiceLightningException()
             raise LightningException()
 
-        ln_invoice = LnInvoice()
+        ln_invoice = LnInvoiceStatus()
 
         if res_json['settled']:
             ln_invoice.is_settled = True

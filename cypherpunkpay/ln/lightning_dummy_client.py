@@ -1,6 +1,6 @@
 from cypherpunkpay.globals import *
 
-from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
+from cypherpunkpay.models.ln_invoice_status import LnInvoiceStatus
 from cypherpunkpay.ln.lightning_client import LightningClient
 
 
@@ -13,8 +13,8 @@ class LightningDummyClient(LightningClient):
     def create_invoice(self, total_btc: [Decimal, None] = None, memo: str = None, expiry_seconds: [int, None] = None) -> str:
         pass
 
-    def get_invoice(self, payment_hash: bytes) -> LnInvoice:
-        return LnInvoice()
+    def get_invoice(self, payment_hash: bytes) -> LnInvoiceStatus:
+        return LnInvoiceStatus()
 
     def name(self) -> str:
         return self.__class__.__name__

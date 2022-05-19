@@ -1,4 +1,5 @@
-class LnInvoice(object):
+class LnInvoiceStatus(object):
+    """Represents status of LN invoice"""
 
     is_settled: bool = False
     amt_paid_msat: int = 0

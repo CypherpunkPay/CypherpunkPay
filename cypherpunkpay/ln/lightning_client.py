@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from cypherpunkpay.globals import *
 
-from cypherpunkpay.bitcoin.ln_invoice import LnInvoice
+from cypherpunkpay.models.ln_invoice_status import LnInvoiceStatus
 
 
 class LightningException(Exception):
@@ -33,7 +33,7 @@ class LightningClient(ABC):
 
     # The r_hash must be of type bytes and length 32
     @abstractmethod
-    def get_invoice(self, payment_hash: bytes) -> LnInvoice:
+    def get_invoice(self, payment_hash: bytes) -> LnInvoiceStatus:
         ...
 
     @abstractmethod
