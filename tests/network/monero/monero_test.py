@@ -1,7 +1,7 @@
 from tests.unit.test_case import *
 from tests.network.network_test_case import CypherpunkpayNetworkTestCase
 
-from cypherpunkpay.db.monero_address_transactions_db import MoneroAddressTransactionsDB
+from cypherpunkpay.monero.monero_address_transactions_db import MoneroAddressTransactionsDB
 
 
 # This test is a temporary scratch pad,

@@ -15,18 +15,18 @@ class UpdateChargeJobsUCTest(CypherpunkpayDBTestCase):
     EXPECTED_INTERVAL_FOR_AWAITING_CONFIRMATION = 15  # 15 seconds
     EXPECTED_INTERVAL_FOR_FINAL = 30 * 60  # 30 minutes
 
-    def setUp(self):
-        super().setUp()
+    def setup_method(self):
+        super().setup_method()
         self.job_scheduler = JobScheduler()
         self.job_scheduler.pause()  # we don't want any jobs to actually run during the tests
 
-    def tearDown(self):
+    def teardown_method(self):
         self.job_scheduler.shutdown()
-        super().tearDown()
+        super().teardown_method()
 
     def test_blank_slate(self):
         UpdateChargeJobsUC(self.job_scheduler, self.db).exec()
-        self.assertEmpty(self.job_scheduler.get_all_jobs())
+        assert not self.job_scheduler.get_all_jobs()
 
     def test_removes_jobs_for_old_charges(self):
         before_threshold_date = utc_ago(days=8)
@@ -47,12 +47,12 @@ class UpdateChargeJobsUCTest(CypherpunkpayDBTestCase):
         UpdateChargeJobsUC(self.job_scheduler, self.db).exec()
 
         updated_jobs = [job.id for job in self.job_scheduler.get_all_jobs()]
-        self.assertTrue('refresh_charge_1' not in updated_jobs)
-        self.assertTrue('refresh_charge_2' in updated_jobs)
-        self.assertTrue('refresh_charge_3' in updated_jobs)
-        self.assertTrue('refresh_charge_4' in updated_jobs)
-        self.assertTrue('refresh_charge_5' not in updated_jobs)
-        self.assertTrue('unrelated_job_1' in updated_jobs)
+        assert 'refresh_charge_1' not in updated_jobs
+        assert 'refresh_charge_2' in updated_jobs
+        assert 'refresh_charge_3' in updated_jobs
+        assert 'refresh_charge_4' in updated_jobs
+        assert 'refresh_charge_5' not in updated_jobs
+        assert 'unrelated_job_1' in updated_jobs
 
     def test_adds_jobs_for_new_charges(self):
         ExampleCharge.db_create(self.db, uid='1'),
@@ -67,10 +67,10 @@ class UpdateChargeJobsUCTest(CypherpunkpayDBTestCase):
 
         updated_jobs = [job.id for job in self.job_scheduler.get_all_jobs()]
         self.assertEqual(4, len(updated_jobs))
-        self.assertTrue('refresh_charge_1' in updated_jobs)
-        self.assertTrue('refresh_charge_2' in updated_jobs)
-        self.assertTrue('refresh_charge_3' in updated_jobs)
-        self.assertTrue('refresh_charge_4' in updated_jobs)
+        assert 'refresh_charge_1' in updated_jobs
+        assert 'refresh_charge_2' in updated_jobs
+        assert 'refresh_charge_3' in updated_jobs
+        assert 'refresh_charge_4' in updated_jobs
 
         job_2: Job = first(lambda job: job.id == 'refresh_charge_2', self.job_scheduler.get_all_jobs())
         self.assertEqual(self.EXPECTED_INTERVAL_FOR_AWAITING_PAYMENT, round(job_2.trigger.interval_length))
@@ -104,7 +104,7 @@ class UpdateChargeJobsUCTest(CypherpunkpayDBTestCase):
         updated_jobs = self.job_scheduler.get_all_jobs()
         self.assertEqual(8, len(updated_jobs))
 
-        self.assertFalse(first(lambda job: job.id == 'refresh_charge_1', updated_jobs))
+        assert not first(lambda job: job.id == 'refresh_charge_1', updated_jobs)
 
         job_2: Job = first(lambda job: job.id == 'refresh_charge_2', updated_jobs)
         self.assertEqual(self.EXPECTED_INTERVAL_FOR_AWAITING_PAYMENT, round(job_2.trigger.interval_length))

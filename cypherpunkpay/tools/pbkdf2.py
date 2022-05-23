@@ -5,7 +5,17 @@ import binascii
 
 class PBKDF2(object):
 
-    ITERATIONS = int(200_000)
+    # The number of iterations is *intentionally* low to limit DoS potential by unauthenticated attacker,
+    # who could repeatedly attempt to sign-in or sing-up from random IP addresses,
+    # thus forcing expensive hash calculations. It also improves sign-in experience for honest users.
+    #
+    # The low number of iterations makes brute forcing hashes quicker, but we consciously accept this tradeoff:
+    #   * it only matters once db leaks while DoS threat is ever-present
+    #   * users are expected to use unique passwords so individual password leak is a non-issue
+    #   * users are expected to use strong passwords that are hard to brute force
+    #   * 256-bit salt per entry mitigates rainbow attacks
+    #   * brute forcing is *still* pretty expensive even with iterations ~10x less than most conservative "best practice"
+    ITERATIONS = 100_000
 
     @staticmethod
     def hash(password: str) -> str:

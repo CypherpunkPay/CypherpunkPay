@@ -1,13 +1,11 @@
-import logging
-from decimal import Decimal
+from cypherpunkpay.globals import *
 
 from cypherpunkpay.models.charge import Charge, ExampleCharge
-from tests.unit.test_case import CypherpunkpayTestCase
 
 
 # Actual charge related logic is in the use cases and so are the tests
 # Here we just smoke test a few methods
-class ChargeTest(CypherpunkpayTestCase):
+class ChargeTest:
 
     def test_instantiates(self):
         charge = Charge(total=Decimal('100.97'), currency='USD', time_to_pay_ms=1000, time_to_complete_ms=10_000)

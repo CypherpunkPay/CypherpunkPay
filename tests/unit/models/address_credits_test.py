@@ -1,10 +1,8 @@
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.credit import Credit
 
-from tests.unit.test_case import CypherpunkpayTestCase
 
-
-class AddressCreditsTest(CypherpunkpayTestCase):
+class AddressCreditsTest:
 
     def test_any(self):
         account_credits = AddressCredits([

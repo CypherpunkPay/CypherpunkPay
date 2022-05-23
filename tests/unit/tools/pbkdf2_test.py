@@ -11,12 +11,10 @@ class PBKDF2Test(CypherpunkpayTestCase):
     def test_hash(self):
         h = PBKDF2.hash('password123')
 
-        # proper length
-        assert len(h) == 8 + 64 + 64
+        assert len(h) == (4 + 32 + 32) * 2
 
-        # million iterations
-        MILLION_ITERATIONS = '00030d40'  # unsigned 4 bytes
-        assert MILLION_ITERATIONS in h
+        EXPECTED_ITERATIONS = '000186a0'  # 100K iterations as unsigned 4 bytes
+        assert h.startswith(EXPECTED_ITERATIONS)
 
     # If this starts failing then maybe the default 12 rounds is no longer enough
     def test_hash_speed(self):
@@ -24,7 +22,7 @@ class PBKDF2Test(CypherpunkpayTestCase):
         start = time.time()
         PBKDF2.hash('password123')
         end = time.time()
-        assert end-start > 0.05
+        assert end - start > 0.01  # seconds
 
     # Based on https://bcrypt-generator.com/
     def test_password_is_correct(self):

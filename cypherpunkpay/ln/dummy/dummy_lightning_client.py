@@ -5,7 +5,7 @@ from cypherpunkpay.ln.lightning_client import LightningClient
 
 
 # Dummy implementations of abstract classes are used for testing
-class LightningDummyClient(LightningClient):
+class DummyLightningClient(LightningClient):
 
     def ping(self) -> None:
         pass

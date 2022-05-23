@@ -1,20 +1,8 @@
 from abc import ABC, abstractmethod
 
+
 from cypherpunkpay.globals import *
-
 from cypherpunkpay.models.ln_invoice_status import LnInvoiceStatus
-
-
-class LightningException(Exception):
-    pass
-
-
-class UnauthorizedLightningException(LightningException):
-    pass
-
-
-class UnknownInvoiceLightningException(LightningException):
-    pass
 
 
 class LightningClient(ABC):
@@ -43,3 +31,15 @@ class LightningClient(ABC):
     def assert_payment_hash(self, r_hash: bytes):
         assert isinstance(r_hash, bytes)
         assert len(r_hash) == 32
+
+
+class LightningException(Exception):
+    pass
+
+
+class UnauthorizedLightningException(LightningException):
+    pass
+
+
+class UnknownInvoiceLightningException(LightningException):
+    pass

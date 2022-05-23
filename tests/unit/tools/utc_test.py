@@ -1,13 +1,9 @@
 import datetime
 
-import pytest
-
-from tests.unit.test_case import CypherpunkpayTestCase
-
 from cypherpunkpay.tools.utc import utc_now, utc_ago, utc_from_now, utc_from_iso
 
 
-class UtcTest(CypherpunkpayTestCase):
+class UtcTest:
 
     def test_utc_from_iso(self):
         dt = utc_from_iso('2022-02-11 16:43:25')
@@ -19,6 +15,7 @@ class UtcTest(CypherpunkpayTestCase):
         assert dt.minute == 43
         assert dt.second == 25
 
+        import pytest
         with pytest.raises(ValueError):
             utc_from_iso('2022-02-11 16:43:25+01:00')
 

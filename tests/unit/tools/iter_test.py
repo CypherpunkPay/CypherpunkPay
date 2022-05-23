@@ -1,9 +1,7 @@
-from tests.unit.test_case import CypherpunkpayTestCase
-
 from cypherpunkpay.tools.iter import first
 
 
-class IterTest(CypherpunkpayTestCase):
+class IterTest:
 
     def test_first(self):
         # Empty iterable

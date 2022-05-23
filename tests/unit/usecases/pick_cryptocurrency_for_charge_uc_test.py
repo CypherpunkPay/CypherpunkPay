@@ -1,7 +1,7 @@
 import pytest
 
 from cypherpunkpay.globals import *
-from cypherpunkpay.ln.lightning_dummy_client import LightningDummyClient
+from cypherpunkpay.ln.dummy.dummy_lightning_client import DummyLightningClient
 from cypherpunkpay.models.charge import Charge
 from tests.unit.config.example_config import ExampleConfig
 from cypherpunkpay.usecases.invalid_params import InvalidParams
@@ -132,7 +132,7 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
 
     def test_btc_lightning(self):
 
-        class LightningClientStub(LightningDummyClient):
+        class LightningClientStub(DummyLightningClient):
             def create_invoice(self, total_btc: [Decimal, None] = None, memo: str = None, expiry_seconds: [int, None] = None) -> str:
                 return CypherpunkpayTestCase.EXAMPLE_PAYMENT_REQUEST_TESTNET
 
@@ -149,11 +149,11 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
         )
         pick_cc.exec()
 
-        self.assertIsNotNone(charge.cc_lightning_payment_request)
+        assert charge.cc_lightning_payment_request
 
     def test_btc_lightning_sats(self):
 
-        class LightningClientStub(LightningDummyClient):
+        class LightningClientStub(DummyLightningClient):
             def create_invoice(self, total_btc: [Decimal, None] = None, memo: str = None, expiry_seconds: [int, None] = None) -> str:
                 return CypherpunkpayTestCase.EXAMPLE_PAYMENT_REQUEST_TESTNET
 
@@ -170,7 +170,7 @@ class PickCryptocurrencyForChargeUCTest(CypherpunkpayDBTestCase):
         )
         pick_cc.exec()
 
-        self.assertIsNotNone(charge.cc_lightning_payment_request)
+        assert charge.cc_lightning_payment_request
         self.assertEqual(charge.cc_currency, 'btc')
         self.assertEqual(charge.cc_total, Decimal('0.00000123'))
 

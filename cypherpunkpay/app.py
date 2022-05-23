@@ -79,16 +79,16 @@ class App(object, metaclass=Singleton):
             exit(1)
 
         if self.config().btc_lightning_lnd_url():
-            from cypherpunkpay.ln.lightning_lnd_client import LightningLndClient
-            self._ln_client = LightningLndClient(
+            from cypherpunkpay.ln.lnd.lnd_client import LndClient
+            self._ln_client = LndClient(
                 lnd_node_url=self.config().btc_lightning_lnd_url(),
                 lnd_invoice_macaroon=self.config().btc_lightning_lnd_invoice_macaroon(),
                 http_client=self._http_client
             )
 
         if self.config().btc_lightning_lightningd_socket_path():
-            from cypherpunkpay.ln.lightning_lightningd_client import LightningLightningdClient
-            self._ln_client = LightningLightningdClient(
+            from cypherpunkpay.ln.clightning.clightning_client import CLightningClient
+            self._ln_client = CLightningClient(
                 lightningd_socket_path=self.config().btc_lightning_lightningd_socket_path()
             )
 

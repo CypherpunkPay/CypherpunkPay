@@ -1,5 +1,5 @@
 from cypherpunkpay.globals import *
-from cypherpunkpay.ln.lightning_dummy_client import LightningDummyClient
+from cypherpunkpay.ln.dummy.dummy_lightning_client import DummyLightningClient
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.models.charge import ExampleCharge, Charge
 from cypherpunkpay.models.credit import Credit
@@ -18,7 +18,7 @@ class StubRefreshChargeUC(RefreshChargeUC):
             current_height=self._blockchain_height,
             db=db,
             http_client=DummyHttpClient(),
-            ln_client=LightningDummyClient(),
+            ln_client=DummyLightningClient(),
             config=ExampleConfig()
         )
         self._mock_credits = credits
@@ -39,7 +39,7 @@ class StubLnRefreshChargeUC(RefreshChargeUC):
             current_height=self._blockchain_height,
             db=db,
             http_client=DummyHttpClient(),
-            ln_client=LightningDummyClient(),
+            ln_client=DummyLightningClient(),
             config=ExampleConfig()
         )
         self._mock_credits = credits
@@ -54,8 +54,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         charge = ExampleCharge.db_create(self.db)
         uc = StubRefreshChargeUC(charge.uid, credits=[], db=self.db)
         uc.exec()
-        self.assertTrue(charge.is_unpaid())
-        self.assertTrue(charge.is_awaiting())
+        assert charge.is_unpaid()
+        assert charge.is_awaiting()
 
     def test_remain_awaiting_underpaid_when_None_credits(self):
         # Suddenly "None credits" for already paid charge *CAN* happen because of temporary discrepancy among block explorers. See FetchAddressCreditsUC.
@@ -67,8 +67,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, credits=None, db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_awaiting())
-        self.assertTrue(charge.is_underpaid())
+        assert charge.is_awaiting()
+        assert charge.is_underpaid()
         self.assertEqual(900, charge.cc_received_total)
 
     def test_increment_subsequent_discrepancies_when_None_credits(self):
@@ -103,8 +103,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_unpaid())
-        self.assertTrue(charge.is_draft())
+        assert charge.is_unpaid()
+        assert charge.is_draft()
 
     # awaiting: unpaid
 
@@ -118,8 +118,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_unpaid())
-        self.assertTrue(charge.is_expired())
+        assert charge.is_unpaid()
+        assert charge.is_expired()
 
     def test_unpaid_to_underpaid(self):
         charge = ExampleCharge.db_create(self.db,
@@ -129,8 +129,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(900, 1), Credit.unconfirmed(99)], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_underpaid())
-        self.assertTrue(charge.is_awaiting())
+        assert charge.is_underpaid()
+        assert charge.is_awaiting()
         self.assertEqual(999, charge.cc_received_total)
 
     def test_unpaid_to_paid(self):
@@ -141,10 +141,10 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(900, 1), Credit.confirmed(99, 1), Credit.unconfirmed(1)], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_paid())
-        self.assertTrue(charge.is_awaiting())
-        self.assertEqual(1000, charge.cc_received_total)
-        self.assertTrue(charge.paid_at)
+        assert charge.is_paid()
+        assert charge.is_awaiting()
+        assert charge.cc_received_total == 1000
+        assert charge.paid_at
 
     def test_unpaid_to_confirmed(self):
         charge = ExampleCharge.db_create(self.db,
@@ -156,11 +156,11 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(900, height - 1), Credit.confirmed(99, height), Credit.confirmed(1, height)], current_height, db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_confirmed())
-        self.assertTrue(charge.is_awaiting())
+        assert charge.is_confirmed()
+        assert charge.is_awaiting()
         self.assertEqual(1000, charge.cc_received_total)
         self.assertEqual(1, charge.confirmations)
-        self.assertTrue(charge.paid_at)
+        assert charge.paid_at
 
     def test_unpaid_to_fully_confirmed(self):
         charge = ExampleCharge.db_create(self.db,
@@ -172,11 +172,11 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(900, height - 1), Credit.confirmed(99, height), Credit.confirmed(1, height)], current_height, db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_confirmed())
-        self.assertTrue(charge.is_completed())
+        assert charge.is_confirmed()
+        assert charge.is_completed()
         self.assertEqual(1000, charge.cc_received_total)
         self.assertEqual(2, charge.confirmations)
-        self.assertTrue(charge.paid_at)
+        assert charge.paid_at
 
     # awaiting: underpaid
 
@@ -192,8 +192,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.unconfirmed(900)], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_underpaid())
-        self.assertTrue(charge.is_expired())
+        assert charge.is_underpaid()
+        assert charge.is_expired()
 
     def test_underpaid_to_less_underpaid(self):
         charge = ExampleCharge.db_create(self.db,
@@ -204,8 +204,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.unconfirmed(900), Credit.unconfirmed(99)], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_underpaid())
-        self.assertTrue(charge.is_awaiting())
+        assert charge.is_underpaid()
+        assert charge.is_awaiting()
         self.assertEqual(999, charge.cc_received_total)
 
     def test_underpaid_to_paid(self):
@@ -217,8 +217,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.unconfirmed(900), Credit.unconfirmed(99), Credit.unconfirmed(2)], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_paid())
-        self.assertTrue(charge.is_awaiting())
+        assert charge.is_paid()
+        assert charge.is_awaiting()
         self.assertEqual(1001, charge.cc_received_total)
 
     def test_underpaid_to_confirmed(self):
@@ -231,8 +231,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(900, 1), Credit.confirmed(101, 1)], current_height, db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_confirmed())
-        self.assertTrue(charge.is_awaiting())
+        assert charge.is_confirmed()
+        assert charge.is_awaiting()
         self.assertEqual(1001, charge.cc_received_total)
         self.assertEqual(1, charge.confirmations)
         self.assertEqual(1, charge.confirmations)
@@ -247,8 +247,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(900, 1), Credit.confirmed(101, 1)], current_height, db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_confirmed())
-        self.assertTrue(charge.is_completed())
+        assert charge.is_confirmed()
+        assert charge.is_completed()
         self.assertEqual(1001, charge.cc_received_total)
         self.assertEqual(2, charge.confirmations)
 
@@ -266,8 +266,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.unconfirmed(1000)], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_paid())
-        self.assertTrue(charge.is_expired())
+        assert charge.is_paid()
+        assert charge.is_expired()
 
     def test_paid_to_paid_overpayment(self):
         charge = ExampleCharge.db_create(self.db,
@@ -278,10 +278,10 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.unconfirmed(1000), Credit.unconfirmed(1)], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_paid())
-        self.assertTrue(charge.is_awaiting())
+        assert charge.is_paid()
+        assert charge.is_awaiting()
         self.assertEqual(1001, charge.cc_received_total)
-        self.assertTrue(charge.is_overpaid())
+        assert charge.is_overpaid()
 
     def test_paid_to_confirmed(self):
         charge = ExampleCharge.db_create(self.db,
@@ -293,8 +293,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(1000, 1)], current_height, db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_confirmed())
-        self.assertTrue(charge.is_awaiting())
+        assert charge.is_confirmed()
+        assert charge.is_awaiting()
         self.assertEqual(1000, charge.cc_received_total)
         self.assertEqual(1, charge.confirmations)
 
@@ -308,8 +308,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(1000, 1)], current_height, db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_confirmed())
-        self.assertTrue(charge.is_completed())
+        assert charge.is_confirmed()
+        assert charge.is_completed()
         self.assertEqual(1000, charge.cc_received_total)
         self.assertEqual(2, charge.confirmations)
 
@@ -327,8 +327,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(1000, 1)], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_confirmed())
-        self.assertTrue(charge.is_expired())
+        assert charge.is_confirmed()
+        assert charge.is_expired()
 
     def test_confirmed_to_confirmed_overpayment(self):
         charge = ExampleCharge.db_create(self.db,
@@ -340,8 +340,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(1000, 1), Credit.confirmed(1, 1)], current_height, db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_confirmed())
-        self.assertTrue(charge.is_awaiting())
+        assert charge.is_confirmed()
+        assert charge.is_awaiting()
         self.assertEqual(1001, charge.cc_received_total)
         self.assertEqual(1, charge.confirmations)
 
@@ -355,8 +355,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(1000, 1)], current_height, db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_confirmed())
-        self.assertTrue(charge.is_completed())
+        assert charge.is_confirmed()
+        assert charge.is_completed()
         self.assertEqual(1000, charge.cc_received_total)
         self.assertEqual(2, charge.confirmations)
 
@@ -374,8 +374,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(1000, 1)], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_confirmed())
-        self.assertTrue(charge.is_completed())
+        assert charge.is_confirmed()
+        assert charge.is_completed()
         self.assertEqual(1000, charge.cc_received_total)
 
     def test_completed_to_completed_unpaid(self):
@@ -390,8 +390,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_unpaid())
-        self.assertTrue(charge.is_completed())
+        assert charge.is_unpaid()
+        assert charge.is_completed()
         self.assertEqual(0, charge.cc_received_total)
 
     def test_completed_to_completed_underpaid(self):
@@ -406,8 +406,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(900, 1)], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_underpaid())
-        self.assertTrue(charge.is_completed())
+        assert charge.is_underpaid()
+        assert charge.is_completed()
         self.assertEqual(900, charge.cc_received_total)
 
     def test_completed_to_completed_overpaid(self):
@@ -422,8 +422,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(1000, 1), Credit.confirmed(1, 1)], db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_confirmed())
-        self.assertTrue(charge.is_completed())
+        assert charge.is_confirmed()
+        assert charge.is_completed()
         self.assertEqual(1001, charge.cc_received_total)
 
     # expired
@@ -438,8 +438,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(1000, height)], current_height, db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_confirmed())
-        self.assertTrue(charge.is_expired())
+        assert charge.is_confirmed()
+        assert charge.is_expired()
         self.assertEqual(1000, charge.cc_received_total)
         self.assertEqual(2, charge.confirmations)
 
@@ -456,8 +456,8 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
         uc = StubRefreshChargeUC(charge.uid, [Credit.confirmed(1000, height)], current_height, db=self.db)
         uc.exec()
         self.db.reload(charge)
-        self.assertTrue(charge.is_confirmed())
-        self.assertTrue(charge.is_expired())
+        assert charge.is_confirmed()
+        assert charge.is_expired()
         self.assertEqual(1000, charge.cc_received_total)
         self.assertEqual(1, charge.confirmations)
 
@@ -486,7 +486,7 @@ class RefreshChargeUCTest(CypherpunkpayDBTestCase):
     class MockLnRefreshChargeUC(RefreshChargeUC):
         def __init__(self, charge_uid: str, db=None):
             self._blockchain_height = 2**31  # just big
-            super().__init__(charge_uid, current_height=self._blockchain_height, db=db, http_client=DummyHttpClient(), ln_client=LightningDummyClient(), config=ExampleConfig())
+            super().__init__(charge_uid, current_height=self._blockchain_height, db=db, http_client=DummyHttpClient(), ln_client=DummyLightningClient(), config=ExampleConfig())
 
         def fetch_credits_from_btc_lightning_node(self, charge):
             raise Exception('This method should not be called -> test case failed')

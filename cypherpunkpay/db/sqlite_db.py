@@ -24,7 +24,7 @@ class SqliteDB(DB):
             log.info(f'Connecting to database {self._db_file_path}')
             self._db = sqlite3.connect(
                 self._db_file_path,
-                isolation_level=None,
+                isolation_level=None,  # enable autocommit, see: https://docs.python.org/2/library/sqlite3.html#controlling-transactions
                 detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES,
                 check_same_thread=False
             )
@@ -83,7 +83,7 @@ class SqliteDB(DB):
                 values = self._dummy_store_order_values(order)
 
             self._db.execute(sql, values)
-            self._db.commit()
+            # self._db.commit()
 
     def save(self, obj: [User, Charge, DummyStoreOrder]) -> None:
         with self.lock:
@@ -102,7 +102,7 @@ class SqliteDB(DB):
                     assert_user_types(user)
                     values = (user.username, user.password_hash, user.created_at, user.updated_at, user.id)
                     self._db.execute(sql, values)
-                    self._db.commit()
+                    # self._db.commit()
                 else:
                     self.insert(user)
             if isinstance(obj, Charge):
@@ -117,7 +117,7 @@ class SqliteDB(DB):
                     assert_charge_types(charge)
                     values = self._charge_values_for_update(charge)
                     self._db.execute(sql, values)
-                    self._db.commit()
+                    # self._db.commit()
                 else:
                     self.insert(charge)
             if isinstance(obj, DummyStoreOrder):
@@ -130,7 +130,7 @@ class SqliteDB(DB):
                     """
                     values = self._dummy_store_order_values_for_update(order)
                     self._db.execute(sql, values)
-                    self._db.commit()
+                    # self._db.commit()
                 else:
                     self.insert(order)
 
@@ -311,7 +311,7 @@ class SqliteDB(DB):
             # noinspection SqlWithoutWhere
             sql = 'DELETE FROM users'
             self._db.execute(sql)
-            self._db.commit()
+            # self._db.commit()
 
     # -- Utils --------------------------------------------------------------------------------------------------------
 
@@ -325,7 +325,7 @@ class SqliteDB(DB):
         sql = 'UPDATE coins SET blockchain_height = ? WHERE cc_currency = ? AND cc_network = ?'
         values = [height, coin.casefold(), cc_network.casefold()]
         self._db.execute(sql, values)
-        self._db.commit()
+        # self._db.commit()
 
     def get_admin_unique_path_segment(self) -> str:
         with self.lock:
@@ -345,7 +345,7 @@ class SqliteDB(DB):
             now = utc_now()
             values = ('admin_unique_path_segment', v, now, now)
             self._db.execute(sql, values)
-            self._db.commit()
+            # self._db.commit()
 
     def user_from_row(self, row, update_me=None) -> User:
         if update_me is None:

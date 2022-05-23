@@ -1,10 +1,9 @@
-from decimal import Decimal
+from cypherpunkpay.globals import *
 
-from tests.unit.test_case import CypherpunkpayTestCase
 from cypherpunkpay.tools.cryptocurrency_payment_uri import CryptocurrencyPaymentUri
 
 
-class CryptocurrencyPaymentUriTest(CypherpunkpayTestCase):
+class CryptocurrencyPaymentUriTest:
 
     def test_get_btc(self):
         # Address

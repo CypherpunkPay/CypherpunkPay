@@ -1,13 +1,7 @@
 from cypherpunkpay.tools.net import is_local_network, get_host_or_ip
-from cypherpunkpay.tools.safe_uid import SafeUid
-
-from tests.unit.test_case import CypherpunkpayTestCase
 
 
-class NetTest(CypherpunkpayTestCase):
-
-    def test_safe_ud(self):
-        SafeUid.gen()
+class NetTest:
 
     def test_is_local_network(self):
         assert is_local_network('http://localhost/test')

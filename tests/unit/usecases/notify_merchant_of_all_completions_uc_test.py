@@ -51,4 +51,4 @@ class NotifyMerchantOfAllCompletionsUCTest(CypherpunkpayDBTestCase):
         mock_http_client = MockHttpClient()
         NotifyMerchantOfAllCompletionsUC(db=self.db, config=ExampleConfig(), http_client=mock_http_client).exec()
 
-        self.assertEqual(2, mock_http_client.counter)
+        assert mock_http_client.counter == 2

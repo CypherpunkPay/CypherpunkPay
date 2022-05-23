@@ -1,3 +1,5 @@
+import pytest
+
 from cypherpunkpay.globals import *
 from cypherpunkpay.full_node_clients.json_rpc_client import JsonRpcClient, JsonRpcRequestError, JsonRpcAuthenticationError, JsonRpcCallError
 
@@ -20,27 +22,27 @@ class JsonRpcClientTest(CypherpunkpayNetworkTestCase):
         self.assertEqual(height, blocks)
 
         result = json_rpc_client.getblockhash(height)
-        self.assertIsInstance(result, str)
+        assert isinstance(result, str)
 
         result = json_rpc_client.listwallets()
-        self.assertIsInstance(result, List)
+        assert isinstance(result, List)
 
     def test_bad_url(self):
         json_rpc_client = JsonRpcClient('http://127.0.0.1:68332', user='bitcoin', passwd='secret', http_client=self.clear_http_client)
-        with self.assertRaises(JsonRpcRequestError):
+        with pytest.raises(JsonRpcRequestError):
             json_rpc_client.getblockcount()
 
     def test_bad_password(self):
         json_rpc_client = JsonRpcClient('http://127.0.0.1:18332', user='bitcoin', passwd='bad password', http_client=self.clear_http_client)
-        with self.assertRaises(JsonRpcAuthenticationError):
+        with pytest.raises(JsonRpcAuthenticationError):
             json_rpc_client.getblockcount()
 
     def test_bad_method(self):
         json_rpc_client = JsonRpcClient('http://127.0.0.1:18332', user='bitcoin', passwd='secret', http_client=self.clear_http_client)
-        with self.assertRaises(JsonRpcRequestError):
+        with pytest.raises(JsonRpcRequestError):
             json_rpc_client.non_existing_method()
 
     def test_bad_param(self):
         json_rpc_client = JsonRpcClient('http://127.0.0.1:18332', user='bitcoin', passwd='secret', http_client=self.clear_http_client)
-        with self.assertRaises(JsonRpcCallError):
+        with pytest.raises(JsonRpcCallError):
             json_rpc_client.getblockhash(1_000_000_000)

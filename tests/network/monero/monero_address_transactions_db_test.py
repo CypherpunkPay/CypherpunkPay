@@ -1,8 +1,6 @@
-from typing import List
-
 from monero.transaction import Transaction
 
-from cypherpunkpay.db.monero_address_transactions_db import MoneroAddressTransactionsDB
+from cypherpunkpay.monero.monero_address_transactions_db import MoneroAddressTransactionsDB
 from tests.unit.test_case import *
 
 

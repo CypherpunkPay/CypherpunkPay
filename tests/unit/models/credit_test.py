@@ -1,8 +1,7 @@
 from cypherpunkpay.models.credit import Credit
-from tests.unit.test_case import CypherpunkpayTestCase
 
 
-class CreditTest(CypherpunkpayTestCase):
+class CreditTest:
 
     def test_is_unconfirmed_replaceable(self):
         credit = Credit(1, confirmed_height=None, has_replaceable_flag=True)

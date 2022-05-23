@@ -1,9 +1,9 @@
+import pytest
+
 from cypherpunkpay.bitcoin.bip32 import Bip32
 
-from tests.unit.test_case import *
 
-
-class Bip32Test(CypherpunkpayTestCase):
+class Bip32Test:
 
     # Electrum mainnet P2WPKH seed words (no funds here):
     # file title fault retire nuclear alone kidney eternal error weekend canvas weird

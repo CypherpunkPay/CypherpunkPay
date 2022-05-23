@@ -1,3 +1,5 @@
+import pytest
+
 from cypherpunkpay.globals import *
 from cypherpunkpay.full_node_clients.json_rpc_client import JsonRpcError
 from cypherpunkpay.full_node_clients.monero_node_client import MoneroNodeClient
@@ -28,7 +30,7 @@ class MoneroNodeClientTest(CypherpunkpayNetworkTestCase):
 
     def test_get_height_failure_bad_path(self):
         client = MoneroNodeClient('http://stagenet.melo.tools:38081/badpath', http_client=self.tor_http_client)
-        with self.assertRaises(JsonRpcError):
+        with pytest.raises(JsonRpcError):
              client.get_height()
 
     # def test_fetch_address_credits(self):

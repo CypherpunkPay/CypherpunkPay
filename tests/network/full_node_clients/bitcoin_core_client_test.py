@@ -1,3 +1,5 @@
+import pytest
+
 from cypherpunkpay.globals import *
 from cypherpunkpay.bitcoin.bip32 import Bip32
 from cypherpunkpay.full_node_clients.bitcoin_core_client import BitcoinCoreClient
@@ -31,7 +33,7 @@ class BitcoinCoreClientTest(CypherpunkpayNetworkTestCase):
 
     def test_get_height_failure(self):
         client = BitcoinCoreClient('http://127.0.0.1:18332', rpc_user='bitcoin', rpc_password='incorrect password', http_client=self.tor_http_client)
-        with self.assertRaises(JsonRpcError):
+        with pytest.raises(JsonRpcError):
             client.get_height()
 
     def test_create_wallet_idempotent(self):

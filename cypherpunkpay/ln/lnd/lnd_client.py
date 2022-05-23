@@ -10,7 +10,7 @@ from cypherpunkpay.net.http_client.base_http_client import BaseHttpClient
 from cypherpunkpay.net.http_client.clear_http_client import ClearHttpClient
 
 
-class LightningLndClient(LightningClient):
+class LndClient(LightningClient):
 
     def __init__(self, lnd_node_url: str, lnd_invoice_macaroon: str = None, http_client: BaseHttpClient = None):
         self._lnd_node_url = lnd_node_url

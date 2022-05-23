@@ -7,24 +7,22 @@ from cypherpunkpay.usecases.report_jobs_uc import ReportJobsUC
 from tests.unit.db_test_case import CypherpunkpayDBTestCase
 
 
-def empty():
-    pass
-
-
 class ReportJobsUCTest(CypherpunkpayDBTestCase):
 
-    def setUp(self):
-        super().setUp()
+    def setup_method(self):
+        super().setup_method()
         self.job_scheduler = JobScheduler()
 
-    def tearDown(self):
+    def teardown_method(self):
         self.job_scheduler.shutdown()
-        super().tearDown()
+        super().teardown_method()
 
     def test_exec(self):
-        self.job_scheduler.add_job(empty, id='refresh_job_rwer334', trigger=IntervalTrigger(minutes=2))
-        self.job_scheduler.add_job(empty, id='refresh_job_3423ref', trigger=IntervalTrigger(seconds=2))
-        self.job_scheduler.add_job(empty, id='refresh_job_gj3u4t9', trigger=IntervalTrigger(minutes=30))
+        def no_op(): pass
+
+        self.job_scheduler.add_job(no_op, id='refresh_job_rwer334', trigger=IntervalTrigger(minutes=2))
+        self.job_scheduler.add_job(no_op, id='refresh_job_3423ref', trigger=IntervalTrigger(seconds=2))
+        self.job_scheduler.add_job(no_op, id='refresh_job_gj3u4t9', trigger=IntervalTrigger(minutes=30))
 
         jobs = self.job_scheduler.get_all_jobs()
 
