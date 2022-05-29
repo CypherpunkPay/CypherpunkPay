@@ -15,7 +15,7 @@ class SqliteDB(DB):
     _db_file_path: str
     _db: sqlite3.Connection
 
-    def __init__(self, db_file_path: str):
+    def __init__(self, db_file_path: [str, Path]):
         self._db_file_path = db_file_path
         self.lock = threading.RLock()
 
@@ -52,6 +52,10 @@ class SqliteDB(DB):
             Path(self._db_file_path).unlink(missing_ok=True)
             self.connect()
             self.migrate()
+
+    def execute(self, sql: str) -> None:
+        with self.lock:
+            self._db.execute(sql)
 
     def insert(self, obj: [User, Charge, DummyStoreOrder]):
         with self.lock:

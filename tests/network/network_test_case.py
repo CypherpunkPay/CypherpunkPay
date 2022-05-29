@@ -1,13 +1,14 @@
 from typing import Optional
 
+import pytest
+
 from cypherpunkpay.net.http_client.clear_http_client import ClearHttpClient
-from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits
-from tests.unit.config.example_config import ExampleConfig
-from tests.unit.test_case import CypherpunkpayTestCase
-from cypherpunkpay.net.http_client.tor_http_client import TorHttpClient
 from cypherpunkpay.net.tor_client.official_tor_circuits import OfficialTorCircuits
 
+from tests.unit.test_case import CypherpunkpayTestCase
 
+
+@pytest.mark.usefixtures('http_clients')
 class CypherpunkpayNetworkTestCase(CypherpunkpayTestCase):
 
     official_tor: Optional[OfficialTorCircuits] = None
@@ -15,20 +16,6 @@ class CypherpunkpayNetworkTestCase(CypherpunkpayTestCase):
 
     XMR_STAGENET_REMOTE_HOST = 'stagenet.community.rino.io'
     XMR_STAGENET_REMOTE_PORT = 38081
-
-    @classmethod
-    def setup_class(cls):
-        cls.official_tor = OfficialTorCircuits(config=ExampleConfig())
-        cls.official_tor.connect_and_verify()
-        cls.tor_http_client = TorHttpClient(cls.official_tor)
-        cls.clear_http_client = ClearHttpClient()
-
-    @classmethod
-    def teardown_class(cls):
-        cls.official_tor.close()
-        cls.official_tor = None
-        cls.clear_http_client.close()
-        cls.clear_http_client = None
 
     def assertTorBrowserRequestHeaders(self, http_client):
         res = http_client.get(url='https://httpbin.org/headers', privacy_context='shared')

@@ -31,6 +31,10 @@ class DB(ABC):
         ...
 
     @abstractmethod
+    def execute(self, sql: str):
+        ...
+
+    @abstractmethod
     def migrate(self):
         ...
 

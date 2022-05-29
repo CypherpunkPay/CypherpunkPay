@@ -16,13 +16,11 @@ class UpdateChargeJobsUCTest(CypherpunkpayDBTestCase):
     EXPECTED_INTERVAL_FOR_FINAL = 30 * 60  # 30 minutes
 
     def setup_method(self):
-        super().setup_method()
         self.job_scheduler = JobScheduler()
         self.job_scheduler.pause()  # we don't want any jobs to actually run during the tests
 
     def teardown_method(self):
         self.job_scheduler.shutdown()
-        super().teardown_method()
 
     def test_blank_slate(self):
         UpdateChargeJobsUC(self.job_scheduler, self.db).exec()

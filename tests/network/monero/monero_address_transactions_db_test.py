@@ -84,6 +84,7 @@ class MoneroAddressTransactionsDBTest(CypherpunkpayTestCase):
 
         assert len(txs) == 0
 
+    # TODO: replace live fetching with hard coded test data
     def daemon_fetch_txs(self, tx_hashes) -> List[Transaction]:
         from monero.daemon import Daemon
         daemon = Daemon(host='stagenet.community.rino.io', port=38081)

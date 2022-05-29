@@ -1,5 +1,6 @@
-from tests.unit.test_case import CypherpunkpayTestCase, Decimal
+from tests.unit.test_case import CypherpunkpayTestCase
 
+from cypherpunkpay import *
 from cypherpunkpay.web.base_view import BaseView
 
 

@@ -1,4 +1,6 @@
-from tests.acceptance.acceptance_test_case import CypherpunkpayAcceptanceTestCase, Decimal
+from tests.acceptance.acceptance_test_case import CypherpunkpayAcceptanceTestCase
+
+from cypherpunkpay import *
 
 
 class ChargeViewsTest(CypherpunkpayAcceptanceTestCase):

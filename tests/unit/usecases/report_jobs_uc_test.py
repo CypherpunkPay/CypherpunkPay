@@ -10,12 +10,10 @@ from tests.unit.db_test_case import CypherpunkpayDBTestCase
 class ReportJobsUCTest(CypherpunkpayDBTestCase):
 
     def setup_method(self):
-        super().setup_method()
         self.job_scheduler = JobScheduler()
 
     def teardown_method(self):
         self.job_scheduler.shutdown()
-        super().teardown_method()
 
     def test_exec(self):
         def no_op(): pass

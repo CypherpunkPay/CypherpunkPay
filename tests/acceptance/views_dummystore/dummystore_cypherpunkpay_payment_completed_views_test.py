@@ -1,6 +1,8 @@
-from tests.acceptance.acceptance_test_case import CypherpunkpayAcceptanceTestCase, Decimal
-
+from cypherpunkpay.globals import *
 from cypherpunkpay.models.dummy_store_order import DummyStoreOrder
+
+
+from tests.acceptance.acceptance_test_case import CypherpunkpayAcceptanceTestCase
 
 
 class DummystoreViewsTest(CypherpunkpayAcceptanceTestCase):

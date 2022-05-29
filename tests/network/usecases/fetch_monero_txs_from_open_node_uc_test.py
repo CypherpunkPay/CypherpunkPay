@@ -20,14 +20,12 @@ class ExampleMoneroConfig(ExampleConfig):
 class FetchMoneroTxsFromOpenNodeUCTest(CypherpunkpayNetworkTestCase):
 
     def setup_method(self):
-        super().setup_method()
         self.db = SqliteDB(self.gen_tmp_file_path('.sqlite3'))
         self.db.connect()
         self.db.migrate()
 
     def teardown_method(self):
         self.db.disconnect()
-        super().teardown_method()
 
     def test_when_uptodate_fetch_nothing(self):
         charge = self.insert_xmr_charge(total='0.00000001', created_at='2022-02-11 00:00:00')

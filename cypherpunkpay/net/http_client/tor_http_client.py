@@ -1,9 +1,9 @@
 import requests
 
 from cypherpunkpay.globals import *
+from cypherpunkpay.tools.net import is_local_network, get_host_or_ip
 from cypherpunkpay.net.http_client.base_http_client import BaseHttpClient
 from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits
-from cypherpunkpay.tools.net import is_local_network, get_host_or_ip
 
 
 class TorHttpClient(BaseHttpClient):
@@ -11,8 +11,7 @@ class TorHttpClient(BaseHttpClient):
     _tor_circuits: BaseTorCircuits
 
     def __init__(self, tor_circuits: BaseTorCircuits = None):
-        from cypherpunkpay.app import App
-        self._tor_circuits = tor_circuits if tor_circuits else App().tor_circuits()
+        self._tor_circuits = tor_circuits
 
     def get(self, url: str, privacy_context: str, headers: dict = None, set_tor_browser_headers: bool = True, verify=None):
         if is_local_network(url):

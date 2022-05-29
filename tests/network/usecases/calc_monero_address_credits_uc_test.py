@@ -2,11 +2,10 @@ from cypherpunkpay.globals import *
 from cypherpunkpay.models.address_credits import AddressCredits
 from cypherpunkpay.monero.monero_tx_db import MoneroTxDb
 from cypherpunkpay.usecases.calc_monero_address_credits_uc import CalcMoneroAddressCreditsUC
+from tests.network.network_test_case import CypherpunkpayNetworkTestCase
 
-from tests.unit.db_test_case import CypherpunkpayDBTestCase
 
-
-class CalcMoneroAddressCreditsUCTest(CypherpunkpayDBTestCase):
+class CalcMoneroAddressCreditsUCTest(CypherpunkpayNetworkTestCase):
 
     YEAR_2022: datetime.datetime = datetime.datetime(year=2022, month=1, day=1, hour=0, minute=0, second=0)
     MAX_HEIGHT = 3_000_000

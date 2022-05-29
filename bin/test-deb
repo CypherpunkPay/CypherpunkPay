@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#.venv/bin/pytest test/deploy
-#.venv/bin/pytest test/deploy/deploy_to_ubuntu1804_tests.py
-#.venv/bin/pytest test/deploy/deploy_to_ubuntu2004_tests.py
-#.venv/bin/pytest test/deploy/deploy_to_ubuntu2104_tests.py
-.venv/bin/pytest test/deploy/deploy_to_debian10_tests.py
+#bin/test test/deploy
+#bin/test test/deploy/deploy_to_ubuntu1804_tests.py
+#bin/test test/deploy/deploy_to_ubuntu2004_tests.py
+#bin/test test/deploy/deploy_to_ubuntu2104_tests.py
+bin/test tests/deploy/deploy_to_debian10_tests.py

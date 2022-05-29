@@ -1,18 +1,22 @@
+from typing import Optional
+
+import pytest
 import webtest
 
-from cypherpunkpay.globals import *
 import cypherpunkpay
 
 from tests.unit.test_case import CypherpunkpayTestCase
 
 
+@pytest.mark.usefixtures('instantiate_app')
+@pytest.mark.usefixtures('acceptance_per_function_wrapper')
 class CypherpunkpayAcceptanceTestCase(CypherpunkpayTestCase):
 
     # Cypherpunkpay application
     app: cypherpunkpay.App = None
 
     # WSGI web application
-    webapp: webtest.TestApp = None
+    webapp: Optional[webtest.TestApp] = None
 
     def assertInBody(self, response, expected_content: str):
         self.assertIn(expected_content, response.text)
