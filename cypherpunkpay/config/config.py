@@ -12,10 +12,7 @@ class Config(object):
     _dict: Dict
 
     def __init__(self, settings=None, env='test'):
-        if settings:
-            self._dict = settings
-        else:
-            self._dict = {}
+        self._dict = settings or {}
         self._env = env
 
     def server(self) -> Dict:
