@@ -21,15 +21,18 @@ class DeployTestCase(TestCase):
         cmd = 'cat ~/.bash_aliases | grep DEVELOPMENT_S99_SSH_UUID'
         self.ssh_uuid = subprocess.run(cmd, shell=True, capture_output=True).stdout.decode('utf-8').split('=')[1].strip()
         self.private_key_path = '/home/user/.ssh/99stack_dev'
-        self.deb_file = f'{os.path.dirname(os.path.realpath(__file__))}/../../dist/debian/cypherpunkpay_1.0.15_amd64.deb'
+        self.deb_file = f'{os.path.dirname(os.path.realpath(__file__))}/../../dist/debian/cypherpunkpay_1.0.16_amd64.deb'
         self.test_deb_script = f'{os.path.dirname(os.path.realpath(__file__))}/resources/install_and_run_cypherpunkpay_deb.sh'
 
     def get_servers(self) -> List:
         log.info(f'Getting server list...')
         cmd = f'curl -X GET -H "Authorization: Bearer {self.api_token}" "https://api.99stack.com/v1/server/list"'
         response_body = subprocess.run(cmd, shell=True, capture_output=True).stdout.decode('utf-8')
-        data = json.loads(response_body)
-        #log.info(self.pretty(data))
+        try:
+            data = json.loads(response_body)
+        except json.decoder.JSONDecodeError:
+            log.info(response_body)
+            raise
         self.assert_no_error_message(data)
         return data['servers']
 
@@ -47,13 +50,15 @@ class DeployTestCase(TestCase):
                             ipv4 = address_info['address']
                     log.info(f'Found {name} with IP4 {ipv4}')
                     if had_no_network:
-                        log.info(f'Sleeping 10 seconds as this server was just assigned IPv4...')
-                        time.sleep(10)
+                        log.info(f'Sleeping 20 seconds as this server was just assigned IPv4...')
+                        time.sleep(20)
                     return ipv4
                 else:
                     log.info(f'Found {name} but no network interface assigned yet (ongoing provisioning?)')
                     had_no_network = True
             else:
+                if name == 'ubuntu2204':
+                    self.create_ubuntu2204()
                 if name == 'ubuntu2110':
                     self.create_ubuntu2110()
                 if name == 'ubuntu2104':
@@ -95,7 +100,7 @@ class DeployTestCase(TestCase):
 
     def delete_server(self, server_id):
         log.info(f'Deleting server_id={server_id}...')
-        payload = '{' + f'"server_id": {server_id}' + '}'
+        payload = '{' + f'"server_id": "{server_id}"' + '}'
         cmd = f"curl -X DELETE -H 'Authorization: Bearer {self.api_token}' -H 'Content-Type: application/json' -d '{payload}' 'https://api.99stack.com/v1/server/remove'"
         response_body = subprocess.run(cmd, shell=True, capture_output=True).stdout.decode('utf-8')
         if response_body.strip():
@@ -105,10 +110,11 @@ class DeployTestCase(TestCase):
             pass  # empty body is OK
 
     def delete_server_if_present(self, name):
-        servers_dict = self.get_servers()
-        server = next(filter(lambda kv: kv[1]['name'] == name, servers_dict.items()), None)
+        servers = self.get_servers()
+        print(self.pretty(servers))
+        server = next(filter(lambda server: server['name'] == name, servers), None)
         if server:
-            server_id = server[0]
+            server_id = server['uuid']
             self.delete_server(server_id)
         else:
             log.info(f"No {name} server found")

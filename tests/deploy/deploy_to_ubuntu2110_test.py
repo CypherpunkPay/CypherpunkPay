@@ -18,8 +18,8 @@ class DeployToUbuntu2110Test(DeployTestCase):
         server_info = self.create_server(
             hostname='ubuntu2110',
             label='ubuntu2110',
-            region=101,  # Amsterdam
-            plan=1101,
+            region=209,
+            plan=2101,
             image=1125
         )
         #log.info(server_info)

@@ -12,4 +12,7 @@ chown -R cypherpunkpay:cypherpunkpay /var/lib/cypherpunkpay
 
 interpolate-cypherpunkpay-conf-on-first-install
 
+# Remove incorrect dependency "funcsig" from APScheduler 3.9.1 METADATA because loadwsgi.py thinks its mandatory on Python 3.10 (this is fucked)
+sed --in-place /funcsig/d /opt/venvs/cypherpunkpay/lib/python3.9/site-packages/APScheduler-3.?.?.dist-info/METADATA
+
 exit 0

@@ -18,8 +18,8 @@ class DeployToDebian10Test(DeployTestCase):
         server_info = self.create_server(
             hostname='debian10',
             label='debian10',
-            region=101,
-            plan=1101,
-            image=1108
+            region=209,
+            plan=2101,
+            image=2116
         )
         #log.info(server_info)

@@ -6,5 +6,6 @@ opt/venvs/cypherpunkpay/bin/interpolate-cypherpunkpay-conf-on-first-install usr/
 opt/venvs/cypherpunkpay/lib/python3.9 opt/venvs/cypherpunkpay/lib/python3.6
 opt/venvs/cypherpunkpay/lib/python3.9 opt/venvs/cypherpunkpay/lib/python3.7
 opt/venvs/cypherpunkpay/lib/python3.9 opt/venvs/cypherpunkpay/lib/python3.8
+opt/venvs/cypherpunkpay/lib/python3.9 opt/venvs/cypherpunkpay/lib/python3.10
 
 # [/ Dirty hack ]
