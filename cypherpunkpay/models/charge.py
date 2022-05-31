@@ -4,8 +4,8 @@ from hashlib import sha3_256
 
 import pyqrcode
 
-from cypherpunkpay.bitcoin.bip32 import Bip32
 from cypherpunkpay.globals import *
+from cypherpunkpay.bitcoin.bip32 import Bip32
 from cypherpunkpay.config.config import Config
 from cypherpunkpay.tools.cryptocurrency_payment_uri import CryptocurrencyPaymentUri
 from cypherpunkpay.tools.safe_uid import SafeUid

@@ -1,7 +1,8 @@
 from cypherpunkpay.globals import *
 
 from cypherpunkpay.models.ln_invoice_status import LnInvoiceStatus
-from cypherpunkpay.ln.lightning_client import LightningClient
+
+from ..lightning_client import LightningClient
 
 
 # Dummy implementations of abstract classes are used for testing

@@ -2,8 +2,9 @@ import requests
 
 from cypherpunkpay.globals import *
 from cypherpunkpay.tools.net import is_local_network, get_host_or_ip
-from cypherpunkpay.net.http_client.base_http_client import BaseHttpClient
-from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits
+
+from .base_http_client import BaseHttpClient
+from ..tor_client.base_tor_circuits import BaseTorCircuits
 
 
 class TorHttpClient(BaseHttpClient):

@@ -1,4 +1,4 @@
-from cypherpunkpay.bitcoin.electrum.constants import BitcoinMainnet, BitcoinTestnet
+from .electrum.constants import BitcoinMainnet, BitcoinTestnet
 
 
 def btc_network_class(network_name):

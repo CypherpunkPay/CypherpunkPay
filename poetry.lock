@@ -188,6 +188,23 @@ optional = false
 python-versions = ">=3.5"
 
 [[package]]
+name = "importlib-metadata"
+version = "4.11.4"
+description = "Read metadata from Python packages"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+typing-extensions = {version = ">=3.6.4", markers = "python_version < \"3.8\""}
+zipp = ">=0.5"
+
+[package.extras]
+docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)"]
+perf = ["ipython"]
+testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "packaging", "pyfakefs", "flufl.flake8", "pytest-perf (>=0.9.2)", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)", "importlib-resources (>=1.3)"]
+
+[[package]]
 name = "iniconfig"
 version = "1.1.1"
 description = "iniconfig: brain-dead simple config-ini parsing"
@@ -319,6 +336,9 @@ description = "plugin and hook calling mechanisms for python"
 category = "dev"
 optional = false
 python-versions = ">=3.6"
+
+[package.dependencies]
+importlib-metadata = {version = ">=0.12", markers = "python_version < \"3.8\""}
 
 [package.extras]
 dev = ["pre-commit", "tox"]
@@ -464,6 +484,7 @@ python-versions = ">=3.6"
 atomicwrites = {version = ">=1.0", markers = "sys_platform == \"win32\""}
 attrs = ">=19.2.0"
 colorama = {version = "*", markers = "sys_platform == \"win32\""}
+importlib-metadata = {version = ">=0.12", markers = "python_version < \"3.8\""}
 iniconfig = "*"
 packaging = "*"
 pluggy = ">=0.12,<2.0"
@@ -570,6 +591,14 @@ python-versions = "*"
 docs = ["Sphinx (>=1.3.1)", "docutils", "pylons-sphinx-themes"]
 
 [[package]]
+name = "typing-extensions"
+version = "4.2.0"
+description = "Backported and Experimental Type Hints for Python 3.7+"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "tzlocal"
 version = "2.1"
 description = "tzinfo object for the local timezone"
@@ -615,7 +644,7 @@ testing = ["pytest", "pytest-cov", "coverage"]
 
 [[package]]
 name = "waitress"
-version = "2.1.1"
+version = "2.1.2"
 description = "Waitress WSGI server"
 category = "main"
 optional = false
@@ -673,6 +702,18 @@ postgres = ["psycopg2"]
 pyodbc = ["pyodbc"]
 
 [[package]]
+name = "zipp"
+version = "3.8.0"
+description = "Backport of pathlib-compatible object wrapper for zip files"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.extras]
+docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)"]
+testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)"]
+
+[[package]]
 name = "zope.deprecation"
 version = "4.4.0"
 description = "Zope Deprecation Infrastructure"
@@ -699,8 +740,8 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.9"
-content-hash = "c615b68ffd0f6502950fb14322eb95857eb00aa5db5265373d823adce5225240"
+python-versions = "^3.7"
+content-hash = "183cf21c43720309a9cb292af3205f648d932989c393ed4cb769bd89767be1ed"
 
 [metadata.files]
 apscheduler = [
@@ -879,6 +920,10 @@ hupper = [
 idna = [
     {file = "idna-3.3-py3-none-any.whl", hash = "sha256:84d9dd047ffa80596e0f246e2eab0b391788b0503584e8945f2368256d2735ff"},
     {file = "idna-3.3.tar.gz", hash = "sha256:9d643ff0a55b762d5cdb124b8eaa99c66322e2157b69160bc32796e824360e6d"},
+]
+importlib-metadata = [
+    {file = "importlib_metadata-4.11.4-py3-none-any.whl", hash = "sha256:c58c8eb8a762858f49e18436ff552e83914778e50e9d2f1660535ffb364552ec"},
+    {file = "importlib_metadata-4.11.4.tar.gz", hash = "sha256:5d26852efe48c0a32b0509ffbc583fda1a2266545a78d104a6f4aff3db17d700"},
 ]
 iniconfig = [
     {file = "iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
@@ -1077,6 +1122,10 @@ translationstring = [
     {file = "translationstring-1.4-py2.py3-none-any.whl", hash = "sha256:5f4dc4d939573db851c8d840551e1a0fb27b946afe3b95aafc22577eed2d6262"},
     {file = "translationstring-1.4.tar.gz", hash = "sha256:bf947538d76e69ba12ab17283b10355a9ecfbc078e6123443f43f2107f6376f3"},
 ]
+typing-extensions = [
+    {file = "typing_extensions-4.2.0-py3-none-any.whl", hash = "sha256:6657594ee297170d19f67d55c05852a874e7eb634f4f753dbd667855e07c1708"},
+    {file = "typing_extensions-4.2.0.tar.gz", hash = "sha256:f1c24655a0da0d1b67f07e17a5e6b2a105894e6824b92096378bb3668ef02376"},
+]
 tzlocal = [
     {file = "tzlocal-2.1-py2.py3-none-any.whl", hash = "sha256:e2cb6c6b5b604af38597403e9852872d7f534962ae2954c7f35efcb1ccacf4a4"},
     {file = "tzlocal-2.1.tar.gz", hash = "sha256:643c97c5294aedc737780a49d9df30889321cbe1204eac2c2ec6134035a92e44"},
@@ -1093,8 +1142,8 @@ venusian = [
     {file = "venusian-3.0.0.tar.gz", hash = "sha256:f6842b7242b1039c0c28f6feef29016e7e7dd3caaeb476a193acf737db31ee38"},
 ]
 waitress = [
-    {file = "waitress-2.1.1-py3-none-any.whl", hash = "sha256:c549f5b2b4afd44d9d97d7cec79f3ef581e25d832827f415dc175327af674aa8"},
-    {file = "waitress-2.1.1.tar.gz", hash = "sha256:e2e60576cf14a1539da79f7b7ee1e79a71e64f366a0b47db54a15e971f57bb16"},
+    {file = "waitress-2.1.2-py3-none-any.whl", hash = "sha256:7500c9625927c8ec60f54377d590f67b30c8e70ef4b8894214ac6e4cad233d2a"},
+    {file = "waitress-2.1.2.tar.gz", hash = "sha256:780a4082c5fbc0fde6a2fcfe5e26e6efc1e8f425730863c04085769781f51eba"},
 ]
 webob = [
     {file = "WebOb-1.8.7-py2.py3-none-any.whl", hash = "sha256:73aae30359291c14fa3b956f8b5ca31960e420c28c1bec002547fb04928cf89b"},
@@ -1107,6 +1156,10 @@ webtest = [
 yoyo-migrations = [
     {file = "yoyo-migrations-7.3.2.tar.gz", hash = "sha256:44840828e1a0169f541e702d5aedca8185ada68087e7bad4850a6fc5d71e77a4"},
     {file = "yoyo_migrations-7.3.2-py3-none-any.whl", hash = "sha256:a6e6bc990732d4951c4e2a5b2815d60fe47a445f1c0d1b3433b9ef5f36bca8df"},
+]
+zipp = [
+    {file = "zipp-3.8.0-py3-none-any.whl", hash = "sha256:c4f6e5bbf48e74f7a38e7cc5b0480ff42b0ae5178957d564d18932525d5cf099"},
+    {file = "zipp-3.8.0.tar.gz", hash = "sha256:56bf8aadb83c24db6c4b577e13de374ccfb67da2078beba1d037c17980bf43ad"},
 ]
 "zope.deprecation" = [
     {file = "zope.deprecation-4.4.0-py2.py3-none-any.whl", hash = "sha256:f1480b74995958b24ce37b0ef04d3663d2683e5d6debc96726eff18acf4ea113"},

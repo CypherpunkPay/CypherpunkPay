@@ -1,6 +1,6 @@
 import requests
 
-from cypherpunkpay.net.http_client.tor_http_client import BaseHttpClient
+from .tor_http_client import BaseHttpClient
 
 
 class ClearHttpClient(BaseHttpClient):

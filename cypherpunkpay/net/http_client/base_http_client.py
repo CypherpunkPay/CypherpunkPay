@@ -4,7 +4,8 @@ from urllib.parse import urlparse
 import requests
 
 from cypherpunkpay.globals import *
-from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits
+
+from ..tor_client.base_tor_circuits import BaseTorCircuits
 
 
 class BaseHttpClient(object):

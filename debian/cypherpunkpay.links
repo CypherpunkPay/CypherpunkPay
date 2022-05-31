@@ -3,7 +3,6 @@ opt/venvs/cypherpunkpay/bin/interpolate-cypherpunkpay-conf-on-first-install usr/
 
 # [ Dirty hack to avoid building for every Python separately ]
 
-opt/venvs/cypherpunkpay/lib/python3.9 opt/venvs/cypherpunkpay/lib/python3.6
 opt/venvs/cypherpunkpay/lib/python3.9 opt/venvs/cypherpunkpay/lib/python3.7
 opt/venvs/cypherpunkpay/lib/python3.9 opt/venvs/cypherpunkpay/lib/python3.8
 opt/venvs/cypherpunkpay/lib/python3.9 opt/venvs/cypherpunkpay/lib/python3.10

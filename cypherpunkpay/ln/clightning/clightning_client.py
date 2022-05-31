@@ -1,9 +1,10 @@
 from cypherpunkpay.globals import *
 
 from cypherpunkpay.models.ln_invoice_status import LnInvoiceStatus
-from cypherpunkpay.ln.clightning.pylnclient.lightning import LightningRpc, RpcError
-from cypherpunkpay.ln.lightning_client import LightningClient, LightningException, UnauthorizedLightningException, UnknownInvoiceLightningException
 from cypherpunkpay.tools.safe_uid import SafeUid
+
+from .pylnclient.lightning import LightningRpc, RpcError
+from ..lightning_client import LightningClient, LightningException, UnauthorizedLightningException, UnknownInvoiceLightningException
 
 
 class CLightningClient(LightningClient):

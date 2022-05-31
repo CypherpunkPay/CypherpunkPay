@@ -1,12 +1,11 @@
 from typing import Union, Iterable
 
 from cypherpunkpay.globals import *
-from cypherpunkpay.bitcoin.electrum.constants import BitcoinMainnet, BitcoinTestnet, AbstractNet
-from cypherpunkpay.bitcoin.electrum.bitcoin import public_key_to_p2wpkh_addr, InvalidChecksum
-from cypherpunkpay.bitcoin.electrum.bip32 import BIP32Node
-from cypherpunkpay.bitcoin.electrum.util import BitcoinException
-
-from cypherpunkpay.bitcoin.electrum.crypto import hash_160
+from .electrum.constants import BitcoinMainnet, BitcoinTestnet, AbstractNet
+from .electrum.bitcoin import public_key_to_p2wpkh_addr, InvalidChecksum
+from .electrum.bip32 import BIP32Node
+from .electrum.util import BitcoinException
+from .electrum.crypto import hash_160
 
 
 class Bip32:

@@ -4,7 +4,6 @@ from abc import ABC
 from monero.backends.offline import OfflineWallet
 from monero.wallet import Wallet
 
-from cypherpunkpay import bitcoin
 from cypherpunkpay.bitcoin.bip32 import Bip32
 from cypherpunkpay.exceptions import UnsupportedCoin
 from cypherpunkpay.usecases.use_case import UseCase

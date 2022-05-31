@@ -1,6 +1,6 @@
 from cypherpunkpay.globals import *
 
-from cypherpunkpay.models.credit import Credit
+from .credit import Credit
 
 
 class AddressCredits:

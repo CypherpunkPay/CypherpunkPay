@@ -7,7 +7,7 @@ authors = ["cypherpunkdev"]
 license = "Unlicense OR MIT"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.7"
 pyramid = "^2.0"
 pyramid-jinja2 = "^2.10"
 waitress = "^2.1.1"

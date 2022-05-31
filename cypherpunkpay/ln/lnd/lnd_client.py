@@ -5,9 +5,10 @@ import requests
 from cypherpunkpay.globals import *
 
 from cypherpunkpay.models.ln_invoice_status import LnInvoiceStatus
-from cypherpunkpay.ln.lightning_client import LightningClient, LightningException, UnauthorizedLightningException, UnknownInvoiceLightningException
 from cypherpunkpay.net.http_client.base_http_client import BaseHttpClient
 from cypherpunkpay.net.http_client.clear_http_client import ClearHttpClient
+
+from ..lightning_client import LightningClient, LightningException, UnauthorizedLightningException, UnknownInvoiceLightningException
 
 
 class LndClient(LightningClient):

@@ -6,7 +6,8 @@ from requests import Session
 
 from cypherpunkpay.globals import *
 from cypherpunkpay.config.config import Config
-from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits
+
+from .base_tor_circuits import BaseTorCircuits
 
 
 class OfficialTorCircuits(BaseTorCircuits):

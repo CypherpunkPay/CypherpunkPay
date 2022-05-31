@@ -1,4 +1,4 @@
-from cypherpunkpay.net.tor_client.base_tor_circuits import BaseTorCircuits
+from .base_tor_circuits import BaseTorCircuits
 
 
 class DummyTorCircuits(BaseTorCircuits):

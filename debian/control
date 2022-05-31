@@ -8,7 +8,7 @@ Standards-Version: 3.9.5
 
 Package: cypherpunkpay
 Architecture: any
-Pre-Depends: dpkg (>= 1.16.1), python3 (>= 3.6), ${misc:Pre-Depends}
+Pre-Depends: dpkg (>= 1.16.1), python3 (>= 3.7), ${misc:Pre-Depends}
 Depends: tor ${python3:Depends}, ${misc:Depends}
 Description: Self-hosted software for accepting Bitcoin on clearnet and onion websites.
  CypherpunkPay is a modern self-hosted software for accepting Bitcoin on clearnet and onion websites.
